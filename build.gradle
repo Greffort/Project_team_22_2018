@@ -2,14 +2,25 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'java'
+
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
 repositories {
+    //описываем источники сторонних библиотек
     mavenCentral()
 }
 
 dependencies {
+    //описываем библиотеки которые подключаем
+    //providedCompile, compile
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    //настройка jar артефакта
+    baseName = 'test creat'
+    version =  '0.1.0'
 }
