@@ -3,6 +3,9 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'helloWorld.HelloWorld'
+
 
 version '1.0-SNAPSHOT'
 
@@ -13,14 +16,24 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    //настройка jar артефакта
+    baseName = 'testcreat'
+    version =  '0.1.0'
+    manifest {
+        attributes 'Main-Class': 'helloWorld.HelloWorld'
+    }
+}
+
+
 dependencies {
     //описываем библиотеки которые подключаем
     //providedCompile, compile
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-jar {
-    //настройка jar артефакта
-    baseName = 'test creat'
-    version =  '0.1.0'
-}
+
+//использовать gradlew скрипты
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '1.11'
+//}
