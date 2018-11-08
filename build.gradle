@@ -1,8 +1,10 @@
 plugins {
     id 'java'
-    id 'pmd'
+    
     id "com.github.spotbugs" version "1.6.5"
+    id 'pmd'
     id 'application'
+    id "name.remal.spotbugs-settings" version "1.0.95"
 }
 
 apply plugin: 'java'
@@ -16,13 +18,10 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-    //описываем источники сторонних библиотек
     mavenCentral()
 }
 
 dependencies {
-    //описываем библиотеки которые подключаем
-    //providedCompile, compile
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.apache.bcel:bcel:6.1'
@@ -31,12 +30,16 @@ dependencies {
 }
 
 jar {
-    //настройка jar артефакта
     baseName = 'testcreat'
     version = '0.1.0'
     manifest {
         attributes 'Main-Class': 'helloworld.HelloWorld'
     }
+}
+
+spotbugs {
+    ignoreFailures = false
+    spotbugsTest.enabled = true
 }
 
 pmd {
@@ -60,7 +63,13 @@ pmd {
 //            'java-typeresolution',
 //            'java-unnecessary',
 //            'java-unusedcode',
-            //'java-naming'
+//            'java-naming'
     ]
 }
+
+
+
+
+
+
 
