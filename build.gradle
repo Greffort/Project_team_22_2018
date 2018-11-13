@@ -10,7 +10,6 @@ apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-apply plugin: 'checkstyle'
 apply plugin: "com.github.spotbugs"
 
 repositories {
