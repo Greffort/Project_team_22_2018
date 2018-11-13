@@ -9,7 +9,7 @@ import java.net.URL;
 public final class ResourceService {
 
     @NotNull
-    public static final URL START_LAYOUT_FXML = ResourcesHelper.getInternalUrl("view/loginForm.fxml");
+    public static final URL START_LAYOUT_FXML = ResourcesHelper.getInternalUrl("view/LoginForm.fxml");
 
     private ResourceService() {
         StringHelper.throwNonInitializeable();

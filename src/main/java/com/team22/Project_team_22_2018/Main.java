@@ -16,16 +16,15 @@ public class Main extends Application {
     @NotNull
     private static final String APPLICATION_NAME = "team_22_project";
 
-
     public static void main(final String[] args) {
         launch(args);
     }
 
-    private static final int APPLICATION_WIDTH = 600;
-    private static final int APPLICATION_HEIGHT = 400;
+    private static final int APPLICATION_WIDTH = 450;
+    private static final int APPLICATION_HEIGHT = 335;
 
     @Override
-    public void start(@NotNull final Stage primaryStage) throws Exception {
+    public void start(@NotNull final Stage primaryStage) {
         @NotNull final Parent root = FXMLHelper.loadNode(ResourceService.START_LAYOUT_FXML);
         @NotNull final Scene scene = new Scene(root, APPLICATION_WIDTH, APPLICATION_HEIGHT);
 
