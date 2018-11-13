@@ -1,39 +1,42 @@
 plugins {
     id 'java'
-    
     id "com.github.spotbugs" version "1.6.5"
     id 'pmd'
     id 'application'
     id "name.remal.spotbugs-settings" version "1.0.95"
 }
 
-apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'checkstyle'
 apply plugin: "com.github.spotbugs"
 
-mainClassName = 'helloworld.HelloWorld'
-
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
+
+description = "Task Manager"
+mainClassName = 'com.team22.Project_team_22_2018.sample.Main'
+sourceCompatibility = 1.8
+version '1.0-SNAPSHOT'
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'org.apache.bcel:bcel:6.1'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
-    
+    compileOnly 'org.projectlombok:lombok:1.16.18'
+    compile 'org.jetbrains:annotations:15.0'
+    compile('com.github.alexm4q:futurutils:master-SNAPSHOT') { changing = true }
 }
 
 jar {
     baseName = 'testcreat'
     version = '0.1.0'
     manifest {
-        attributes 'Main-Class': 'helloworld.HelloWorld'
+        attributes 'Main-Class': 'com.team22.Project_team_22_2018.sample.Main'
     }
 }
 
@@ -66,10 +69,5 @@ pmd {
 //            'java-naming'
     ]
 }
-
-
-
-
-
 
 
