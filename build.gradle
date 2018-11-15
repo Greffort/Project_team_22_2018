@@ -28,7 +28,7 @@ dependencies {
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
     compileOnly 'org.projectlombok:lombok:1.16.18'
     compile 'org.jetbrains:annotations:15.0'
-    compile('com.github.alexm4q:futurutils:master-SNAPSHOT') { changing = true }
+    //compile('com.github.alexm4q:futurutils:master-SNAPSHOT') { changing = true }
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
 }
 

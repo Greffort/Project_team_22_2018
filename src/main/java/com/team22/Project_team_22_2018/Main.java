@@ -1,12 +1,15 @@
 package com.team22.Project_team_22_2018;
 
-import com.futur.common.helpers.resources.FXMLHelper;
-import com.team22.Project_team_22_2018.service.ResourceService;
 import javafx.application.Application;
+import javafx.fxml.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 
 
 /**
@@ -24,10 +27,10 @@ public class Main extends Application {
     private static final int APPLICATION_HEIGHT = 335;
 
     @Override
-    public void start(@NotNull final Stage primaryStage) {
-        @NotNull final Parent root = FXMLHelper.loadNode(ResourceService.START_LAYOUT_FXML);
+    public void start(@NotNull final Stage primaryStage) throws IOException {
+        URL url = Paths.get("./src/main/resources/view/LoginForm.fxml").toUri().toURL();
+        Parent root = FXMLLoader.load(url);
         @NotNull final Scene scene = new Scene(root, APPLICATION_WIDTH, APPLICATION_HEIGHT);
-
         primaryStage.setTitle(APPLICATION_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();

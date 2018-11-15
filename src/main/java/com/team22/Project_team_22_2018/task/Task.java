@@ -31,4 +31,8 @@ public class Task {
         this(nameTask, descriptionTask, FILL_DEFAULT);
     }
 
+    @Override
+    public String toString() {
+        return nameTask + deadLineTask + deadLineTask;
+    }
 }
