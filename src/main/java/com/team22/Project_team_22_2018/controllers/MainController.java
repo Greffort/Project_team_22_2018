@@ -7,10 +7,9 @@ import lombok.Setter;
 /**
  * @author MainController
  */
-public class MainController {
-
+public  class MainController {
     @Getter
     @Setter
-    private ManagerTask managerTask = new ManagerTask();
+    private static ManagerTask managerTask = new ManagerTask();
 
 }

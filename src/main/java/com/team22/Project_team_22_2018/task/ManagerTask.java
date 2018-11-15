@@ -11,7 +11,15 @@ import lombok.Getter;
 public class ManagerTask {
 
     @Getter
-    private ObservableList<Task> tasks = FXCollections.observableArrayList();
+    private ObservableList<Task> tasks;
+
+    public ManagerTask(ObservableList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public ManagerTask() {
+        this.tasks = FXCollections.observableArrayList();
+    }
 
     public void addTask(Task task) {
         tasks.add(task);

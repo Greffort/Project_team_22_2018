@@ -1,5 +1,4 @@
 package com.team22.Project_team_22_2018.controllers;
-import com.team22.Project_team_22_2018.task.ManagerTask;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -7,7 +6,6 @@ import com.team22.Project_team_22_2018.task.Task;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
-import java.awt.*;
 
 public class ControllerCreateTaskForm extends MainController{
 

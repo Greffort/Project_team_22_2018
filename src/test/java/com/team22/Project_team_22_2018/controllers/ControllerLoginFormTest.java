@@ -21,15 +21,12 @@ public class ControllerLoginFormTest extends Assert {
 
     @Test(expectedExceptions = MalformedURLException.class)
     public void testMalformedURLException() {
-        ControllerLoginForm controllerLoginForm = new ControllerLoginForm();
 
 
     }
 
     @Test(expectedExceptions = IOException.class)
     public void testIOException() {
-        List list = null;
-        int size = list.size();
     }
 
     @Test

@@ -29,20 +29,14 @@ public class ControllerLoginForm extends MainController{
     private TableColumn<Task, String> columnDescription;
 
     public void buttonAddTask(ActionEvent actionEvent)  throws Exception{
-
-        //getManagerTask().addTask(new Task()); //для проверки
-
         URL url = Paths.get("src/main/resources/view/CreateTaskForm.fxml").toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        //аапаппап
         stage.setTitle("Windows add");
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();//
-//
+        stage.show();
     }
 
     public void buttonRemoteTask(ActionEvent actionEvent) {
