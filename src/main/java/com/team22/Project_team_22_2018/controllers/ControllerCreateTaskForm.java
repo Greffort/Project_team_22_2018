@@ -9,7 +9,7 @@ public class ControllerCreateTaskForm {
 
     Button button;
 
-    public void closeWindow(){
+    public void closeWindow() {
         Platform.exit();
     }
 }

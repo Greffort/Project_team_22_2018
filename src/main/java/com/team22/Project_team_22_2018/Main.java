@@ -34,5 +34,7 @@ public class Main extends Application {
         primaryStage.setTitle(APPLICATION_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 }

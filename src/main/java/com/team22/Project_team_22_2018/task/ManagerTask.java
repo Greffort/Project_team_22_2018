@@ -21,14 +21,4 @@ public class ManagerTask {
         tasks.add(task);
     }
 
-//    @Override
-//    public String toString() {
-//        String s ="";
-//        for (int i = 0; i < tasks.size(); i++) {
-//            s+=getTasks().get(i).getNameTask()+"  ";
-//            s+=getTasks().get(i).getDescriptionTask()+"  ";
-//            s+=getTasks().get(i).getDeadLineTask()+"  ";
-//        }
-//        return s;
-//    }
 }
