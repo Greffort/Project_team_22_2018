@@ -28,13 +28,11 @@ public class Main extends Application {
 
     @Override
     public void start(@NotNull final Stage primaryStage) throws IOException {
-        URL url = Paths.get("./src/main/resources/view/LoginForm.fxml").toUri().toURL();
+        URL url = Paths.get("src/main/resources/view/LoginForm.fxml").toUri().toURL();
         Parent root = FXMLLoader.load(url);
         @NotNull final Scene scene = new Scene(root, APPLICATION_WIDTH, APPLICATION_HEIGHT);
         primaryStage.setTitle(APPLICATION_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 }

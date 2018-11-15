@@ -13,6 +13,4 @@ public class MainController {
     @Setter
     private ManagerTask managerTask = new ManagerTask();
 
-
-
 }

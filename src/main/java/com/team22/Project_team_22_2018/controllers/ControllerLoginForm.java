@@ -22,8 +22,6 @@ import java.nio.file.Paths;
  */
 public class ControllerLoginForm extends MainController{
 
-
-
     @FXML
     private TableView<Task> tableViewTask;
 
@@ -34,11 +32,11 @@ public class ControllerLoginForm extends MainController{
     @FXML
     private TableColumn<Task, String> columnDescription;
 
-    public void buttonAddTask(ActionEvent actionEvent) throws Exception {
+    public void buttonAddTask(ActionEvent actionEvent)  throws Exception{
 
         getManagerTask().addTask(new Task()); //для проверки
 
-        URL url = Paths.get("./src/main/resources/view/CreateTaskForm.fxml").toUri().toURL();
+        URL url = Paths.get("src/main/resources/view/CreateTaskForm.fxml").toUri().toURL();
         Parent root = FXMLLoader.load(url);
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -71,4 +69,5 @@ public class ControllerLoginForm extends MainController{
         columnDescription.setCellValueFactory(new PropertyValueFactory<Task, String>("descriptionTask"));
         tableViewTask.setItems(getManagerTask().getTasks());
     }
+
 }

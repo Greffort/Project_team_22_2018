@@ -13,10 +13,6 @@ public class ManagerTask {
     @Getter
     private ObservableList<Task> tasks = FXCollections.observableArrayList();
 
-    public ObservableList<Task> getTaskList() {
-        return tasks;
-    }
-
     public void addTask(Task task) {
         tasks.add(task);
     }

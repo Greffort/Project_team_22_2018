@@ -1,17 +1,11 @@
 package com.team22.Project_team_22_2018.controllers;
 
-//import org.junit.Assert;
-//import org.junit.Test;
-//import org.tes
-//import org.testng.Assert;
-//import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author ControllerLoginFormTest
@@ -25,8 +19,15 @@ public class ControllerLoginFormTest extends Assert {
 
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNullPointerException() {
+    @Test(expectedExceptions = MalformedURLException.class)
+    public void testMalformedURLException() {
+        ControllerLoginForm controllerLoginForm = new ControllerLoginForm();
+
+
+    }
+
+    @Test(expectedExceptions = IOException.class)
+    public void testIOException() {
         List list = null;
         int size = list.size();
     }

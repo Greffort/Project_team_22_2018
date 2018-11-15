@@ -1,8 +1,7 @@
 package com.team22.Project_team_22_2018;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.*;
 
 /**
  * @author MainTest
