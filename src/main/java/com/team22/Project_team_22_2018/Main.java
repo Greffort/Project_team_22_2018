@@ -23,6 +23,8 @@ public class Main extends Application {
         launch(args);
     }
 
+    //
+
     private static final int APPLICATION_WIDTH = 450;
     private static final int APPLICATION_HEIGHT = 335;
 

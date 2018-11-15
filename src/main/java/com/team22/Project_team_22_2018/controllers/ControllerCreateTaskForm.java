@@ -27,6 +27,7 @@ public class ControllerCreateTaskForm extends MainController{
     public void buttonCreateTask(){
         Task newTask = new Task(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString());
         System.out.println(newTask.getNameTask() + " " + newTask.getDescriptionTask() + " " + newTask.getDeadLineTask());
+
         getManagerTask().addTask(newTask);
     }
 }

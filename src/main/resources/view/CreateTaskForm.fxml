@@ -16,4 +16,5 @@
     <TextArea fx:id="taskDescriptionTextArea" layoutX="16.0" layoutY="71.0" prefHeight="138.0" prefWidth="269.0" promptText="Description:" wrapText="true" />
     <DatePicker fx:id="taskDeadlineDatePicker" layoutX="16.0" layoutY="225.0" prefHeight="25.0" prefWidth="269.0" promptText="Deadline date:" />
     <Button layoutX="16.0" onAction="#buttonCreateTask" layoutY="411.0" prefHeight="25.0" prefWidth="123.0" text="add task" />
+
 </Pane>
