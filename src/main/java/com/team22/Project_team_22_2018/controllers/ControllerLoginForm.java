@@ -49,13 +49,6 @@ public class ControllerLoginForm extends MainController{
 
     @FXML
     private void initialize() {
-
-        getManagerTask().addTask(new Task("Task1", "qwerty", "data"));
-        getManagerTask().addTask(new Task("Task2", "dsfsdfw", "data"));
-        getManagerTask().addTask(new Task("Task3", "dsfdsfwe", "data"));
-        getManagerTask().addTask(new Task("Task4", "iueern", "data"));
-        getManagerTask().addTask(new Task("Task5", "woeirn", "data"));
-
         columnTask.setCellValueFactory(new PropertyValueFactory<Task, String>("nameTask"));
         columnDeadLine.setCellValueFactory(new PropertyValueFactory<Task, String>("deadLineTask"));
         columnDescription.setCellValueFactory(new PropertyValueFactory<Task, String>("descriptionTask"));
