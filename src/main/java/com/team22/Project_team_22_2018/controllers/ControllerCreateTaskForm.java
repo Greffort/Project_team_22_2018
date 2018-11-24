@@ -1,4 +1,5 @@
 package com.team22.Project_team_22_2018.controllers;
+
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -7,7 +8,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 
-public class ControllerCreateTaskForm extends MainController{
+public class ControllerCreateTaskForm extends MainController {
 
     @FXML
     private TextField taskNameTextField;
@@ -18,14 +19,13 @@ public class ControllerCreateTaskForm extends MainController{
     @FXML
     private DatePicker taskDeadlineDatePicker;
 
-    public void closeWindow(){
-        Platform.exit();
+    public void closeWindow() {
+//        System.exit(0);
     }
 
-    public void buttonCreateTask(){
+    public void buttonCreateTask() {
         Task newTask = new Task(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString());
-        System.out.println(newTask.getNameTask() + " " + newTask.getDescriptionTask() + " " + newTask.getDeadLineTask());
-
+        //System.out.println(newTask.getName() + " " + newTask.getDescription() + " " + newTask.getDeadLine());
         getManagerTask().addTask(newTask);
     }
 }
