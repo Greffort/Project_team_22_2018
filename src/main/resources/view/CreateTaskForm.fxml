@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.controllers.ControllerCreateTaskForm">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.controllers.CreateTaskFormController">
     <Button fx:id="closeButton" layoutX="160.0" layoutY="411.0" onAction="#closeWindow" prefHeight="25.0" prefWidth="123.0" text="cancel"> </Button>
     <TextField layoutX="14.0" fx:id="taskNameTextField" layoutY="14.0" prefHeight="44.0" prefWidth="269.0" promptText="Task name:">
         <font>

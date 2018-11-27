@@ -1,18 +1,21 @@
 package com.team22.Project_team_22_2018.task;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @author Task
+ * @author Greffort
  * <p>
  * Содержит значение определенной задачи
  */
 @Setter
 @Getter
 @AllArgsConstructor
-public final class Task {
+public final class Task implements Serializable {
 
     private String name;
 

@@ -25,9 +25,7 @@ dependencies {
     compile 'org.jetbrains:annotations:15.0'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
     compile 'ch.qos.logback:logback-classic:1.1.2'
-    compile 'commons:commons-io:LATEST'
 }
-
 description = "Task Manager"
 mainClassName = 'com.team22.Project_team_22_2018.Main'
 sourceCompatibility = 1.8
@@ -42,7 +40,7 @@ jar {
 }
 
 spotbugs {
-    ignoreFailures = false
+    ignoreFailures = true
     spotbugsTest.enabled = true
 }
 

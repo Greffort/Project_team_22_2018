@@ -1,36 +1,31 @@
 package com.team22.Project_team_22_2018;
 
+import com.team22.Project_team_22_2018.util.Resources;
 import javafx.application.Application;
-import javafx.fxml.*;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
-
 
 /**
- * @author Main
+ * @author Greffort
  */
 public class Main extends Application {
+
     @NotNull
     private static final String APPLICATION_NAME = "team_22_project";
 
-    public static void main(final String[] args) {
+    public static void main(@NotNull final String[] args) {
         launch(args);
     }
 
-    private static final int APPLICATION_WIDTH = 450;
-    private static final int APPLICATION_HEIGHT = 335;
-
     @Override
     public void start(@NotNull final Stage primaryStage) throws IOException {
-        URL url = Paths.get("src/main/resources/view/LoginForm.fxml").toUri().toURL();
-        Parent root = FXMLLoader.load(url);
-        @NotNull final Scene scene = new Scene(root, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        @NotNull final Parent root = FXMLLoader.load(Resources.LOGIN_FORM);
+        @NotNull final Scene scene = new Scene(root);
         primaryStage.setTitle(APPLICATION_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
