@@ -12,5 +12,8 @@ public interface Resources {
     URL HELP_FORM = Resources.class.getClassLoader().getResource("view/HelpForm.fxml");
 //    File SAVE = new File("src/main/resources/file/save.txt");
 
+    URL HELP_TEXT = Resources.class.getClassLoader().getResource("file/help.txt");
+    URL LOCAL_SAVE = Resources.class.getClassLoader().getResource("file/save");
+
 
 }

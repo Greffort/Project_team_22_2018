@@ -1,6 +1,6 @@
-package com.team22.Project_team_22_2018.controllers;
+package com.team22.Project_team_22_2018.ui.controllers;
 
-import com.team22.Project_team_22_2018.task.Task;
+import com.team22.Project_team_22_2018.ui.rows.TaskRow;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -11,7 +11,7 @@ import lombok.Setter;
 public class CreateTaskFormController {
 
     @Setter
-    private ObservableList<Task> tasks;
+    private ObservableList<TaskRow> tasks;
 
     @FXML
     private TextField taskNameTextField;
@@ -27,7 +27,7 @@ public class CreateTaskFormController {
     }
 
     public void buttonCreateTask() {
-        Task newTask = new Task(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString());
+        TaskRow newTask = new TaskRow(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString(),"none","none");
         tasks.addAll(newTask);
     }
 }

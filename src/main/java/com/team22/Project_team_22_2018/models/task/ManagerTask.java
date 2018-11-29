@@ -1,7 +1,9 @@
-package com.team22.Project_team_22_2018.task;
+package com.team22.Project_team_22_2018.models.task;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,11 +26,10 @@ public final class ManagerTask implements Serializable {
 
     @Override
     public String toString() {
-        String s = "";
-        for (Task task : tasks) {
-
-            s += task.toString() + "   ";
+        @NotNull val s = new StringBuilder();
+        for (@NotNull val task : tasks) {
+            s.append(task.toString()).append("   ");
         }
-        return s;
+        return s.toString();
     }
 }

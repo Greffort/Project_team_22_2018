@@ -15,17 +15,24 @@ apply plugin: "com.github.spotbugs"
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
+    
     testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
     compileOnly 'org.projectlombok:lombok:1.16.18'
     compile 'org.jetbrains:annotations:15.0'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
     compile 'ch.qos.logback:logback-classic:1.1.2'
+
+    compile 'de.jensd:fontawesomefx:8.9'
+    
+    
 }
+
 description = "Task Manager"
 mainClassName = 'com.team22.Project_team_22_2018.Main'
 sourceCompatibility = 1.8

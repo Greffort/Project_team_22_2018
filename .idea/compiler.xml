@@ -4,9 +4,5 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="IdeaProjects-Project_team_22_2018_package" target="1.8" />
-      <module name="Project_team_22_2018_package" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

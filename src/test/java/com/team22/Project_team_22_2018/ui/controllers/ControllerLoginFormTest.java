@@ -1,12 +1,9 @@
-package com.team22.Project_team_22_2018.controllers;
+package com.team22.Project_team_22_2018.ui.controllers;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
 
 /**
  * @author ControllerLoginFormTest
