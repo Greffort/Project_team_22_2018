@@ -22,12 +22,12 @@ public class CreateTaskFormController {
     @FXML
     private DatePicker taskDeadlineDatePicker;
 
-    public void closeWindow(){
+    public void closeWindow() {
 //        System.exit(0);
     }
 
     public void buttonCreateTask() {
-        TaskRow newTask = new TaskRow(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString(),"none","none");
+        TaskRow newTask = new TaskRow(taskNameTextField.getText(), taskDescriptionTextArea.getText(), taskDeadlineDatePicker.getValue().toString(), "none", "none");
         tasks.addAll(newTask);
     }
 }

@@ -28,6 +28,8 @@ public class Main extends Application {
         @NotNull final Scene scene = new Scene(root);
         primaryStage.minHeightProperty().setValue(600);
         primaryStage.minWidthProperty().setValue(880);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(600);
         primaryStage.setTitle(APPLICATION_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();

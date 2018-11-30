@@ -165,9 +165,6 @@ public class MainController {
     public void saveAsAction() throws IOException {
         val fileChooser = new FileChooser();
         val file = fileChooser.showSaveDialog(null);
-
-
-//        Resources.SAVE = file.toPath();
         List<Task> collect = tableView.getItems().stream().map(TaskRow::toTask).collect(Collectors.toList());
         if (file != null) {
             Util.writeTasks(new ManagerTask(collect), file.getPath());
@@ -207,7 +204,6 @@ public class MainController {
     public void closeAction() {
         System.exit(0);
     }
-
 }
 
 
