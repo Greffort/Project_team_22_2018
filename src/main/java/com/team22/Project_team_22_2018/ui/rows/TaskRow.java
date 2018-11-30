@@ -16,12 +16,6 @@ import java.util.Objects;
 
 public final class TaskRow implements Serializable {
 
-    private static final String FILL_DEFAULT = "not specified";
-
-//    columnDaysBeforeDeadline;
-//    @FXML
-//    private TableColumn<TaskRow, String> columnStatus;
-
     private SimpleBooleanProperty selected;
 
     private SimpleStringProperty name;

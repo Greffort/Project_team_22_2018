@@ -1,22 +1,25 @@
 package com.team22.Project_team_22_2018.ui.controllers;
 
-import com.team22.Project_team_22_2018.ui.rows.TaskRow;
 import com.team22.Project_team_22_2018.models.task.ManagerTask;
 import com.team22.Project_team_22_2018.models.task.Task;
+import com.team22.Project_team_22_2018.ui.rows.TaskRow;
 import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.Util;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,18 +37,6 @@ import java.util.stream.Collectors;
 //@Slf4j
 public class MainController {
 
-    @Getter
-    @Setter
-    private BooleanProperty check = new SimpleBooleanProperty(false);
-
-    @Getter
-    @Setter
-    private Boolean selected = new Boolean(true);
-
-    @Getter
-    @Setter
-    CheckBoxTableCell checkBoxTableCell = new CheckBoxTableCell();
-
     @FXML
     private TableView<TaskRow> tableView;
     @FXML
@@ -58,35 +49,15 @@ public class MainController {
     private TableColumn<TaskRow, String> daysBeforeDeadlineColumn;
     @FXML
     private TableColumn<TaskRow, String> statusColumn;
-
     @FXML
     private TableColumn<TaskRow, Boolean> checkBoxColumn;
-//            TableColumn<MainController,Boolean> checkBoxColumn;
+    @FXML
+    private VBox vBoxSplitPane;
+    @FXML
+    private SplitPane splitPane;
 
     @FXML
     private void initialize() {
-//        taskColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, String>("name"));
-//        deadLineColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, String>("deadline"));
-//        descriptionColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, String>("description"));
-//        daysBeforeDeadlineColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, String>("restTime"));
-//        statusColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, String>("status"));
-//        checkBoxColumn.setCellValueFactory(new PropertyValueFactory<TaskRow, Boolean>("selected"));
-
-
-//        checkBoxColumn.setCellFactory(
-//                CheckBoxTableCell.forTableColumn(checkBoxColumn)
-//        );
-
-
-//        checkBoxColumn.getCellFactory(
-//          CheckBoxTableCell.forTableColumn(checkBoxColumn, getSelected())
-//        );
-//        checkBoxColumn.setCellValueFactory(
-//                new PropertyValueFactory()
-//
-//        );
-
-
         checkBoxColumn.setCellFactory(p -> {
                     CheckBoxTableCell cell = new CheckBoxTableCell();
                     cell.setAlignment(Pos.CENTER_RIGHT);
@@ -97,8 +68,6 @@ public class MainController {
         checkBoxColumn.setCellValueFactory(cellData -> {
             TaskRow cellValue = cellData.getValue();
             BooleanProperty property = cellValue.selectedProperty();
-
-            // Add listener to handler change
             property.addListener((observable, oldValue, newValue) -> cellValue.setSelected(newValue));
 
             return property;
@@ -106,7 +75,6 @@ public class MainController {
 
         tableView.setEditable(true);
 
-        //редактирование столбца заданий
         taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         taskColumn.setOnEditCommit(
                 (TableColumn.CellEditEvent<TaskRow, String> t) -> {
@@ -114,54 +82,34 @@ public class MainController {
                             t.getTablePosition().getRow()).setName(t.getNewValue());
                 });
 
-        //редактирование столбца дедлайнов
         deadLineColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         deadLineColumn.setOnEditCommit(
-                (
-                        TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setDeadline(t.getNewValue());
                 });
 
-        //редактирование столбца описания
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setOnEditCommit(
-                (
-                        TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setDescription(t.getNewValue());
                 });
 
-        //редактирование столбца описания
         daysBeforeDeadlineColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         daysBeforeDeadlineColumn.setOnEditCommit(
-                (
-                        TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setRestTime(t.getNewValue());
                 });
 
         statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         statusColumn.setOnEditCommit(
-                (
-                        TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setDescription(t.getNewValue());
                 });
-
-
-//        checkBoxColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-//        checkBoxColumn.setOnEditCommit(
-//                (
-//                        TableColumn.CellEditEvent<MainController, Boolean> t) -> {
-//                    t.getTableView().getItems().get(
-//                            t.getTablePosition().getRow()).setCheckBoxTableCell(this.checkBoxTableCell.);//setS(t.getNewValue());
-//                });
     }
-
-    @Getter
-    @Setter
-    CheckBoxTableCell checkBoxTableCell1 = new CheckBoxTableCell();
 
     @FXML
     private void buttonAddTask() throws Exception {
@@ -186,10 +134,11 @@ public class MainController {
                 items.remove(i);
             }
         }
-//        val row = tableView.getSelectionModel().getSelectedIndex();
-//        if (0 <= row) {
-//            tableView.getItems().remove(row);
-//        }
+        //удаление выделенного элемента
+        /*val row = tableView.getSelectionModel().getSelectedIndex();
+        if (0 <= row) {
+            tableView.getItems().remove(row);
+        }*/
     }
 
     @FXML
@@ -199,19 +148,13 @@ public class MainController {
 
     @FXML
     private void saveAction() throws Exception {
-
-//        val fileChooser = new FileChooser();
-//        val file = fileChooser.showSaveDialog(null);
-//        if (file != null) {
-//            Util.writeTasks(new ManagerTask(new ArrayList<>(tableView.getItems())), file.getPath());
-//        }
-
 //        ObservableList<TaskRow> items = tableView.getItems();
 //        List<Task> list = new ArrayList<>();
 //        for (TaskRow item : items) {
 //            list.add(item.toTask());
 //        }
 
+//        if ()
         List<Task> collect = tableView.getItems().stream().map(TaskRow::toTask).collect(Collectors.toList());
 
         Util.writeTasks(new ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
@@ -219,25 +162,35 @@ public class MainController {
     }
 
     @FXML
+    public void saveAsAction() throws IOException {
+        val fileChooser = new FileChooser();
+        val file = fileChooser.showSaveDialog(null);
+
+
+//        Resources.SAVE = file.toPath();
+        List<Task> collect = tableView.getItems().stream().map(TaskRow::toTask).collect(Collectors.toList());
+        if (file != null) {
+            Util.writeTasks(new ManagerTask(collect), file.getPath());
+        }
+    }
+
+    @FXML
     private void loadAction() throws IOException, ClassNotFoundException {
-//        val fileChooser = new FileChooser();
-//        val file = fileChooser.showOpenDialog(null);
-//        if (file != null) {
-//            ManagerTask managerTask = Util.readTasks(file.getPath());
-//            tableView.getItems().setAll(managerTask.getTasks());
-//        }
-
-
-
         ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
         final List<TaskRow> collect = managerTask.getTasks().stream().map(TaskRow::new).collect(Collectors.toList());
         tableView.getItems().setAll(collect);
     }
 
-//    @FXML
-//    private void closeAction() {
-//        System.exit(0);
-//    }
+    @FXML
+    public void loadFromAction() throws IOException, ClassNotFoundException {
+        val fileChooser = new FileChooser();
+        val file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
+            final List<TaskRow> collect = managerTask.getTasks().stream().map(TaskRow::new).collect(Collectors.toList());
+            tableView.getItems().setAll(collect);
+        }
+    }
 
     @FXML
     private void helpAction() throws IOException {
@@ -248,22 +201,13 @@ public class MainController {
         stage.setScene(scene);
         stage.show();
     }
-//
-//    private int getNumberOfVisibleRows() {
-//        VirtualFlow<?> vf = loadVirtualFlow();
-//        return vf.getLastVisibleCell().getIndex() - vf.getFirstVisibleCell().getIndex();
-//    }
-//
-//
-//    private VirtualFlow<?> loadVirtualFlow() {
-//        return (VirtualFlow<?>) ((TableViewSkin<?>) tableView.getSkin()).getChildren().get(1);
-//    }
 
-//    public class CheckBoxTableCellFactory<S, T> implements Callback<TableColumn<S, T>, TableCell<S, T>> {
-//        public TableCell<S, T> call(TableColumn<S, T> param) {
-//            return new CheckBoxTableCell<S, T>();
-//        }
-//    }
+    @FXML
+    //добавить диалоговое окно "Вы уверенны что хотите выйти?"
+    public void closeAction() {
+        System.exit(0);
+    }
+
 }
 
 

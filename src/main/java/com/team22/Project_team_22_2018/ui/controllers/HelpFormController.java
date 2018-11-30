@@ -33,7 +33,6 @@ public class HelpFormController {
             while ((line = br.readLine()) != null) {
                 s.append(line);
             }
-
             return s.toString();
         } catch (IOException e) {
             e.printStackTrace();

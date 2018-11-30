@@ -1,6 +1,10 @@
 package com.team22.Project_team_22_2018.util;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * @author Greffort
@@ -15,5 +19,6 @@ public interface Resources {
     URL HELP_TEXT = Resources.class.getClassLoader().getResource("file/help.txt");
     URL LOCAL_SAVE = Resources.class.getClassLoader().getResource("file/save");
 
+    Path SAVE = null;
 
 }
