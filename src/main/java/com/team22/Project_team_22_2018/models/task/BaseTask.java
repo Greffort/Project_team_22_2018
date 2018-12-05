@@ -95,4 +95,17 @@ public class BaseTask implements ITask {
     public int hashCode() {
         return Objects.hash(name, deadline, restTime, dateClose, dateOpen, status, description, progressBar);
     }
+
+    @Override
+    public String toString(){
+
+        return new StringBuffer(name).append(" ").
+                append(deadline).append(" ").
+                append(restTime).append(" ").
+                append(dateClose).append(" ").
+                append(dateOpen).append(" ").
+                append(status).append(" ").
+                append(description).append(" ").
+                append(progressBar).toString();
+    }
 }

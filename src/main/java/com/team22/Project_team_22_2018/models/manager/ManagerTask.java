@@ -28,10 +28,12 @@ public final class ManagerTask implements IManagerTask,Serializable, IObservable
 
     public ManagerTask() {
         this(new ArrayList<>());
+        this.observers = new ArrayList<>();
     }
 
     public ManagerTask(List<ITask> tasks) {
         this.tasks = tasks;
+        this.observers = new ArrayList<>();
     }
 
     public void addTask(final ITask task) {
@@ -83,5 +85,16 @@ public final class ManagerTask implements IManagerTask,Serializable, IObservable
         for(IObserver observer : observers) {
             observer.handleEvent();
         }
+    }
+
+    public void searchBySubString(String subString){
+
+        List<ITask> filteredTasks = new ArrayList<>();
+
+        for(ITask i : tasks){
+            if(i.toString().contains(subString)) filteredTasks.add(i);
+        }
+
+        //тут должен вызываться метод контроллера, который передаст список вьюхе и та обновит таблицу
     }
 }
