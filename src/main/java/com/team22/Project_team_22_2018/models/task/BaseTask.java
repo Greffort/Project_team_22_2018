@@ -96,6 +96,8 @@ public class BaseTask implements ITask {
         return Objects.hash(name, deadline, restTime, dateClose, dateOpen, status, description, progressBar);
     }
 
+    //комментарий
+
     @Override
     public String toString(){
 
