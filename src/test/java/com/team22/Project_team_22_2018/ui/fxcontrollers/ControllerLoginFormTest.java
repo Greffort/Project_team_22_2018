@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.ui.controllers;
+package com.team22.Project_team_22_2018.ui.fxcontrollers;
 
 import org.testng.annotations.Test;
 
@@ -19,7 +19,7 @@ public class ControllerLoginFormTest/* extends Assert */{
 
     @Test(expectedExceptions = MalformedURLException.class)
     public void testMalformedURLException() throws MalformedURLException {
-//        URL ur0 = Paths.get("src/main/resources/view/CreateTaskForm.fxml").toUri().toURL();
+//        URL ur0 = Paths.get("src/main/resources/IView/CreateTaskForm.fxml").toUri().toURL();
 //        URL url = Paths.get("").toUri().toURL();
     }
 

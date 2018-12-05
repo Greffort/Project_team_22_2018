@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.ui.controllers.MainController">
+<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.fxcontrollers.MainController">
     <center>
       <VBox>
          <children>
@@ -63,7 +63,7 @@
                <items>
                     <TableView fx:id="tableView">
                         <columns>
-                        <TableColumn fx:id="checkBoxColumn1" maxWidth="27.0" minWidth="27.0" prefWidth="27.0" text="#">
+                        <TableColumn fx:id="numberingColumn" maxWidth="27.0" minWidth="27.0" prefWidth="27.0" text="#">
                            <cellValueFactory>
                               <PropertyValueFactory property="selected" />
                            </cellValueFactory>
@@ -85,7 +85,7 @@
                             </TableColumn>
                             <TableColumn fx:id="daysBeforeDeadlineColumn" prefWidth="127.0" text="Дней до дедлайна">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="restTime" />
+                                    <PropertyValueFactory property="dayBeforeDeadline" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Статус">
@@ -108,13 +108,6 @@
               <HBox alignment="CENTER_RIGHT" spacing="10.0">
                   <children>
                   <BorderPane prefHeight="35.0" prefWidth="364.0" HBox.hgrow="ALWAYS">
-                     <left>
-                        <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#helpAction" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 35;" textFill="#000000a5" BorderPane.alignment="CENTER">
-                           <graphic>
-                              <FontAwesomeIconView fill="#00000090" glyphName="QUESTION" size="12" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
-                           </graphic>
-                        </Button>
-                     </left>
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
@@ -399,9 +392,14 @@
                </HBox>
             <TreeView prefHeight="744.0" prefWidth="221.0">
                <VBox.margin>
-                  <Insets top="5.0" />
+                  <Insets bottom="20.2" top="5.0" />
                </VBox.margin>
             </TreeView>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#helpAction" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 35;" textFill="#000000a5">
+               <graphic>
+                  <FontAwesomeIconView fill="#00000090" glyphName="QUESTION" size="12" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
+               </graphic>
+            </Button>
            </children>
            <padding>
                <Insets bottom="5.0" left="5.0" right="5.0" />

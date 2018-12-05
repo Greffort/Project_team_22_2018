@@ -1,10 +1,16 @@
-package com.team22.Project_team_22_2018.ui.rows;
+package com.team22.Project_team_22_2018.view;
 
-import com.team22.Project_team_22_2018.models.task.Task;
+//import delete_OldTask;
+import com.team22.Project_team_22_2018.models.task.BaseTask;
+import com.team22.Project_team_22_2018.models.task.ITask;
+import com.team22.Project_team_22_2018.models.task.decorator.SubTaskTask;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -20,42 +26,42 @@ public final class TaskRow implements Serializable {
 
     private SimpleStringProperty name;
 
-    private SimpleStringProperty deadline; //пока написал string, нужно будет подумать в чем удобнее хранить, что бы было проще работать
+    private SimpleObjectProperty<LocalDate> deadline;
 
-    private SimpleStringProperty restTime; //пока написал string, нужно будет подумать в чем удобнее хранить, что бы было проще работать
+    private SimpleObjectProperty<LocalDate> restTime;
 
-    private SimpleStringProperty status;
+    private SimpleIntegerProperty status;
 
     private SimpleStringProperty description;
 
     public TaskRow() {
         this.selected = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty();
-        this.deadline = new SimpleStringProperty();
-        this.restTime = new SimpleStringProperty();
-        this.status = new SimpleStringProperty();
+        this.deadline = new SimpleObjectProperty<>();
+        this.restTime = new SimpleObjectProperty<>();
+        this.status = new SimpleIntegerProperty();
         this.description = new SimpleStringProperty();
     }
 
-    public TaskRow(final Task task) {
+    public TaskRow(final ITask task) {
         this(task.getName(), task.getDeadline(), task.getRestTime(), task.getStatus(), task.getDescription());
     }
 
     public TaskRow(final String name,
-                   final String deadline,
-                   final String restTime,
-                   final String status,
+                   final LocalDate deadline,
+                   final LocalDate restTime,
+                   final int status,
                    final String description) {
         this.selected = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(name);
-        this.deadline = new SimpleStringProperty(deadline);
-        this.restTime = new SimpleStringProperty(restTime);
-        this.status = new SimpleStringProperty(status);
+        this.deadline = new SimpleObjectProperty<>(deadline);
+        this.restTime = new SimpleObjectProperty<>(restTime);
+        this.status = new SimpleIntegerProperty(status);
         this.description = new SimpleStringProperty(description);
     }
 
-    public Task toTask() {
-        return new Task(getName(), getDeadline(), getRestTime(), getStatus(), getDescription());
+    public ITask toTask() {
+        return new SubTaskTask(new BaseTask(getName(), getDeadline(), getRestTime()));
     }
 
     public boolean isSelected() {
@@ -82,39 +88,39 @@ public final class TaskRow implements Serializable {
         this.name.set(name);
     }
 
-    public String getDeadline() {
+    public LocalDate getDeadline() {
         return deadline.get();
     }
 
-    public SimpleStringProperty deadlineProperty() {
+    public SimpleObjectProperty<LocalDate> deadlineProperty() {
         return deadline;
     }
 
-    public void setDeadline(String deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline.set(deadline);
     }
 
-    public String getRestTime() {
+    public LocalDate getRestTime() {
         return restTime.get();
     }
 
-    public SimpleStringProperty restTimeProperty() {
+    public SimpleObjectProperty<LocalDate> restTimeProperty() {
         return restTime;
     }
 
-    public void setRestTime(String restTime) {
+    public void setRestTime(LocalDate restTime) {
         this.restTime.set(restTime);
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status.get();
     }
 
-    public SimpleStringProperty statusProperty() {
+    public SimpleIntegerProperty statusProperty() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status.set(status);
     }
 
