@@ -1,15 +1,15 @@
 package com.team22.Project_team_22_2018.view.fxcontrollers;
 
 import com.team22.Project_team_22_2018.controller.IController;
+import com.team22.Project_team_22_2018.models.IModel;
 import com.team22.Project_team_22_2018.models.IObservable;
-import com.team22.Project_team_22_2018.models.manager.IManagerTask;
 import com.team22.Project_team_22_2018.models.manager.ManagerTask;
 import com.team22.Project_team_22_2018.models.task.ITask;
 import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.Util;
 import com.team22.Project_team_22_2018.view.IObserver;
 import com.team22.Project_team_22_2018.view.IView;
-import com.team22.Project_team_22_2018.view.TaskRow;
+import com.team22.Project_team_22_2018.view.ModelConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,7 +29,7 @@ import lombok.val;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,25 +43,38 @@ import java.util.stream.Collectors;
 public class MainController implements IView, IObserver {
 
     IController controller;
-    IManagerTask managerTask;
+    IModel managerTask;
 
 
     @FXML
-    private TableView<TaskRow> tableView;
+    private TableView<ModelConverter> tableView;
     @FXML
-    private TableColumn<TaskRow, String> taskColumn;
+    private TableColumn<ITask, String> taskColumn;
     @FXML
-    private TableColumn<TaskRow, DateFormat> deadLineColumn;
+    private TableColumn<ITask, LocalDate> deadLineColumn;
     @FXML
-    private TableColumn<TaskRow, String> descriptionColumn;
+    private TableColumn<ITask, LocalDate> daysBeforeDeadlineColumn;
     @FXML
-    private TableColumn<TaskRow, DateFormat> daysBeforeDeadlineColumn;
+    private TableColumn<ITask, LocalDate> dateCloseColumn;
     @FXML
-    private TableColumn<TaskRow, String> statusColumn;
+    private TableColumn<ITask, LocalDate> dateOpenColumn;
     @FXML
-    private TableColumn<TaskRow, Boolean> checkBoxColumn;
+    private TableColumn<ITask, String> statusColumn;
+    @FXML
+    private TableColumn<ITask, String> descriptionColumn;
+    @FXML
+    private TableColumn<ITask, String> progressBarColumn;
 
-    public MainController(IController controller, IManagerTask managerTask) {
+
+
+
+
+
+
+    @FXML
+    private TableColumn<ModelConverter, Boolean> checkBoxColumn;
+
+    public MainController(IController controller, IModel managerTask) {
         this.controller = controller;
         this.managerTask = managerTask;
         ((IObservable) this.managerTask).registerObserver(this);//поставили форму слушать модель
@@ -68,6 +82,15 @@ public class MainController implements IView, IObserver {
 
     @FXML
     private void initialize() {
+        tableView.setEditable(true);
+
+        taskColumn.setCellValueFactory(new PropertyValueFactory<ITask, String>("name"));
+        deadLineColumn.setCellValueFactory(new PropertyValueFactory<ITask, LocalDate>("deadline"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<ITask, String>("restTime"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<ITask, String>("dateClose"));
+        daysBeforeDeadlineColumn.setCellValueFactory(new PropertyValueFactory<ITask, LocalDate>("dateOpen"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<ITask, String>("status"));
+
         checkBoxColumn.setCellFactory(p -> {
                     CheckBoxTableCell cell = new CheckBoxTableCell();
                     cell.setAlignment(Pos.CENTER_RIGHT);
@@ -75,51 +98,53 @@ public class MainController implements IView, IObserver {
                 }
         );
 
-
         checkBoxColumn.setCellValueFactory(cellData -> {
-            TaskRow cellValue = cellData.getValue();
+            ModelConverter cellValue = cellData.getValue();
             BooleanProperty property = cellValue.selectedProperty();
             property.addListener((observable, Value, newValue) -> cellValue.setSelected(newValue));
-
             return property;
         });
 
-        tableView.setEditable(true);
+
+/*
 
         taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         taskColumn.setOnEditCommit(
-                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<ModelConverter, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setName(t.getNewValue());
                 });
 
 //        deadLineColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 //        deadLineColumn.setOnEditCommit(
-//                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
+//                (TableColumn.CellEditEvent<ModelConverter, String> t) -> {
 //                    t.getTableView().getItems().get(
 //                            t.getTablePosition().getRow()).setDeadline(t.getNewValue());
 //                });
 
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setOnEditCommit(
-                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<ModelConverter, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setDescription(t.getNewValue());
                 });
 
 //        daysBeforeDeadlineColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 //        daysBeforeDeadlineColumn.setOnEditCommit(
-//                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
+//                (TableColumn.CellEditEvent<ModelConverter, String> t) -> {
 //                    t.getTableView().getItems().get(
 //                            t.getTablePosition().getRow()).setDayBeforeDeadline(t.getNewValue());
 //                });
 
         statusColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         statusColumn.setOnEditCommit(
-                (TableColumn.CellEditEvent<TaskRow, String> t) -> {
+                (TableColumn.CellEditEvent<ModelConverter, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setDescription(t.getNewValue());
                 });
+*/
+
+
     }
 
     @FXML
@@ -137,14 +162,17 @@ public class MainController implements IView, IObserver {
 
     @FXML
     private void buttonRemoteTask() {
-        //List<TaskRow> collect = items.stream().filter(TaskRow::isSelected).collect(Collectors.toList());
+        //List<ModelConverter> collect = items.stream().filter(ModelConverter::isSelected).collect(Collectors.toList());
 
-        final ObservableList<TaskRow> items = tableView.getItems();
+        final ObservableList<ModelConverter> items = tableView.getItems();
         for (int i = items.size() - 1; i >= 0; i--) {
             if (items.get(i).isSelected()) {
                 items.remove(i);
+                controller.removeTask(i);
             }
         }
+
+
         //удаление выделенного элемента
         /*val row = tableView.getSelectionModel().getSelectedIndex();
         if (0 <= row) {
@@ -159,32 +187,32 @@ public class MainController implements IView, IObserver {
 
     @FXML
     private void saveAction() throws Exception {
-        ObservableList<TaskRow> items = tableView.getItems();
-        List<ITask> list = new ArrayList<>();
-        for (TaskRow item : items) {
-            list.add(item.toTask());
-        }
-
-        List<ITask> collect = tableView.getItems().stream().map(TaskRow::toTask).collect(Collectors.toList());
-
-        Util.writeTasks(new ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+////        ObservableList<ModelConverter> items = tableView.getItems();
+////        List<ITask> list = new ArrayList<>();
+////        for (ModelConverter item : items) {
+////            list.add(item.toTask());
+////        }
+//
+//        List<ITask> collect = tableView.getItems().stream().map(ModelConverter::toTask).collect(Collectors.toList());
+//
+//        Util.writeTasks(new ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
 
     }
 
     @FXML
     public void saveAsAction() throws IOException {
-        val fileChooser = new FileChooser();
-        val file = fileChooser.showSaveDialog(null);
-        List<ITask> collect = tableView.getItems().stream().map(TaskRow::toTask).collect(Collectors.toList());
-        if (file != null) {
-            Util.writeTasks(new ManagerTask(collect), file.getPath());
-        }
+//        val fileChooser = new FileChooser();
+//        val file = fileChooser.showSaveDialog(null);
+//        List<ITask> collect = tableView.getItems().stream().map(ModelConverter::toTask).collect(Collectors.toList());
+//        if (file != null) {
+//            Util.writeTasks(new ManagerTask(collect), file.getPath());
+//        }
     }
 
     @FXML
     private void loadAction() throws IOException, ClassNotFoundException {
         ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
-        final List<TaskRow> collect = managerTask.getTasks().stream().map(TaskRow::new).collect(Collectors.toList());
+        final List<ModelConverter> collect = managerTask.getTasks().stream().map(ModelConverter::new).collect(Collectors.toList());
         tableView.getItems().setAll(collect);
     }
 
@@ -194,11 +222,15 @@ public class MainController implements IView, IObserver {
         val file = fileChooser.showOpenDialog(null);
         if (file != null) {
             ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
-            final List<TaskRow> collect = managerTask.getTasks().stream().map(TaskRow::new).collect(Collectors.toList());
+            final List<ModelConverter> collect = managerTask.getTasks().stream().map(ModelConverter::new).collect(Collectors.toList());
             tableView.getItems().setAll(collect);
         }
     }
 
+    /*
+     * BUG
+     * Если окно уже открыто, то не открывать его снова
+     */
     @FXML
     private void helpAction() throws IOException {
         Parent root = FXMLLoader.load(Resources.HELP_FORM);
@@ -210,7 +242,10 @@ public class MainController implements IView, IObserver {
     }
 
     @FXML
-    //добавить диалоговое окно "Вы уверенны что хотите выйти?"
+    /*
+     * BUG
+     * добавить диалоговое окно "Вы уверенны что хотите выйти?"
+     */
     public void closeAction() {
         System.exit(0);
     }

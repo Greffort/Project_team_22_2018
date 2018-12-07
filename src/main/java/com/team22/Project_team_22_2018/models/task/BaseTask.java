@@ -1,9 +1,12 @@
 package com.team22.Project_team_22_2018.models.task;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,11 +19,12 @@ public class BaseTask implements ITask {
     private static final String FILL_DEFAULT = "not specified";
     private static final LocalDate FILL_DATE_DEFAULT = LocalDate.of(1, 1, 1);
 
+
     private String name;
 
     private LocalDate deadline;
 
-    private LocalDate restTime; //дней до дедлайна
+    private LocalDate restTime;
 
     private LocalDate dateClose;
 
@@ -73,6 +77,19 @@ public class BaseTask implements ITask {
         this.description = description;
 
         this.progressBar = progressBar;
+    }
+
+    @Override
+    public List<ITask> getSubTasks() {
+        List<ITask> list = new ArrayList<>();
+//        list.add(this);
+        return list;
+
+    }
+
+    @Override
+    public ITask createTask() {
+        return new BaseTask();
     }
 
     @Override

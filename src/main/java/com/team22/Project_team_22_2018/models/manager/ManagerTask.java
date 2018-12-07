@@ -1,16 +1,31 @@
 package com.team22.Project_team_22_2018.models.manager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.team22.Project_team_22_2018.models.IModel;
 import com.team22.Project_team_22_2018.models.IObservable;
+import com.team22.Project_team_22_2018.models.task.BaseTask;
 import com.team22.Project_team_22_2018.models.task.ITask;
+import com.team22.Project_team_22_2018.models.task.decorator.SubTaskTask;
+import com.team22.Project_team_22_2018.util.Converter;
 import com.team22.Project_team_22_2018.view.IObserver;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Observer;
 
 /**
  * @author Greffort
@@ -20,14 +35,16 @@ import java.util.Observer;
 
 @Getter
 @Setter
-public final class ManagerTask implements IManagerTask,Serializable, IObservable {
+public final class ManagerTask implements IModel, /*Serializable,*/ IObservable {
 
+    @JsonSerialize
     private final List<ITask> tasks;
-
+//@JsonIgnore
     private List<IObserver> observers;
 
     public ManagerTask() {
         this(new ArrayList<>());
+        this.observers = new ArrayList<>();
     }
 
     public ManagerTask(List<ITask> tasks) {
@@ -38,15 +55,37 @@ public final class ManagerTask implements IManagerTask,Serializable, IObservable
         tasks.add(task);
     }
 
-    public void removeTask(int index){
+    public void removeTask(int index) {
         tasks.remove(index);
     }
 
-    public ITask getTask(int index){
-        return tasks.get(index);
+    public String getTask(int index) {
+        String s = "Ошибка";
+//        ITask task = tasks.get(index);
+//
+//        System.out.println(task);
+//        try {
+//            s = Converter.toJSON(this);
+//            System.out.println(s);
+//            Converter.toJavaObject(s);
+//            ManagerTask mt = Converter.toJavaObject(s);
+//            System.out.println(mt);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            //Запись в лог
+//        }
+        return s;
+
+//        ITask
+//        try {
+//Converter.toJavaObject(s);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null/*tasks.get(index)*/;
     }
 
-    public void setTask(int index, ITask task){
+    public void setTask(int index, ITask task) {
         tasks.set(index, task);
     }
 
@@ -72,7 +111,22 @@ public final class ManagerTask implements IManagerTask,Serializable, IObservable
         return s.toString();
     }
 
-        @Override
+//    public String getJson(){
+//        String s = "Ошибка";
+//        ManagerTask mg2 = new ManagerTask();
+//        try {
+//            s = Converter.toJSON(mg2);
+//            System.out.println(s);
+//            ManagerTask mg1 = Converter.toJavaObject(s);
+//            System.out.println(mg1);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            //Запись в лог
+//        }
+//        return s;
+//    }
+
+    @Override
     public void registerObserver(IObserver observer) {
         this.observers.add(observer);
     }
@@ -80,7 +134,7 @@ public final class ManagerTask implements IManagerTask,Serializable, IObservable
     @Override
     public void notifyAllObservers() {
         //словили изменение -> оповестили всех слушателей
-        for(IObserver observer : observers) {
+        for (IObserver observer : observers) {
             observer.handleEvent();
         }
     }

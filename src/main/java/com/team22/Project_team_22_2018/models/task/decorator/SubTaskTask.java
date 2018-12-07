@@ -1,5 +1,7 @@
 package com.team22.Project_team_22_2018.models.task.decorator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.team22.Project_team_22_2018.models.task.ITask;
 
 import java.time.LocalDate;
@@ -12,7 +14,7 @@ import java.util.Objects;
  */
 public class SubTaskTask extends TaskDecorator {
 
-
+    @JsonSerialize
     private List<ITask> subTasks;
 
     public SubTaskTask(ITask task) {
@@ -108,7 +110,7 @@ public class SubTaskTask extends TaskDecorator {
         return this.subTasks.get(index);
     }
 
-    public List<ITask> getAllSubTask() {
+    public List<ITask> getSubTasks() {
         return subTasks;
     }
 
@@ -132,5 +134,12 @@ public class SubTaskTask extends TaskDecorator {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), subTasks);
+    }
+
+    @Override
+    public String toString() {
+        return "SubTaskTask{" +
+                "subTasks=" + subTasks +
+                '}';
     }
 }

@@ -18,6 +18,7 @@ public interface Resources {
 
     URL HELP_TEXT = Resources.class.getClassLoader().getResource("file/help.txt");
     URL LOCAL_SAVE = Resources.class.getClassLoader().getResource("file/save");
+    URL BASE_FILE = Resources.class.getClassLoader().getResource("file/json.json");
 
     Path SAVE = null;
 

@@ -1,6 +1,6 @@
 package com.team22.Project_team_22_2018.view.fxcontrollers;
 
-import com.team22.Project_team_22_2018.view.TaskRow;
+import com.team22.Project_team_22_2018.view.ModelConverter;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -24,7 +24,7 @@ public class CreateTaskFormController {
 
     @Setter
 
-    private ObservableList<TaskRow> tasks;
+    private ObservableList<ModelConverter> tasks;
 
     @FXML
 
@@ -48,19 +48,19 @@ public class CreateTaskFormController {
 
     public void buttonCreateTask() {
 
-        TaskRow newTask = new TaskRow(taskNameTextField.getText(), LocalDate.of(1,1,1)/*taskDeadlineDatePicker.getValue()*/, LocalDate.of(1,1,1),0, taskDescriptionTextArea.getText());
-
-        tasks.addAll(newTask);
+//        ModelConverter newTask = new ModelConverter(taskNameTextField.getText(), LocalDate.of(1, 1, 1)/*taskDeadlineDatePicker.getValue()*/, LocalDate.of(1, 1, 1), 0, taskDescriptionTextArea.getText());
+//
+//        tasks.addAll(newTask);
 
         closeWindow();
 
     }
 
-    public void loadTask(TableView.TableViewSelectionModel<TaskRow> selectionModel) throws ParseException {
+    public void loadTask(TableView.TableViewSelectionModel<ModelConverter> selectionModel) throws ParseException {
 
-        taskNameTextField.setText(selectionModel.getSelectedItem().getName());
-
-        taskDescriptionTextArea.setText(selectionModel.getSelectedItem().getDescription());
+//        taskNameTextField.setText(selectionModel.getSelectedItem().getName());
+//
+//        taskDescriptionTextArea.setText(selectionModel.getSelectedItem().getDescription());
 
         String string = "January 2, 2010";
 

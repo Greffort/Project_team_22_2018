@@ -1,6 +1,7 @@
 package com.team22.Project_team_22_2018.models.task;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author ITask
@@ -38,5 +39,9 @@ public interface ITask {
     LocalDate getDateOpen();
 
     void setDateOpen(LocalDate date);
+
+    List<ITask> getSubTasks();
+
+    ITask createTask();
 
 }

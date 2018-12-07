@@ -1,8 +1,12 @@
 package com.team22.Project_team_22_2018.models.task.decorator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team22.Project_team_22_2018.models.task.BaseTask;
 import com.team22.Project_team_22_2018.models.task.ITask;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -94,6 +98,19 @@ public class TaskDecorator implements ITask {
     @Override
     public void setDateOpen(LocalDate date) {
         task.getDateOpen();
+    }
+
+    @Override
+    public List<ITask> getSubTasks() {
+        List<ITask> list = new ArrayList<>();
+        list.add(this);
+        return list;
+    }
+
+    @Override
+    public ITask createTask() {
+//        return new SubTaskTask(new BaseTask());
+        return null;
     }
 
     @Override
