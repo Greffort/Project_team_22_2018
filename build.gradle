@@ -22,24 +22,32 @@ repositories {
 dependencies {
     
     testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+
     compileOnly 'org.projectlombok:lombok:1.16.18'
     compile 'org.jetbrains:annotations:15.0'
+
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+
     compile 'ch.qos.logback:logback-classic:1.1.2'
 
     compile 'de.jensd:fontawesomefx:8.9'
 
-    compile group: 'com.rmoquin.bundle', name: 'json-simple', version: '1.1'
-
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
 
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
 
-//    runtime 'com.github.cliftonlabs: json-simple: 3.0.2'
-//    compile group: 'com.github.cliftonlabs', name: 'json-simple', version: '3.0.2'
+    
+    
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+    
+//    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+//    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+
 }
 
 description = "Task Manager"
@@ -83,6 +91,7 @@ pmd {
 //            'java-naming'
     ]
 }
+
 //
 //task wrapper(type: Wrapper) {
 //    gradleVersion = '4.10' // Желаемая версия

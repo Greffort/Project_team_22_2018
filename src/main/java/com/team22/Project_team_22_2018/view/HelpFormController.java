@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.view.fxcontrollers;
+package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;
