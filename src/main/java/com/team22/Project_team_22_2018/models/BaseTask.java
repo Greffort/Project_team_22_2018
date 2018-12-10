@@ -86,7 +86,7 @@ public class BaseTask implements Serializable {
 
         this.deadline = deadline;
 
-       /* this.restTime = restTime; //дней до дедлайна*/
+        /* this.restTime = restTime; //дней до дедлайна*/
 
         this.dateClose = dateClose;
 

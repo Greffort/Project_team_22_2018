@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.team22.Project_team_22_2018.view.Observer;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public final class ManagerTask implements Serializable, Observable {
         this(new ArrayList<>());
     }
 
-//    public ManagerTask(List<BaseTask> tasks) {
+//    public com.team22.Project_team_22_2018.models.ManagerTask(List<BaseTask> tasks) {
 //
 //        this(tasks, new ArrayList<>());
 //    }
@@ -61,29 +59,19 @@ public final class ManagerTask implements Serializable, Observable {
         notifyAllObservers();
     }
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ManagerTask that = (ManagerTask) o;
-        return Objects.equals(tasks, that.tasks);
+        return Objects.equals(tasks, that.tasks) &&
+                Objects.equals(observers, that.observers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tasks);
+        return Objects.hash(tasks, observers);
     }
-
-//    @Override
-//    public String toString() {
-//        @NotNull val s = new StringBuilder();
-//        for (@NotNull val task : tasks) {
-//            s.append(task.toString()).append("   ");
-//        }
-//        return s.toString();
-//    }
 
     @Override
     public void registerObserver(Observer observer) {
@@ -95,5 +83,14 @@ public final class ManagerTask implements Serializable, Observable {
         for (Observer observer : observers) {
             observer.handleEvent();
         }
+    }
+    public void searchBySubString(String subString){
+
+        List<BaseTask> filteredTasks = new ArrayList<>();
+
+        for(BaseTask i : tasks){
+            if(i.toString().contains(subString)) filteredTasks.add(i);
+        }
+        //тут должен вызываться метод контроллера, который передаст список вьюхе и та обновит таблицу
     }
 }

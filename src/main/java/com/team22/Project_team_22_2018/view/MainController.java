@@ -202,7 +202,7 @@ controller.setTasks(tableView.getItems());
 
 //        List<BaseTask> collect = tableView.getItems().stream().map(SessionDataTask::toTask).collect(Collectors.toList());
 //
-//        Util.writeTasks(new ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+//        Util.writeTasks(new com.team22.Project_team_22_2018.models.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
     }
 
     @FXML
@@ -211,13 +211,13 @@ controller.setTasks(tableView.getItems());
         val file = fileChooser.showSaveDialog(null);
 //        List<BaseTask> collect = tableView.getItems().stream().map(SessionDataTask::toTask).collect(Collectors.toList());
         if (file != null) {
-//            Util.writeTasks(new ManagerTask(collect), file.getPath());
+//            Util.writeTasks(new com.team22.Project_team_22_2018.models.ManagerTask(collect), file.getPath());
         }
     }
 
     @FXML
     private void loadAction() throws IOException, ClassNotFoundException {
-//        ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
+//        com.team22.Project_team_22_2018.models.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
 //        final List<SessionDataTask> collect = managerTask.getTasks().stream().map(SessionDataTask::new).collect(Collectors.toList());
 //        tableView.getItems().setAll(collect);
     }
@@ -227,7 +227,7 @@ controller.setTasks(tableView.getItems());
 //        val fileChooser = new FileChooser();
 //        val file = fileChooser.showOpenDialog(null);
 //        if (file != null) {
-//            ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
+//            com.team22.Project_team_22_2018.models.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
 //            final List<SessionDataTask> collect = managerTask.getTasks().stream().map(SessionDataTask::new).collect(Collectors.toList());
 //            tableView.getItems().setAll(collect);
 //        }

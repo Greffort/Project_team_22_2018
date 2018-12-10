@@ -1,6 +1,5 @@
 package com.team22.Project_team_22_2018;
 
-import com.team22.Project_team_22_2018.models.ManagerTask;
 import com.team22.Project_team_22_2018.models.BaseTask;
 import com.team22.Project_team_22_2018.controller.Converter;
 
