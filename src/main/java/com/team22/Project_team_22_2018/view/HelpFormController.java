@@ -3,6 +3,7 @@ package com.team22.Project_team_22_2018.view;
 import com.team22.Project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.stage.WindowEvent;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +19,8 @@ public class HelpFormController {
 
     @FXML
     private Label helpLable;
+
+
 
     @FXML
     private void initialize() {

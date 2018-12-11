@@ -1,6 +1,6 @@
 package com.team22.Project_team_22_2018;
 
-import com.team22.Project_team_22_2018.models.BaseTask;
+import com.team22.Project_team_22_2018.models.Task;
 import com.team22.Project_team_22_2018.controller.Converter;
 
 import java.io.IOException;
@@ -13,8 +13,8 @@ public class MainTest {
 
     public void testConverter() {
         final ManagerTask obj = new ManagerTask();
-        obj.addTask(new BaseTask());
-        BaseTask task3 = new BaseTask("ЗАДАНИЕ  11111", LocalDate.of(2018, 12, 12), LocalDate.of(2017, 12, 12));
+        obj.addTask(new Task());
+        Task task3 = new Task("ЗАДАНИЕ  11111", LocalDate.of(2018, 12, 12), LocalDate.of(2017, 12, 12));
         obj.addTask(task3);
         ManagerTask managerTask;
         try {

@@ -21,25 +21,27 @@ import java.util.Objects;
 public final class ManagerTask implements Serializable, Observable {
 
     @JsonSerialize
-    private List<BaseTask> tasks;
+    private List<Task> tasks;
 
     @JsonIgnore
     private List<Observer> observers = new ArrayList<>();
+
+//    enum Status {IN_PROGRESS, CLOSE, OPEN, WAITING, TERMINATED}
 
     public ManagerTask() {
         this(new ArrayList<>());
     }
 
-//    public com.team22.Project_team_22_2018.models.ManagerTask(List<BaseTask> tasks) {
+//    public com.team22.Project_team_22_2018.models.ManagerTask(List<Task> tasks) {
 //
 //        this(tasks, new ArrayList<>());
 //    }
 
-    public ManagerTask(List<BaseTask> tasks) {
+    public ManagerTask(List<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public void addTask(final BaseTask task) {
+    public void addTask(final Task task) {
 
         tasks.add(task);
         notifyAllObservers();
@@ -50,14 +52,20 @@ public final class ManagerTask implements Serializable, Observable {
         notifyAllObservers();
     }
 
-    public BaseTask getTask(int index) {
+    public Task getTask(int index) {
         return tasks.get(index);
     }
 
-    public void setTask(int index, BaseTask task) {
+    public void setTask(int index, Task task) {
         tasks.set(index, task);
         notifyAllObservers();
     }
+
+//    public void getListStatus(){
+////        ArrayList arrayList = Arrays.toString(Status.values());//new ArrayList();
+//        System.out.println(Arrays.toString(Status.values()));
+//
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -86,9 +94,9 @@ public final class ManagerTask implements Serializable, Observable {
     }
     public void searchBySubString(String subString){
 
-        List<BaseTask> filteredTasks = new ArrayList<>();
+        List<Task> filteredTasks = new ArrayList<>();
 
-        for(BaseTask i : tasks){
+        for(Task i : tasks){
             if(i.toString().contains(subString)) filteredTasks.add(i);
         }
         //тут должен вызываться метод контроллера, который передаст список вьюхе и та обновит таблицу

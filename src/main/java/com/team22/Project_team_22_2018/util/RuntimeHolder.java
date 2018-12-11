@@ -5,6 +5,7 @@ import com.team22.Project_team_22_2018.models.ManagerTask;
 
 /**
  * @author RuntimeHolder
+ * Здесь создаются экземпляры модели и контроллера, в дальнейшем везде работаем с ними
  */
 public class RuntimeHolder {
 

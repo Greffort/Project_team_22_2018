@@ -1,10 +1,9 @@
 package com.team22.Project_team_22_2018.controller;
 
-import com.team22.Project_team_22_2018.models.BaseTask;
+import com.team22.Project_team_22_2018.models.Task;
 import com.team22.Project_team_22_2018.models.ManagerTask;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.view.session_data.SessionDataManagerTask;
-import com.team22.Project_team_22_2018.view.session_data.SessionDataTask;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
@@ -22,99 +21,59 @@ import java.util.ArrayList;
 public class Controller {
 
     ManagerTask managerTask;
-
     //    private static final Logger log = LoggerFactory.getLogger(Controller.class);
     public Controller(ManagerTask managerTask) {
         this.managerTask = RuntimeHolder.getModelHolder();
     }
 
-    public void addTask(BaseTask task) {
-        managerTask.addTask(task);
-    }
+//    public ObservableList getListStatus(){
+//        managerTask.
+//    }
 
-    public void addTask(
-            String name,
-            String deadline,
-            String dateClose,
-            String dateOpen,
-            String status,
-            String description
-            /*String progressBar*/) {
-        int intStatus;
-        if (status == "Выполняется") {
-            intStatus = 0;
-        }
-        if (status == "Закрыта") {
-            intStatus = -1;
-        }
-        if (status == "Просрочена") {
-            intStatus = 1;
-        } else {
-            intStatus = 100500;
-        }
-        managerTask.addTask(new BaseTask(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), intStatus, description));
-    }
+//    public void getListStatus(){
+//        managerTask.getListStatus();
+//    }
 
-    public void addSubTask(int indexTask, BaseTask subTask) {
-        managerTask.getTask(indexTask).addSubTask(subTask);
-    }
+    public void addTask(String name, String deadline, String dateClose, String dateOpen, String status, String description) {
 
-    public void addSubTask(int indexTask, int indexSubTask, BaseTask subTask) {
-        managerTask.getTask(indexTask).addSubTask(subTask, indexSubTask);
+        managerTask.addTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description));
     }
 
     public void addSubTask(int indexTask, String name, String deadline, String dateClose, String dateOpen, String status, String description) {
-        int intStatus;
-        if (status == "Выполняется") {
-            intStatus = 0;
-        }
-        if (status == "Закрыта") {
-            intStatus = -1;
-        }
-        if (status == "Просрочена") {
-            intStatus = 1;
-        } else {
-            intStatus = 100500;
-        }
-        managerTask.getTask(indexTask).addSubTask(new BaseTask(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), intStatus, description));
+        managerTask.getTask(indexTask).addSubTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description));
     }
 
     public void addSubTask(int indexTask, int indexSubTask, String name, String deadline, String dateClose, String dateOpen, String status, String description) {
-        int intStatus;
-        if (status == "Выполняется") {
-            intStatus = 0;
-        }
-        if (status == "Закрыта") {
-            intStatus = -1;
-        }
-        if (status == "Просрочена") {
-            intStatus = 1;
-        } else {
-            intStatus = 100500;
-        }
-        managerTask.getTask(indexTask).addSubTask(new BaseTask(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), intStatus, description), indexSubTask);
+        managerTask.getTask(indexTask).addSubTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description), indexSubTask);
     }
 
     public void removeTask(int index) {
         managerTask.removeTask(index);
     }
 
-    public BaseTask getTask(int index) {
+    public Task getTask(int index) {
         return managerTask.getTask(index);
     }
 
-    public void setTask(int index, BaseTask task) {
-        managerTask.setTask(index, task);
+    public void setTask(int index, com.team22.Project_team_22_2018.view.session_data.SessionDataTask task) {
+        try {
+            managerTask.setTask(index,Converter.toJavaObject(Converter.toJSON(task), Task.class));
+        } catch (IOException e) {
+            //запись в лог
+        }
+
+//        managerTask.setTask(index, task);
     }
 
     public ObservableList getTasks() {
-        SessionDataManagerTask sessionDataManagerTask = new SessionDataManagerTask();
+//        SessionDataManagerTask sessionDataManagerTask = new SessionDataManagerTask();
+        ObservableList<com.team22.Project_team_22_2018.view.session_data.SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
         try {
             for (int i = 0; i < managerTask.getTasks().size(); i++) {
                 String s = Converter.toJSON(managerTask.getTask(i));
-                sessionDataManagerTask.addTask(Converter.toJavaObject(s, SessionDataTask.class));
+                sessionDataTasks.add(Converter.toJavaObject(s, com.team22.Project_team_22_2018.view.session_data.SessionDataTask.class));
             }
-            return sessionDataManagerTask.getTasks();
+            return sessionDataTasks;
         } catch (IOException e) {
             //запись в лог
         }
@@ -127,7 +86,7 @@ public class Controller {
         try {
             for (int i = 0; i < tasks.size(); i++) {
                 String s = Converter.toJSON(tasks.get(i));
-                arrayList.add(Converter.toJavaObject(s, BaseTask.class));
+                arrayList.add(Converter.toJavaObject(s, Task.class));
             }
             managerTask.setTasks(arrayList);
         } catch (IOException e) {

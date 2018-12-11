@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * @author SessionDataManagerTask
+ * Этот клас нужен для представления полученных данных в таблице. В формате SimpleProperty.
+ * Не используется
  */
 @Getter
 @Setter

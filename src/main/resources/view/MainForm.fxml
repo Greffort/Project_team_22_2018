@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
+<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
     <center>
       <VBox>
          <children>
@@ -139,14 +139,6 @@
                         <Insets left="1.0" />
                      </padding>
                   </Button>
-                      <Button alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonEditTask" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textAlignment="CENTER" wrapText="true">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="EDIT" size="20" textAlignment="CENTER" wrappingWidth="17.0" />
-                     </graphic>
-                     <padding>
-                        <Insets top="1.0" />
-                     </padding>
-                  </Button>
                       <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonRemoteTask" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
                         <FontAwesomeIconView glyphName="TRASH" size="20" wrappingWidth="15.714285850524902" />
@@ -166,6 +158,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Button>
+                  <FontAwesomeIconView fx:id="hidePanelOpen" glyphName="ANGLE_DOUBLE_LEFT" onMouseClicked="#buttonHidePanelOpen" size="25" />
                   </children>
                   <padding>
                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -194,7 +187,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Справка">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#helpAction" text="Справка" />
+              <MenuItem fx:id="menuItemHelp" mnemonicParsing="false" onAction="#helpAction" text="Справка" />
             </items>
           </Menu>
         </menus>
@@ -216,43 +209,43 @@
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <TextField prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
+                   <TextField fx:id="textTask" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
                    <Label opacity="0.95" text="Дата дедлайна" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <DatePicker prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
+                   <DatePicker fx:id="dataPicDeadline" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
                    <Label opacity="0.95" text="Дата начала" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <DatePicker prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
+                   <DatePicker fx:id="dataPicDateOpen" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
                    <Label opacity="0.95" text="Дата окончания" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <DatePicker prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
+                   <DatePicker fx:id="dataPicDateClose" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
                    <Label opacity="0.95" prefHeight="20.0" prefWidth="47.0" text="Статус" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <ComboBox prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
+                   <ComboBox fx:id="comboBoxStatus" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
                    <Label opacity="0.95" text="Тэг" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <ComboBox prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
+                   <ComboBox fx:id="comboBoxTeg" prefHeight="40.0" prefWidth="205.0" style="-fx-background-radius: 25;" VBox.vgrow="ALWAYS" />
                    <Label contentDisplay="CENTER" opacity="0.95" text="Описание" VBox.vgrow="ALWAYS">
                        <font>
                            <Font size="14.0" />
                        </font>
                    </Label>
-                   <TextArea prefHeight="400.0" prefWidth="171.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
+                   <TextArea fx:id="textDescription" prefHeight="400.0" prefWidth="171.0" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
                    <HBox prefHeight="2.0" prefWidth="205.0" VBox.vgrow="NEVER">
                        <children>
                            <CheckBox alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" style="-fx-background-radius: 25;" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
@@ -269,14 +262,19 @@
                            <Insets bottom="5.0" />
                        </VBox.margin>
                    </HBox>
-                   <ProgressBar prefHeight="40.0" prefWidth="205.0" progress="0.65">
+                   <ProgressBar fx:id="progressBar" prefHeight="40.0" prefWidth="205.0" progress="0.65">
                        <VBox.margin>
                            <Insets top="5.0" />
                        </VBox.margin>
                    </ProgressBar>
                    <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="205.0" VBox.vgrow="NEVER">
                        <children>
-                           <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
+                  <FontAwesomeIconView fx:id="hidePanelClose" glyphName="ANGLE_DOUBLE_RIGHT" onMouseClicked="#buttonHidePanelClose" size="25">
+                     <HBox.margin>
+                        <Insets right="90.0" />
+                     </HBox.margin>
+                  </FontAwesomeIconView>
+                           <Button fx:id="saveEditTask" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveEditAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                                <graphic>
                                    <FontAwesomeIconView glyphName="SAVE" size="20" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
                                </graphic>
@@ -287,7 +285,7 @@
                                    <Insets right="5.0" />
                                </HBox.margin>
                            </Button>
-                           <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#buttonEditTask" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textAlignment="CENTER" wrapText="true">
+                           <Button fx:id="editTask" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#buttonEditTask" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textAlignment="CENTER" wrapText="true">
                                <padding>
                                    <Insets top="1.0" />
                                </padding>
@@ -390,7 +388,7 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </VBox.margin>
                </HBox>
-            <TreeView prefHeight="744.0" prefWidth="221.0">
+            <TreeView fx:id="tree" prefHeight="744.0" prefWidth="221.0">
                <VBox.margin>
                   <Insets bottom="20.2" top="5.0" />
                </VBox.margin>
