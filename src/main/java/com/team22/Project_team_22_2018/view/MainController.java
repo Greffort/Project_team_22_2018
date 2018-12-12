@@ -150,6 +150,8 @@ controller.setTasks(tableView.getItems());
         controller.setTasks(tableView.getItems());
         val scene = new Scene(root);
         val stage = new Stage();
+        stage.minHeightProperty().setValue(200);
+        stage.minWidthProperty().setValue(300);
         stage.setTitle("Windows add");
         stage.setScene(scene);
         stage.show();
