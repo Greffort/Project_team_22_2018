@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
+<BorderPane minHeight="490.0" minWidth="607.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
     <center>
       <VBox>
          <children>
@@ -141,7 +141,7 @@
                   </Button>
                       <Button alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonEditTask" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textAlignment="CENTER" wrapText="true">
                      <graphic>
-                        <FontAwesomeIconView glyphName="EDIT" size="20" text="" textAlignment="CENTER" wrappingWidth="17.0" />
+                        <FontAwesomeIconView glyphName="EDIT" size="20" textAlignment="CENTER" wrappingWidth="17.0" />
                      </graphic>
                      <padding>
                         <Insets top="1.0" />

@@ -1,8 +1,10 @@
 package com.team22.Project_team_22_2018;
 
+import com.team22.Project_team_22_2018.controller.Controller;
 import com.team22.Project_team_22_2018.models.ManagerTask;
 import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
+import com.team22.Project_team_22_2018.util.Tree;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,22 +31,13 @@ public class Main extends Application {
 //        final Logger log = LoggerFactory.getLogger(Main.class);
 //        log.error("ddfdf");
 
-//        obj.addTask(new SessionDataTask());
-//        SessionDataTask task3 = new SessionDataTask("ЗАДАНИЕ  11111", LocalDate.of(2018, 12, 12), LocalDate.of(2017, 12, 12));
-//        obj.addTask(task3);
-//        ManagerTaskConverter managerTask;
-//        try {
-//            final String s = Converter.toJSON(obj);
-//            System.out.println(s);
-//            managerTask = Converter.toJavaObject(s,ManagerTaskConverter.class);
-//
-//        } catch (
-//                IOException e) {
-//            e.printStackTrace();
-//        }
+//        ManagerTask managerTask = RuntimeHolder.getModelHolder();
+////        managerTask.addTask(new Task());
+////        Task task3 = new Task("ЗАДАНИЕ  11111", LocalDate.of(2018, 12, 12), LocalDate.of(2017, 12, 12));
+////        managerTask.addTask(task3);
 
-//        ManagerTaskConverter mt = new ManagerTaskConverter();
-//        Controller c = new Controller(mt);
+        Controller controller = RuntimeHolder.getControllerHolder();
+        Parent tree = new Tree(controller.getTasks());
         launch(args);
     }
 

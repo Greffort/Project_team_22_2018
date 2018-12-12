@@ -7,6 +7,7 @@ import javafx.util.Callback;
 
 /**
  * @author NumberTableCellFactory
+ * Этот клас нужен для автонумерации строк в таблице
  */
 public class NumberTableCellFactory<S, T> implements Callback<TableColumn<S, T>, TableCell<S, T>> {
 

@@ -2,7 +2,6 @@ package com.team22.Project_team_22_2018.view.session_data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team22.Project_team_22_2018.controller.Converter;
-import com.team22.Project_team_22_2018.models.BaseTask;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,6 +15,7 @@ import java.util.Objects;
 
 /**
  * @author SessionDataTask
+ * Этот клас нужен для представления полученных данных в таблице. В формате SimpleProperty
  */
 
 @Getter

@@ -19,18 +19,18 @@ import java.util.Objects;
  */
 @Setter
 @Getter
-public class BaseTask implements Serializable {
+public class Task implements Serializable {
 
     private static final String FILL_DEFAULT = "not specified";
     private static final LocalDate FILL_DATE_DEFAULT = null;
 
-    private List<BaseTask> subTasks;
+    private List<Task> subTasks;
 
     private String name;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
 //    @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -40,47 +40,50 @@ public class BaseTask implements Serializable {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateClose;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOpen;
 
-    private int status;
+
+
+
+    private String status;
 
     private String description;
 
 //    private int progressBar;
 
 
-    public BaseTask() {
+    public Task() {
         this(FILL_DEFAULT, FILL_DATE_DEFAULT, FILL_DATE_DEFAULT);
     }
 
-    public BaseTask(String name, LocalDate deadline, LocalDate dateOpen) {
+    public Task(String name, LocalDate deadline, LocalDate dateOpen) {
 //        restTime = deadline - dateOpen;
         this(name, deadline, FILL_DATE_DEFAULT, dateOpen);
     }
 
-    public BaseTask(String name, LocalDate deadline, /*LocalDate restTime,*/LocalDate dateClose, LocalDate dateOpen) {
+    public Task(String name, LocalDate deadline, LocalDate dateClose, LocalDate dateOpen) {
 
-        this(name, deadline, /*restTime,*/ FILL_DATE_DEFAULT, dateOpen, 0);
+        this(name, deadline,  dateClose, dateOpen, "WAITING");
 
     }
 
-    public BaseTask(String name, LocalDate deadline, /*LocalDate restTime,*/ LocalDate dateClose, LocalDate dateOpen, int status) {
+    public Task(String name, LocalDate deadline, LocalDate dateClose, LocalDate dateOpen, String status) {
 
-        this(name, deadline, /*restTime, */dateClose, dateOpen, status, FILL_DEFAULT);
+        this(name, deadline, dateClose, dateOpen, status, FILL_DEFAULT);
     }
 
-//    public BaseTask(String name, LocalDate deadline,/* LocalDate restTime,*/ LocalDate dateClose, LocalDate dateOpen, int status, String description) {
+//    public Task(String name, LocalDate deadline,/* LocalDate restTime,*/ LocalDate dateClose, LocalDate dateOpen, int status, String description) {
 //
 //        this(name, deadline, /*restTime, */dateClose, dateOpen, status, description, 0);
 //    }
 
-    public BaseTask(String name, LocalDate deadline, /*LocalDate restTime,*/ LocalDate dateOpen, LocalDate dateClose, int status, String description/*, int progressBar*/) {
+    public Task(String name, LocalDate deadline, LocalDate dateOpen, LocalDate dateClose, String status, String description) {
 
         this.name = name;
 
@@ -101,23 +104,23 @@ public class BaseTask implements Serializable {
         this.subTasks = new ArrayList<>();
     }
 
-    public void addSubTask(BaseTask task, int index) {
+    public void addSubTask(Task task, int index) {
         this.subTasks.add(index, task);
     }
 
-    public void addSubTask(BaseTask task) {
+    public void addSubTask(Task task) {
         this.subTasks.add(task);
     }
 
-    public BaseTask getSubTask(int index) {
+    public Task getSubTask(int index) {
         return this.subTasks.get(index);
     }
 
-    public List<BaseTask> getSubTasks() {
+    public List<Task> getSubTasks() {
         return subTasks;
     }
 
-    public void setSubTask(BaseTask task, int index) {
+    public void setSubTask(Task task, int index) {
         this.subTasks.set(index, task);
     }
 
@@ -129,7 +132,7 @@ public class BaseTask implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BaseTask baseTask = (BaseTask) o;
+        Task baseTask = (Task) o;
         return status == baseTask.status &&
                 Objects.equals(subTasks, baseTask.subTasks) &&
                 Objects.equals(name, baseTask.name) &&

@@ -2,9 +2,8 @@ package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.controller.Controller;
 import com.team22.Project_team_22_2018.controller.Converter;
-import com.team22.Project_team_22_2018.models.BaseTask;
+import com.team22.Project_team_22_2018.models.Task;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.view.session_data.SessionDataTask;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 
@@ -30,7 +28,7 @@ public class CreateTaskFormController {
     private javafx.scene.control.Button closeButton;
 
     @Setter
-    private ObservableList<SessionDataTask> tasks;
+    private ObservableList<Task> tasks;
 
     @FXML
     private TextField taskNameTextField;
@@ -48,8 +46,8 @@ public class CreateTaskFormController {
 
     public void buttonCreateTask() {
 
-        controller.addTask("1","1997-10-22","1997-10-22","1997-10-22","Выполняется","1");
-//        SessionDataTask newTask = new SessionDataTask(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
+        controller.addTask("Имя задачи","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
+//        Task newTask = new Task(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
 //        controller.addTask(newTask);
 //        tasks.addAll(newTask);
 try{
@@ -61,7 +59,7 @@ try{
         closeWindow();
     }
 
-    public void loadTask(TableView.TableViewSelectionModel<SessionDataTask> selectionModel) throws ParseException {
+    public void loadTask(TableView.TableViewSelectionModel<Task> selectionModel) throws ParseException {
 
 //        taskNameTextField.setText(selectionModel.getSelectedItem().getName());
 //        taskDescriptionTextArea.setText(selectionModel.getSelectedItem().getDescription());
