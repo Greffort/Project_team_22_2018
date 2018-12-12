@@ -102,7 +102,7 @@ public class MainController implements Observer {
                 (TableColumn.CellEditEvent<SessionDataTask, String> t) -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setName(t.getNewValue());
-controller.setTasks(tableView.getItems());
+                    controller.setTasks(tableView.getItems());
                 });
 
         deadLineColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -151,6 +151,8 @@ controller.setTasks(tableView.getItems());
         val scene = new Scene(root);
         val stage = new Stage();
         stage.setTitle("Windows add");
+        stage.minHeightProperty().setValue(200);
+        stage.minWidthProperty().setValue(300);
         stage.setScene(scene);
         stage.show();
     }
