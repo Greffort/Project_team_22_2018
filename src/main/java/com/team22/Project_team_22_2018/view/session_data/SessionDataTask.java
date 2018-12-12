@@ -1,10 +1,14 @@
 package com.team22.Project_team_22_2018.view.session_data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.team22.Project_team_22_2018.controller.Converter;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +27,9 @@ import java.util.Objects;
 public class SessionDataTask {
 
     private List<SessionDataTask> subTasks;
+
+//    @JsonIgnoreProperties ( ignoreUnknown = true )
+//    private ObservableList<SessionDataTask> simpleSubTasks;
     @JsonIgnore
     private SimpleBooleanProperty selected;
 
@@ -55,8 +62,9 @@ public class SessionDataTask {
         this.dateOpen = new SimpleStringProperty();
         this.status = new SimpleStringProperty();
         this.progressBar = new SimpleStringProperty();
-        this.subTasks = new ArrayList<>();
+        this.subTasks = FXCollections.observableArrayList();
         this.numbering = new SimpleIntegerProperty(0);
+//        this.simpleSubTasks = (ObservableList<SessionDataTask>) subTasks;
     }
 
     public SessionDataTask(String s) {
@@ -72,6 +80,8 @@ public class SessionDataTask {
             this.status = new SimpleStringProperty(baseTaskConverter.getStatus());
             this.progressBar = new SimpleStringProperty(baseTaskConverter.getProgressBar());
             this.numbering = new SimpleIntegerProperty(0);
+            this.subTasks =  baseTaskConverter.getSubTasks();
+//            this.simpleSubTasks = (ObservableList<SessionDataTask>) subTasks;
         } catch (IOException e) {
             //запись в лог
         }
@@ -95,8 +105,9 @@ public class SessionDataTask {
         this.dateOpen = new SimpleStringProperty(dateOpen);
         this.status = new SimpleStringProperty(status);
         this.progressBar = new SimpleStringProperty(progressBar);
-        this.subTasks = subTasks;
+        this.subTasks =  subTasks;
         this.numbering = new SimpleIntegerProperty(0);
+//        this.simpleSubTasks = (ObservableList<SessionDataTask>) subTasks;
     }
 
     public List<SessionDataTask> getSubTasks() {
@@ -106,6 +117,14 @@ public class SessionDataTask {
     public void setSubTasks(List<SessionDataTask> subTasks) {
         this.subTasks = subTasks;
     }
+
+//    public ObservableList<SessionDataTask> getSimpleSubTasks() {
+////        return simpleSubTasks;
+////    }
+////
+////    public void setSimpleSubTasks(ObservableList<SessionDataTask> simpleSubTasks) {
+////        this.simpleSubTasks = simpleSubTasks;
+////    }
 
     public boolean isSelected() {
         return selected.get();
@@ -226,8 +245,6 @@ public class SessionDataTask {
     public void setNumbering(int numbering) {
         this.numbering.set(numbering);
     }
-
-
 
     @Override
     public boolean equals(Object o) {

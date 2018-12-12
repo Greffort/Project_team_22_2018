@@ -36,8 +36,8 @@ public class Main extends Application {
 ////        Task task3 = new Task("ЗАДАНИЕ  11111", LocalDate.of(2018, 12, 12), LocalDate.of(2017, 12, 12));
 ////        managerTask.addTask(task3);
 
-        Controller controller = RuntimeHolder.getControllerHolder();
-        Parent tree = new Tree(controller.getTasks());
+//        Controller controller = RuntimeHolder.getControllerHolder();
+//        Parent tree = new Tree(controller.getTasks());
         launch(args);
     }
 

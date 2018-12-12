@@ -3,6 +3,7 @@ package com.team22.Project_team_22_2018.controller;
 import com.team22.Project_team_22_2018.models.Task;
 import com.team22.Project_team_22_2018.models.ManagerTask;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
+import com.team22.Project_team_22_2018.view.session_data.SessionDataTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -51,11 +52,23 @@ public class Controller {
         managerTask.removeTask(index);
     }
 
-    public Task getTask(int index) {
-        return managerTask.getTask(index);
+    public SessionDataTask getTask(int index) {
+        try {
+Task task = managerTask.getTask(index);
+String s = Converter.toJSON(task);
+SessionDataTask sessionDataTask = Converter.toJavaObject(s, SessionDataTask.class);
+
+            System.out.println();
+           return sessionDataTask;
+
+        } catch (IOException e) {
+            //запись в лог
+        }
+
+        return null;
     }
 
-    public void setTask(int index, com.team22.Project_team_22_2018.view.session_data.SessionDataTask task) {
+    public void setTask(int index, SessionDataTask task) {
         try {
             managerTask.setTask(index,Converter.toJavaObject(Converter.toJSON(task), Task.class));
         } catch (IOException e) {
@@ -67,11 +80,11 @@ public class Controller {
 
     public ObservableList getTasks() {
 //        SessionDataManagerTask sessionDataManagerTask = new SessionDataManagerTask();
-        ObservableList<com.team22.Project_team_22_2018.view.session_data.SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
+        ObservableList<SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
         try {
             for (int i = 0; i < managerTask.getTasks().size(); i++) {
                 String s = Converter.toJSON(managerTask.getTask(i));
-                sessionDataTasks.add(Converter.toJavaObject(s, com.team22.Project_team_22_2018.view.session_data.SessionDataTask.class));
+                sessionDataTasks.add(Converter.toJavaObject(s, SessionDataTask.class));
             }
             return sessionDataTasks;
         } catch (IOException e) {

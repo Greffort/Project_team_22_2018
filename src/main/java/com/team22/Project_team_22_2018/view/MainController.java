@@ -134,7 +134,7 @@ public class MainController implements Observer {
         dataPicDateClose.setConverter(converter);
 
         //TableView
-        handleEvent();
+//        handleEvent();
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         deadLineColumn.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -340,6 +340,8 @@ public class MainController implements Observer {
     public void handleEvent() {
         //здесь нужно вывести графическое обновление данных форы, тобишь запрос к контроллеру на новые данны
         tableView.setItems(controller.getTasks());
+//        new Tree(tree,tableView,controller.getTask(0));
+
 //tree.setTr
     }
 

@@ -53,7 +53,11 @@ public final class ManagerTask implements Serializable, Observable {
     }
 
     public Task getTask(int index) {
-        return tasks.get(index);
+        if(tasks.size()==0){
+            return null;
+        }else{
+            return tasks.get(index);
+        }
     }
 
     public void setTask(int index, Task task) {

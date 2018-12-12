@@ -47,6 +47,7 @@ public class CreateTaskFormController {
     public void buttonCreateTask() {
 
         controller.addTask("Имя задачи","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
+        controller.addSubTask(0,0,"Подзадача","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
 //        Task newTask = new Task(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
 //        controller.addTask(newTask);
 //        tasks.addAll(newTask);
