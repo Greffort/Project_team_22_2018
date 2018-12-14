@@ -3,6 +3,7 @@ package com.team22.Project_team_22_2018.view;
 import com.team22.Project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,11 @@ public class HelpFormController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void close(){
+        Stage stage = (Stage) helpLable.getScene().getWindow();
+        stage.close();
     }
 }
 

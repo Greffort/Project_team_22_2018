@@ -14,6 +14,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -23,9 +24,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -43,6 +48,9 @@ import java.util.Locale;
 @Slf4j
 public class MainController implements Observer {
 
+    @Setter
+    private boolean addTaskWindowAlreadyOpen = false;
+
     private ManagerTask managerTask = RuntimeHolder.getModelHolder();
     private Controller controller = RuntimeHolder.getControllerHolder();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
@@ -56,6 +64,10 @@ public class MainController implements Observer {
             } else {
                 return "";
             }
+        }
+
+        public void setAddTaskWindwAlreadyopen(){
+            addTaskWindowAlreadyOpen = false;
         }
 
         @Override
@@ -183,15 +195,31 @@ public class MainController implements Observer {
      * Добавить запись в лог
      */
     private void buttonAddTask() throws Exception {
-        FXMLLoader loader = new FXMLLoader(Resources.CREATE_TASK_FORM);
-        final Parent root = loader.load();
-        final CreateTaskFormController controller = loader.getController();
-        controller.setTasks(tableView.getItems());
-        val scene = new Scene(root);
-        val stage = new Stage();
-        stage.setTitle("Windows add");
-        stage.setScene(scene);
-        stage.show();
+
+        if(!addTaskWindowAlreadyOpen) {
+
+            addTaskWindowAlreadyOpen = true;
+            FXMLLoader loader = new FXMLLoader(Resources.CREATE_TASK_FORM);
+            final Parent root = loader.load();
+            final CreateTaskFormController controller = loader.getController();
+            controller.setTasks(tableView.getItems());
+            val scene = new Scene(root);
+            val stage = new Stage();
+            stage.setTitle("add task");
+            stage.minWidthProperty().setValue(300);
+            stage.minHeightProperty().setValue(200);
+            stage.setScene(scene);
+            controller.setMainController(this);
+
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    addTaskWindowAlreadyOpen = false;
+                }
+            });
+
+            stage.show();
+        }
     }
 
     @FXML
@@ -292,13 +320,25 @@ public class MainController implements Observer {
      */
     @FXML
     private void helpAction() throws IOException {
+        /*Parent root = FXMLLoader.load(Resources.HELP_FORM);
+        Scene scene = new Scene(root);
+        Stage stage1 = new Stage();
+        //stage.setTitle("Нelp");
+        stage1.setScene(scene);
+        stage1.setOpacity(0.5);
+        //stage1.initStyle(StageStyle.UNDECORATED);
+        stage1.setWidth(1000);
+        stage1.setHeight(600);
+        //menuItemHelp.setDisable(true);
+        stage1.show();*/
         Parent root = FXMLLoader.load(Resources.HELP_FORM);
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Нelp");
-        stage.setScene(scene);
-        stage.show();
-        menuItemHelp.setDisable(true);
+        Stage stage1 = new Stage();
+        stage1.setScene(scene);
+        stage1.setWidth(1000);
+        stage1.setHeight(600);
+        stage1.setOpacity(0.5);
+        stage1.show();
     }
 
     @FXML

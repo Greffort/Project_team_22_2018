@@ -2,6 +2,7 @@ package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.controller.Controller;
 import com.team22.Project_team_22_2018.controller.Converter;
+import com.team22.Project_team_22_2018.models.ManagerTask;
 import com.team22.Project_team_22_2018.models.Task;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -23,6 +25,10 @@ import java.util.Locale;
 public class CreateTaskFormController {
 
     Controller controller = RuntimeHolder.getControllerHolder();
+
+
+    @Setter
+    MainController mainController;
 
     @FXML
     private javafx.scene.control.Button closeButton;
@@ -41,6 +47,7 @@ public class CreateTaskFormController {
 
     public void closeWindow() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
+        mainController.setAddTaskWindowAlreadyOpen(false);
         stage.close();
     }
 
@@ -51,12 +58,11 @@ public class CreateTaskFormController {
 //        Task newTask = new Task(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
 //        controller.addTask(newTask);
 //        tasks.addAll(newTask);
-try{
-    System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
-}catch (IOException e ){
+    try{
+        System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
+    }catch (IOException e ){
 
-}
-
+    }
         closeWindow();
     }
 
@@ -70,5 +76,7 @@ try{
         Date date = format.parse(string);
         taskDeadlineDatePicker.setUserData(date);
 
+
     }
+
 }
