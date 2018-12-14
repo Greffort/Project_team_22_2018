@@ -320,17 +320,8 @@ public class MainController implements Observer {
      */
     @FXML
     private void helpAction() throws IOException {
-        /*Parent root = FXMLLoader.load(Resources.HELP_FORM);
-        Scene scene = new Scene(root);
-        Stage stage1 = new Stage();
-        //stage.setTitle("Нelp");
-        stage1.setScene(scene);
-        stage1.setOpacity(0.5);
-        //stage1.initStyle(StageStyle.UNDECORATED);
-        stage1.setWidth(1000);
-        stage1.setHeight(600);
+
         //menuItemHelp.setDisable(true);
-        stage1.show();*/
         Parent root = FXMLLoader.load(Resources.HELP_FORM);
         Scene scene = new Scene(root);
         Stage stage1 = new Stage();
