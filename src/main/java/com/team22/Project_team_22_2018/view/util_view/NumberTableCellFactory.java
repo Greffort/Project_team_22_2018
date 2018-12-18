@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.view.session_data;
+package com.team22.Project_team_22_2018.view.util_view;
 
 import javafx.beans.NamedArg;
 import javafx.scene.control.TableCell;

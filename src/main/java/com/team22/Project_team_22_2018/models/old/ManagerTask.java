@@ -1,7 +1,8 @@
-package com.team22.Project_team_22_2018.models;
+package com.team22.Project_team_22_2018.models.old;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.team22.Project_team_22_2018.models.Observable;
 import com.team22.Project_team_22_2018.view.Observer;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +33,7 @@ public final class ManagerTask implements Serializable, Observable {
         this(new ArrayList<>());
     }
 
-//    public com.team22.Project_team_22_2018.models.ManagerTask(List<Task> tasks) {
+//    public com.team22.Project_team_22_2018.models.old.ManagerTask(List<Task> tasks) {
 //
 //        this(tasks, new ArrayList<>());
 //    }

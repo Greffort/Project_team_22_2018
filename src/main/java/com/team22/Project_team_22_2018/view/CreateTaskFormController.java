@@ -1,8 +1,9 @@
 package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.controller.Controller;
-import com.team22.Project_team_22_2018.controller.Converter;
-import com.team22.Project_team_22_2018.models.Task;
+import com.team22.Project_team_22_2018.models.Purpose;
+import com.team22.Project_team_22_2018.models.PurposeStage;
+import com.team22.Project_team_22_2018.models.old.Task;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,18 +13,20 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+@Log4j
 public class CreateTaskFormController {
 
     Controller controller = RuntimeHolder.getControllerHolder();
 
+    MainController mainController = new MainController();
     @FXML
     private javafx.scene.control.Button closeButton;
 
@@ -46,17 +49,19 @@ public class CreateTaskFormController {
 
     public void buttonCreateTask() {
 
-        controller.addTask("Имя задачи","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
-        controller.addSubTask(0,0,"Подзадача","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
+        controller.addPurpose(new Purpose());
+        controller.addPurposeStage(0, new PurposeStage());
+//        controller.addTask("Имя задачи","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
+//        controller.addSubTask(0,0,"Подзадача","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
 //        Task newTask = new Task(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
 //        controller.addTask(newTask);
 //        tasks.addAll(newTask);
-try{
-    System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
-}catch (IOException e ){
-
-}
-
+//try{
+////    System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
+//}catch (IOException e ){
+//
+//}
+        mainController.setFlagAddStage(false);
         closeWindow();
     }
 
@@ -69,6 +74,5 @@ try{
         DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
         Date date = format.parse(string);
         taskDeadlineDatePicker.setUserData(date);
-
     }
 }

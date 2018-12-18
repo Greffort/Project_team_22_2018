@@ -2,31 +2,27 @@ package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.controller.Controller;
 import com.team22.Project_team_22_2018.controller.Converter;
-import com.team22.Project_team_22_2018.models.ManagerTask;
+import com.team22.Project_team_22_2018.models.Account;
 import com.team22.Project_team_22_2018.models.Observable;
 import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.util.Tree;
-import com.team22.Project_team_22_2018.view.session_data.NumberTableCellFactory;
-import com.team22.Project_team_22_2018.view.session_data.SessionDataManagerTask;
-import com.team22.Project_team_22_2018.view.session_data.SessionDataTask;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.beans.property.BooleanProperty;
+import com.team22.Project_team_22_2018.view.util_view.NumberTableCellFactory;
+import com.team22.Project_team_22_2018.view.util_view.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import lombok.val;
 
 import java.io.IOException;
@@ -40,10 +36,10 @@ import java.util.Locale;
  * <p>
  * Определяет поведние входной формы "LoginForm"
  */
-@Slf4j
+@Log4j
 public class MainController implements Observer {
 
-    private ManagerTask managerTask = RuntimeHolder.getModelHolder();
+    private Account account = RuntimeHolder.getModelHolder();
     private Controller controller = RuntimeHolder.getControllerHolder();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
@@ -68,166 +64,206 @@ public class MainController implements Observer {
         }
     };
     private ObservableList<String> langs = FXCollections.observableArrayList("IN_PROGRESS", "CLOSE", "OPEN", "WAITING", "TERMINATED");
+    private ObservableList<String> langs2 = FXCollections.observableArrayList("+", "-");
+    private boolean flagHelpStage = false;
+    @Getter
+    @Setter
+    private boolean flagAddStage = false;
 
     @FXML
-    private TreeView tree;
+    private TableView<TableViewData> tableView;
     @FXML
-    private TableView tableView;
+    private TableColumn<TableViewData, String> taskColumn;
     @FXML
-    private TableColumn<SessionDataTask, String> taskColumn;
-    @FXML
-    private TableColumn<SessionDataTask, String> deadLineColumn;
-    @FXML
-    private TableColumn<SessionDataTask, String> statusColumn;
-    @FXML
-    private TableColumn<SessionDataTask, String> descriptionColumn;
-    @FXML
-    private TableColumn<SessionDataTask, Boolean> checkBoxColumn;
+    private TableColumn<TableViewData, String> statusColumn;
     @FXML
     private TableColumn numberingColumn;
 
     @FXML
-    private TextField textTask;
+    private TextField namePurpose;
+    @FXML
+    private TextField textCriterionCompleted;
+
+    @FXML
+    private ListView<String> listView;
+
     @FXML
     private TextArea textDescription;
     @FXML
     private DatePicker dataPicDeadline;
     @FXML
-    private DatePicker dataPicDateOpen;
-    @FXML
-    private DatePicker dataPicDateClose;
-    @FXML
     private ComboBox comboBoxStatus;
     @FXML
-    private ComboBox comboBoxTeg;
+    private ComboBox comboBoxStageStatus;
     @FXML
-    private ProgressBar progressBar;
+    private Label labelCreateDate;
     @FXML
-    private Button editTask;
-    @FXML
-    private Button saveEditTask;
-    @FXML
-    private FontAwesomeIconView hidePanelOpen;
-//    @FXML
-//    private FontAwesomeIconView hidePanelClose;
+    private Label labelCloseDate;
 
 
     @FXML
-    private MenuItem menuItemHelp;
+    private TextField textStage;
     @FXML
-    private VBox vBoxSplitPane2;
-
+    private Button editPurpose;
+    @FXML
+    private Button saveEditPurpose;
+    @FXML
+    private Button addNewStage;
+    @FXML
+    private Button closePurpose;
 
     public MainController() {
-        ((Observable) managerTask).registerObserver(this);
+        ((Observable) account).registerObserver(this);
     }
 
     @FXML
     private void initialize() {
         tableView.setEditable(true);
 
-        //right Vbox
-        buttonHidePanelClose();
+        labelCloseDate.setVisible(false);
+
         setEditPane(true, 0.9);
         dataPicDeadline.setConverter(converter); //dataPicDeadline.setPromptText("dd-MM-yyyy");
-        dataPicDateOpen.setConverter(converter);
-        dataPicDateClose.setConverter(converter);
 
         //TableView
-//        handleEvent();
-        taskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        deadLineColumn.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        taskColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         numberingColumn.setCellFactory(new NumberTableCellFactory<>());
-        checkBoxColumn.setCellFactory(p -> {
-            CheckBoxTableCell cell = new CheckBoxTableCell();
-            cell.setAlignment(Pos.CENTER_RIGHT);
-            return cell;
-        });
-        checkBoxColumn.setCellValueFactory(cellData -> {
-            SessionDataTask cellValue = cellData.getValue();
-            BooleanProperty property = cellValue.selectedProperty();
-            property.addListener((observable, Value, newValue) -> cellValue.setSelected(newValue));
-            return property;
-        });
-        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                val row = tableView.getSelectionModel().getSelectedIndex();
-                if (0 <= row) {
-                    tableView.getItems().get(row);
-                }
-                SessionDataTask task = (SessionDataTask) tableView.getSelectionModel().getSelectedItem();
-                updateTaskInfo(task);
-                buttonHidePanelOpen();
+
+        //редактирование столбца заданий
+        taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        taskColumn.setOnEditCommit(this::handle);
+
+
+        listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
+                updatePurposeInfo(listView.getSelectionModel().getSelectedIndex()));
+
+
+    }
+
+    //USE ACCOUNT
+    @FXML
+    /**
+     * Обрабатывает нажатие кнопки "Добавить Цель"
+     */
+    private void buttonAddPurpose() throws IOException{
+//        try {
+            if (flagAddStage) {
+                return;
             } else {
-                updateTaskInfo(null);
+                flagAddStage = false;
+                flagAddStage = false;
+                FXMLLoader loader = new FXMLLoader(Resources.ADD_PURPOSE);
+                final Parent root = loader.load();
+//                final CreateTaskFormController controller = loader.getController();
+                val scene = new Scene(root);
+                val stage = new Stage();
+                stage.setTitle("Windows add");
+                stage.setScene(scene);
+                stage.show();
+                stage.setOnCloseRequest(event -> {
+                    flagAddStage = false;
+                });
             }
-        });
-
-        //TreeView
-
-//        TreeItem root = new TreeItem(controller.getTasks());
-//        root.setExpanded(true);
-
-
-//        Parent tree = new Tree(controller.getTasks());
-////        this.tree = tree;
-
-    }
-
-    @FXML
-    /*
-     * BUG
-     * Если окно уже открыто, то не открывать его снова, но и не блокировать остальные окна
-     * Добавить запись в лог
-     */
-    private void buttonAddTask() throws Exception {
-        FXMLLoader loader = new FXMLLoader(Resources.CREATE_TASK_FORM);
-        final Parent root = loader.load();
-        final CreateTaskFormController controller = loader.getController();
-        controller.setTasks(tableView.getItems());
-        val scene = new Scene(root);
-        val stage = new Stage();
-        stage.setTitle("Windows add");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    /*
-     * Добавить запись в лог
-     */
-    private void buttonRemoteTask() {
-        //List<Task> collect = items.stream().filter(Task::isSelected).collect(Collectors.toList());
-
-        final ObservableList<SessionDataTask> items = tableView.getItems();
-        for (int i = items.size() - 1; i >= 0; i--) {
-            if (items.get(i).isSelected()) {
-                items.remove(i);
-                controller.removeTask(i);
-            }
-        }
-        try {
-            System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
-        } catch (IOException e) {
-//запись в лог
-        }
-        //удаление выделенного элемента
-//        val row = tableView.getSelectionModel().getSelectedIndex();
-//        if (0 <= row) {
-//            tableView.getItems().remove(row);
+//        } catch (IOException e) {
+//            log.error(e);
 //        }
     }
 
     @FXML
+    /**
+     * Обрабатывает нажатие кнопки "Удалить Цель"
+     */
+    private void buttonRemotePurpose() {
+
+        controller.removePurpose(listView.getSelectionModel().getSelectedIndex());
+
+        try {
+            System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
+
+    //VIEW PURPOSE
+
+    @FXML
+    /*
+     * Добавить дружелюбности, месседж бокс "Выберите задачу!" || "Не выбранна задача!"
+     */
+    private void buttonEditPurpose() {
+        if (namePurpose.getText() == null) {
+            return;
+        } else {
+            setEditPane(false, 1);
+//        }
+        }
+    }
+
+    public void closePurpose() {
+    }
+
+    //USE STAGE
+    @FXML
+    /**
+     * Отправляет значения имени и статуса "Этапа" контроллеру
+     */
+    public void buttonAddNewStage() {
+        if (textStage.getText() == null || comboBoxStageStatus.getItems() == null) {
+            return;
+        } else {
+            controller.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue().toString());
+            updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
+        }
+    }
+
+    @FXML
+    /*
+     * Добавить дружелюбности, месседж бокс "Задача сохранена", или в лейбл внизу формы выводить
+     */
+    /**
+     * Обрабатывает событие сохранения "Цели". Отправляет команду на перезапись объекта Purpose в модели
+     */
+    public void saveEditAction() {
+        setEditPane(true, 0.9);
+        controller.setPurpose(
+                listView.getSelectionModel().getSelectedIndex(),
+                tableView.getItems(),
+                namePurpose.getText(),
+                textCriterionCompleted.getText(),
+                textDescription.getText(),
+                comboBoxStatus.getValue().toString(),
+                dataPicDeadline.getValue().format(formatter),
+                LocalDate.now().toString()
+        );
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Project team 22");
+        alert.setHeaderText("Изменения сохранены");
+    }
+
+    @FXML
     /*
      * BUG
-     * Добавить обработку исключений+
      * Сделать сохранение в XML формат
-     * Добавить запись в лог
      */
     private void saveAction() throws Exception {
+//        try {
+//            ObservableList<Task> items = tableView.getItems();
+//        List<ITask> list = new ArrayList<>();
+//        for (Task item : items) {
+//            list.add(item.toTask());
+//        }
+
+//        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
+//
+//        Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+
+//        }catch (IOException e){
+//            log.error(e);
+//        }
+
+
 //        ObservableList<Task> items = tableView.getItems();
 //        List<ITask> list = new ArrayList<>();
 //        for (Task item : items) {
@@ -236,7 +272,7 @@ public class MainController implements Observer {
 
 //        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
 //
-//        Util.writeTasks(new com.team22.Project_team_22_2018.models.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+//        Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
     }
 
     @FXML
@@ -246,14 +282,18 @@ public class MainController implements Observer {
      * Сделать сохранение в XML формат
      * Добавить запись в лог
      */
-    public void saveAsAction() throws IOException {
+    public void saveAsAction() {
+//        try{
         val fileChooser = new FileChooser();
         val file = fileChooser.showSaveDialog(null);
-//        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
+        //List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
         if (file != null) {
-//            Util.writeTasks(new com.team22.Project_team_22_2018.models.ManagerTask(collect), file.getPath());
+            // Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), file.getPath());
+//       }}catch (*//*IOException e*//*){
+//            log.error(e); }
         }
     }
+
 
     @FXML
     /*
@@ -263,7 +303,7 @@ public class MainController implements Observer {
      * Добавить запись в лог
      */
     private void loadAction() throws IOException, ClassNotFoundException {
-//        com.team22.Project_team_22_2018.models.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
+//        com.team22.Project_team_22_2018.models.old.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
 //        final List<Task> collect = managerTask.getTasks().stream().map(Task::new).collect(Collectors.toList());
 //        tableView.getItems().setAll(collect);
     }
@@ -279,150 +319,155 @@ public class MainController implements Observer {
 //        val fileChooser = new FileChooser();
 //        val file = fileChooser.showOpenDialog(null);
 //        if (file != null) {
-//            com.team22.Project_team_22_2018.models.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
+//            com.team22.Project_team_22_2018.models.old.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
 //            final List<Task> collect = managerTask.getTasks().stream().map(Task::new).collect(Collectors.toList());
 //            tableView.getItems().setAll(collect);
 //        }
     }
 
-    /*
-     * BUG
-     * Если окно уже открыто, то не открывать его снова, но и не блокировать остальные окна
-     * Добавить запись в лог
-     */
     @FXML
-    private void helpAction() throws IOException {
-        Parent root = FXMLLoader.load(Resources.HELP_FORM);
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Нelp");
-        stage.setScene(scene);
-        stage.show();
-        menuItemHelp.setDisable(true);
-    }
-
-    @FXML
-    /*
-     * добавить диалоговое окно "Вы уверенны что хотите выйти?"
-     * Добавить запись в лог
-     */
-    public void closeAction() {
-        System.exit(0);
-    }
-
-    private void updateTaskInfo(SessionDataTask task) {
-        if (task != null) {
-            textTask.setText(task.getName());
-            textDescription.setText(task.getDescription());
-            dataPicDeadline.setValue(LocalDate.parse(task.getDeadline()));
-            dataPicDateOpen.setValue(LocalDate.parse(task.getDateOpen()));
-            dataPicDateClose.setValue(LocalDate.parse(task.getDateClose()));
-            comboBoxStatus.setItems(langs);
-            comboBoxStatus.setValue(task.getStatus());
-
-        } else {
-            textTask.setText("");
-            textDescription.setText("");
-            dataPicDeadline.setValue(null);
-            dataPicDeadline.getEditor().clear();
-            dataPicDateOpen.setValue(null);
-            dataPicDateOpen.getEditor().clear();
-            dataPicDateClose.setValue(null);
-            dataPicDateClose.getEditor().clear();
-            comboBoxStatus.setValue(null);
-            comboBoxStatus.getEditor().clear();
-            comboBoxTeg.setValue(null);
-            comboBoxTeg.getEditor().clear();
+    private void helpAction() {
+        try {
+            if (flagHelpStage) {
+                return;
+            } else {
+                flagHelpStage = true;
+                Parent root = FXMLLoader.load(Resources.HELP_FORM);
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setTitle("Нelp");
+                stage.setScene(scene);
+                stage.show();
+                stage.setOnCloseRequest(event -> {
+                    flagHelpStage = false;
+                });
+            }
+        } catch (IOException e) {
+            log.error(e);
         }
     }
 
+    @FXML
+    public void closeAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Project team 22");
+        alert.setHeaderText("Вы уверены, что хотите выйти?");
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.exit(0);
+                log.info("Приложение закрыто");
+            }
+            if (rs == ButtonType.CANCEL) {
+                return;
+            }
+        });
+    }
+
+
+    private void updatePurposeInfo(int index) {
+        namePurpose.setText(controller.getNamePurpose(index));
+        textCriterionCompleted.setText(controller.getCriterionCompleted(index));
+        textDescription.setText(controller.getDescription(index));
+
+        labelCreateDate.setText("Дата создания цели: " + controller.getCreateDate(index));
+
+
+        if ("null".equals(controller.getCloseDate(index))) {
+            labelCloseDate.setVisible(false);
+        } else {
+            labelCloseDate.setVisible(true);
+            labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controller.getCloseDate(index));
+        }
+        try {
+            dataPicDeadline.setValue(LocalDate.parse(controller.getDeadlineDate(index)));
+            if (controller.getStageNames(listView.getSelectionModel().getSelectedIndex()) != null) {
+                tableView.setItems(getTableViewDatas());
+            }
+            comboBoxStageStatus.setValue("-");
+            comboBoxStageStatus.setItems(langs2);
+            textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+        } catch (NullPointerException e) {
+            log.error(e);
+        }
+
+        comboBoxStageStatus.setItems(langs2);
+
+        comboBoxStatus.setItems(langs);
+        comboBoxStatus.setValue(controller.getStatus(index));
+
+
+    }
+
+    private void updatePurposeStageInfo() {
+        try {
+            comboBoxStageStatus.setValue(controller.getStageStatus(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+            comboBoxStageStatus.setItems(langs2);
+            textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+        } catch (NullPointerException e) {
+            log.error(e);
+        }
+
+
+    }
+
+    private ObservableList<TableViewData> getTableViewDatas() {
+        ObservableList<TableViewData> tableViewData = FXCollections.observableArrayList();
+        ObservableList<String> stageNames = controller.getStageNames(listView.getSelectionModel().getSelectedIndex());
+        ObservableList<String> stageStatus = controller.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
+
+        for (int i = 0; i < stageNames.size(); i++) {
+            tableViewData.add(new TableViewData(stageNames.get(i), stageStatus.get(i)));
+        }
+        return tableViewData;
+    }
+
+    /**
+     * Вызывается при обновлении данных в модели, и вызывает изменения формы
+     */
     @Override
     public void handleEvent() {
-        //здесь нужно вывести графическое обновление данных форы, тобишь запрос к контроллеру на новые данны
-        tableView.setItems(controller.getTasks());
-//        new Tree(tree,tableView,controller.getTask(0));
 
-//tree.setTr
-    }
-
-    @FXML
-    /*
-     * Добавить дружелюбности, месседж бокс "Выберите задачу!" || "Не выбранна задача!"
-     * Добавить запись в лог
-     */
-    private void buttonEditTask() {
-        if (textTask.getText().trim().equals("")) {
-            return;
-        } else {
-            setEditPane(false, 1);
-            editTask.setDefaultButton(true);
+        try {
+            listView.setItems(controller.getPurposes());
+        } catch (NullPointerException e) {
+            log.error(e);
         }
-
     }
 
-    @FXML
-    /*
-     * Добавить дружелюбности, месседж бокс "Задача сохранена", или в лейбл внизу формы выводить
-     * Добавить запись в лог
-     */
-    public void saveEditAction() {
-        setEditPane(true, 0.9);
-        val row = tableView.getSelectionModel().getSelectedIndex();
-        if (0 <= row) {
-            tableView.getItems().get(row);
-        }
-        SessionDataTask sessionDataTask = (SessionDataTask) tableView.getSelectionModel().getSelectedItem();
-        SessionDataTask task = new SessionDataTask(
-                textTask.getText(),
-                textDescription.getText(),
-                dataPicDeadline.getValue().format(formatter),
-                sessionDataTask.getRestTime(),
-                dataPicDateClose.getValue().format(formatter),
-                dataPicDateOpen.getValue().format(formatter),
-                comboBoxStatus.getValue().toString(),
-                sessionDataTask.getProgressBar(),
-                sessionDataTask.getSubTasks());
-        controller.setTask(row, task);
-    }
 
     public void setEditPane(Boolean bool, double opacity) {
-        editTask.setDisable(!bool);
-        saveEditTask.setDisable(bool);
-        textTask.setDisable(bool);
+        textStage.setDisable(bool);
+        editPurpose.setDisable(!bool);
+        saveEditPurpose.setDisable(bool);
+        namePurpose.setDisable(bool);
         textDescription.setDisable(bool);
         dataPicDeadline.setDisable(bool);
-        dataPicDateOpen.setDisable(bool);
-        dataPicDateClose.setDisable(bool);
         comboBoxStatus.setDisable(bool);
-        comboBoxTeg.setDisable(bool);
+        tableView.setDisable(bool);
+        textCriterionCompleted.setDisable(bool);
+        comboBoxStageStatus.setDisable(bool);
+        addNewStage.setDisable(bool);
+        closePurpose.setDisable(bool);
 
-        textTask.setOpacity(opacity);
+        textStage.setOpacity(opacity);
+        textCriterionCompleted.setOpacity(opacity);
+        tableView.setOpacity(opacity);
+        namePurpose.setOpacity(opacity);
         textDescription.setOpacity(opacity);
         dataPicDeadline.setOpacity(opacity);
-        dataPicDateOpen.setOpacity(opacity);
-        dataPicDateClose.setOpacity(opacity);
         comboBoxStatus.setOpacity(opacity);
-        comboBoxTeg.setOpacity(opacity);
         dataPicDeadline.setOpacity(opacity);
-    }
-
-    public void buttonHidePanelClose() {
-        vBoxSplitPane2.setPrefWidth(0);
-        vBoxSplitPane2.setVisible(false);
-        hidePanelOpen.setVisible(true);
-        hidePanelOpen.setSize("25");
-    }
-
-    public void buttonHidePanelOpen() {
-        vBoxSplitPane2.setPrefWidth(215);
-        vBoxSplitPane2.setVisible(true);
-        hidePanelOpen.setVisible(false);
-        hidePanelOpen.setSize("0");
-
+        comboBoxStageStatus.setOpacity(opacity);
+        addNewStage.setOpacity(opacity);
+        closePurpose.setOpacity(opacity);
 
     }
 
 
+    private void handle(TableColumn.CellEditEvent<TableViewData, String> t) {
+        controller.setStageName(listView.getSelectionModel().getSelectedIndex(),
+                tableView.getSelectionModel().getSelectedIndex(), t.getNewValue().toString());
+    }
 }
 
 
