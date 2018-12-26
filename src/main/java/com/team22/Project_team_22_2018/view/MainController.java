@@ -17,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.Getter;
@@ -138,7 +137,7 @@ public class MainController implements Observer {
         listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 updatePurposeInfo(listView.getSelectionModel().getSelectedIndex()));
 
-
+        tableView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> updatePurposeStageInfo(tableView.getSelectionModel().getSelectedIndex()));
     }
 
     //USE ACCOUNT
@@ -146,25 +145,25 @@ public class MainController implements Observer {
     /**
      * Обрабатывает нажатие кнопки "Добавить Цель"
      */
-    private void buttonAddPurpose() throws IOException{
+    private void buttonAddPurpose() throws IOException {
 //        try {
-            if (flagAddStage) {
-                return;
-            } else {
-                flagAddStage = false;
-                flagAddStage = false;
-                FXMLLoader loader = new FXMLLoader(Resources.ADD_PURPOSE);
-                final Parent root = loader.load();
+        if (flagAddStage) {
+            return;
+        } else {
+            flagAddStage = false;
+            flagAddStage = false;
+            FXMLLoader loader = new FXMLLoader(Resources.ADD_PURPOSE);
+            final Parent root = loader.load();
 //                final CreateTaskFormController controller = loader.getController();
-                val scene = new Scene(root);
-                val stage = new Stage();
-                stage.setTitle("Windows add");
-                stage.setScene(scene);
-                stage.show();
-                stage.setOnCloseRequest(event -> {
-                    flagAddStage = false;
-                });
-            }
+            val scene = new Scene(root);
+            val stage = new Stage();
+            stage.setTitle("Windows add");
+            stage.setScene(scene);
+            stage.show();
+            stage.setOnCloseRequest(event -> {
+                flagAddStage = false;
+            });
+        }
 //        } catch (IOException e) {
 //            log.error(e);
 //        }
@@ -175,11 +174,13 @@ public class MainController implements Observer {
      * Обрабатывает нажатие кнопки "Удалить Цель"
      */
     private void buttonRemotePurpose() {
+        if (listView.getItems() != null) {
+            controller.removePurpose(listView.getSelectionModel().getSelectedIndex());
+        }
 
-        controller.removePurpose(listView.getSelectionModel().getSelectedIndex());
-
+//Удалить вывод модели
         try {
-            System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
+            System.out.println(Converter.toJson(RuntimeHolder.getModelHolder()));
         } catch (IOException e) {
             log.error(e);
         }
@@ -243,11 +244,8 @@ public class MainController implements Observer {
     }
 
     @FXML
-    /*
-     * BUG
-     * Сделать сохранение в XML формат
-     */
-    private void saveAction() throws Exception {
+    private void saveAction() {
+        controller.saveAs();
 //        try {
 //            ObservableList<Task> items = tableView.getItems();
 //        List<ITask> list = new ArrayList<>();
@@ -276,22 +274,8 @@ public class MainController implements Observer {
     }
 
     @FXML
-    /*
-     * BUG
-     * Добавить обработку исключений
-     * Сделать сохранение в XML формат
-     * Добавить запись в лог
-     */
     public void saveAsAction() {
-//        try{
-        val fileChooser = new FileChooser();
-        val file = fileChooser.showSaveDialog(null);
-        //List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
-        if (file != null) {
-            // Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), file.getPath());
-//       }}catch (*//*IOException e*//*){
-//            log.error(e); }
-        }
+        controller.saveAs();
     }
 
 
@@ -303,6 +287,8 @@ public class MainController implements Observer {
      * Добавить запись в лог
      */
     private void loadAction() throws IOException, ClassNotFoundException {
+        controller.loadAs();
+        handleEvent();
 //        com.team22.Project_team_22_2018.models.old.ManagerTask managerTask = Util.readTasks(Resources.LOCAL_SAVE.getPath());
 //        final List<Task> collect = managerTask.getTasks().stream().map(Task::new).collect(Collectors.toList());
 //        tableView.getItems().setAll(collect);
@@ -316,6 +302,8 @@ public class MainController implements Observer {
      * Добавить запись в лог
      */
     public void loadFromAction() throws IOException, ClassNotFoundException {
+        controller.loadAs();
+        handleEvent();
 //        val fileChooser = new FileChooser();
 //        val file = fileChooser.showOpenDialog(null);
 //        if (file != null) {
@@ -365,49 +353,61 @@ public class MainController implements Observer {
 
 
     private void updatePurposeInfo(int index) {
-        namePurpose.setText(controller.getNamePurpose(index));
-        textCriterionCompleted.setText(controller.getCriterionCompleted(index));
-        textDescription.setText(controller.getDescription(index));
+        boolean name = controller.getNamePurpose(index) != null;
+        boolean criterionCompleted = controller.getCriterionCompleted(index) != null;
+        boolean description = controller.getDescription(index) != null;
+        boolean createDate = controller.getCreateDate(index) != null;
+//        boolean stageName = controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()) != null;
+        boolean status = controller.getStatus(index) != null;
+        boolean deadline = controller.getDeadlineDate(index) != null;
+        boolean closeDate = controller.getCloseDate(index) != null;
 
-        labelCreateDate.setText("Дата создания цели: " + controller.getCreateDate(index));
 
-
-        if ("null".equals(controller.getCloseDate(index))) {
-            labelCloseDate.setVisible(false);
-        } else {
-            labelCloseDate.setVisible(true);
-            labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controller.getCloseDate(index));
-        }
-        try {
-            dataPicDeadline.setValue(LocalDate.parse(controller.getDeadlineDate(index)));
-            if (controller.getStageNames(listView.getSelectionModel().getSelectedIndex()) != null) {
-                tableView.setItems(getTableViewDatas());
-            }
-            comboBoxStageStatus.setValue("-");
-            comboBoxStageStatus.setItems(langs2);
-            textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
 
         comboBoxStageStatus.setItems(langs2);
-
         comboBoxStatus.setItems(langs);
-        comboBoxStatus.setValue(controller.getStatus(index));
+        comboBoxStageStatus.setValue("-");
+        comboBoxStatus.setValue(langs.get(0));
 
-
-    }
-
-    private void updatePurposeStageInfo() {
-        try {
-            comboBoxStageStatus.setValue(controller.getStageStatus(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
-            comboBoxStageStatus.setItems(langs2);
-            textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
-        } catch (NullPointerException e) {
-            log.error(e);
+        if (listView.getSelectionModel() != null && tableView.getItems() != null) {
+            tableView.setItems(getTableViewDatas());
         }
 
+        if (closeDate) {
+            labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controller.getCloseDate(index));
+            labelCloseDate.setVisible(true);
+        } else {
+            labelCloseDate.setVisible(false);
+        }
 
+        if (name && criterionCompleted && description && createDate && /*stageName &&*/ status && deadline) {
+            namePurpose.setText(controller.getNamePurpose(index));
+            textCriterionCompleted.setText(controller.getCriterionCompleted(index));
+            textDescription.setText(controller.getDescription(index));
+            labelCreateDate.setText("Дата создания цели: " + controller.getCreateDate(index));
+//
+            dataPicDeadline.setValue(LocalDate.parse(controller.getDeadlineDate(index)));
+        } else {
+            namePurpose.setText("Поле не заполнено");
+            textCriterionCompleted.setText("Поле не заполнено");
+            textDescription.setText("Поле не заполнено");
+            labelCreateDate.setText("Поле не заполнено");
+            textDescription.setText("Поле не заполнено");
+        }
+    }
+
+    private void updatePurposeStageInfo(int index) {
+        //добавить проверки
+        boolean stageName = controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()) != null;
+        textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+        tableView.setItems(getTableViewDatas());
+//        try {
+//            comboBoxStageStatus.setValue(controller.getStageStatus(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+//            comboBoxStageStatus.setItems(langs2);
+//            textStage.setText(controller.getStageName(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex()));
+//        } catch (NullPointerException e) {
+//            log.error(e);
+//        }
     }
 
     private ObservableList<TableViewData> getTableViewDatas() {

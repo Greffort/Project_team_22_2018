@@ -18,7 +18,7 @@ public class MainTest {
 //        obj.addTask(task3);
 //        ManagerTask managerTask;
 //        try {
-//            final String s = Converter.toJSON(obj);
+//            final String s = Converter.toJson(obj);
 //            System.out.println(s);
 //            managerTask = Converter.toJavaObject(s,ManagerTask.class);
 //

@@ -145,7 +145,7 @@ public class AddForm implements Observer {
 //        controller.addTask(newTask);
 //        tasks.addAll(newTask);
 //try{
-////    System.out.println(Converter.toJSON(RuntimeHolder.getModelHolder()));
+////    System.out.println(Converter.toJson(RuntimeHolder.getModelHolder()));
 //}catch (IOException e ){
 //
 //}

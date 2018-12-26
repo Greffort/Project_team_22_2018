@@ -76,12 +76,12 @@ public class Purpose {
 
 
     public PurposeStage getPurposeStage(int index) {
-        try{
+//        try{
             return this.purposeStages.get(index);
-        }catch (IndexOutOfBoundsException e){
-            log.error(e);
-            return null;
-        }
+//        }catch (IndexOutOfBoundsException e){
+//            log.error(e);
+//            return null;
+//        }
     }
 
     public void setPurposeStage(int index, PurposeStage purposeStage) {

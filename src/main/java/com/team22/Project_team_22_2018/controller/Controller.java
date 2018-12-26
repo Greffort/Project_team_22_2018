@@ -3,12 +3,18 @@ package com.team22.Project_team_22_2018.controller;
 import com.team22.Project_team_22_2018.models.Account;
 import com.team22.Project_team_22_2018.models.Purpose;
 import com.team22.Project_team_22_2018.models.PurposeStage;
+import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
 import com.team22.Project_team_22_2018.view.util_view.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.FileChooser;
 import lombok.extern.log4j.Log4j;
+import lombok.val;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +43,7 @@ public class Controller {
         ArrayList<PurposeStage> arrayList = new ArrayList();
 
         for (int i = 0; i < purposeStages.size(); i++) {
-            arrayList.add(new PurposeStage(purposeStages.get(i).getStage(),purposeStages.get(i).getStatus()));
+            arrayList.add(new PurposeStage(purposeStages.get(i).getStage(), purposeStages.get(i).getStatus()));
         }
         this.account.addPurpose(new Purpose(
                 arrayList,
@@ -68,19 +74,15 @@ public class Controller {
 
     //remove
     public void removePurpose(int index) {
-        try {
+        if(index >= 0 && index < account.getPurposes().size()){
             this.account.removePurpose(index);
-        } catch (NullPointerException e) {
-            log.error(e);
+        }else {
+         return;
         }
     }
 
     public void removePurposeStage(int indexPurpose, int indexPurposeStage) {
-        try {
-            this.account.getPurpose(indexPurpose).removePurposeStage(indexPurposeStage);
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
+        this.account.getPurpose(indexPurpose).removePurposeStage(indexPurposeStage);
     }
 
     public void clearPurposes(int indexPurpose, int indexPurposeStage) {
@@ -89,19 +91,12 @@ public class Controller {
 
     //set
     public void setPurpose(int index, Purpose purpose) {
-        try {
-            this.account.setPurpose(index, purpose);
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
+        this.account.setPurpose(index, purpose);
     }
 
     public void setPurposeStage(int indexPurpose, int indexPurposeStage, PurposeStage parpose) {
-        try {
-            this.account.getPurpose(indexPurpose).setPurposeStage(indexPurposeStage, parpose);
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
+
+        this.account.getPurpose(indexPurpose).setPurposeStage(indexPurposeStage, parpose);
     }
 
     public void setPurposes(List<Purpose> list) {
@@ -117,187 +112,170 @@ public class Controller {
                            String status,
                            String deadline,
                            String dateOpen) {
-        try {
-            ObservableList<TableViewData> tableViewData = purposeStages;
-            ArrayList<PurposeStage> list = new ArrayList<>();
+        ObservableList<TableViewData> tableViewData = purposeStages;
+        ArrayList<PurposeStage> list = new ArrayList<>();
 
-            for (int i = 0; i < tableViewData.size(); i++) {
-                list.add(new PurposeStage(tableViewData.get(i).getStage(), tableViewData.get(i).getStatus()));
-            }
-            this.account.setPurpose(index,
-                    new Purpose(
-                            list,
-                            name,
-                            criterionCompleted,
-                            description,
-                            status,
-                            LocalDate.parse(deadline),
-                            LocalDate.parse(dateOpen)));
-        } catch (NullPointerException e) {
-            log.error(e);
+        for (int i = 0; i < tableViewData.size(); i++) {
+            list.add(new PurposeStage(tableViewData.get(i).getStage(), tableViewData.get(i).getStatus()));
         }
+        this.account.setPurpose(index,
+                new Purpose(
+                        list,
+                        name,
+                        criterionCompleted,
+                        description,
+                        status,
+                        LocalDate.parse(deadline),
+                        LocalDate.parse(dateOpen)));
     }
 
     public void setStageName(int indexPurpose, int indexPurposeStage, String name) {
-        try {
-            this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setName(name);
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
+        this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setName(name);
     }
 
     public void setStageStatus(int indexPurpose, int indexPurposeStage, String status) {
-        try {
-            this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setCompleted(status);
-        } catch (NullPointerException e) {
-            log.error(e);
-        }
+        this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setCompleted(status);
     }
 
     //get
     public Purpose getPurpose(int index) {
-        try {
-            return this.account.getPurpose(index);
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(index);
     }
 
     public PurposeStage getPurposeStage(int indexPurpose, int indexPurposeStage) {
-        try {
-            return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage);
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage);
     }
 
     //GET NEW
     public ObservableList<String> getPurposes() {
-        try {
-            List<Purpose> list = this.account.getPurposes();
-            ObservableList<String> observableList = FXCollections.observableArrayList();
+        List<Purpose> list = this.account.getPurposes();
+        ObservableList<String> observableList = FXCollections.observableArrayList();
 
-            for (Purpose purpose : list) {
-                observableList.add(purpose.getName());
-            }
-            return observableList;
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
+        for (Purpose purpose : list) {
+            observableList.add(purpose.getName());
         }
+        return observableList;
     }
 
     public String getNamePurpose(int index) {
-        try {
+        if (this.account.getPurpose(index).getName() == null) {
+            return "Имя не указанно";
+        } else {
             return this.account.getPurpose(index).getName();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
         }
     }
 
     public String getCriterionCompleted(int index) {
-        try {
-            return this.account.getPurpose(index).getCriterionCompleted();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(index).getCriterionCompleted();
     }
 
     public String getDescription(int index) {
-        try {
-            return this.account.getPurpose(index).getDescription();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(index).getDescription();
     }
 
     public String getCreateDate(int index) {
-        try {
-            return this.account.getPurpose(index).getDateOpen().toString();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(index).getDateOpen().toString();
     }
 
     public String getCloseDate(int index) {
-        try {
-            return this.account.getPurpose(index).getDateClose().toString();
-        } catch (NullPointerException e) {
-            log.error(e);
+        if (this.account.getPurpose(index).getDateClose() == null) {
             return null;
+        } else {
+            return this.account.getPurpose(index).getDateClose().toString();
         }
     }
 
     public String getDeadlineDate(int index) {
-        try {
-            return this.account.getPurpose(index).getDeadline().toString();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+
+        return this.account.getPurpose(index).getDeadline().toString();
     }
 
     public String getStatus(int index) {
-        try {
-            return this.account.getPurpose(index).getStatus();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(index).getStatus();
     }
 
     public ObservableList<String> getStageNames(int index) {
-        try {
-            ObservableList<String> observableList = FXCollections.observableArrayList();
-            List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
-            for (PurposeStage purposeStage : list) {
-                observableList.add(purposeStage.getName());
+
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+        List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
+        for (PurposeStage purposeStage : list) {
+            observableList.add(purposeStage.getName());
 //                observableList.add(purposeStage.getCompleted());
-            }
-            return observableList;
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
         }
+        return observableList;
     }
 
     public ObservableList<String> getStageStatuses(int index) {
-        try {
-            ObservableList<String> observableList = FXCollections.observableArrayList();
-            List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
-            for (PurposeStage purposeStage : list) {
-                observableList.add(purposeStage.getCompleted());
-            }
-            return observableList;
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+        List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
+        for (PurposeStage purposeStage : list) {
+            observableList.add(purposeStage.getCompleted());
         }
+        return observableList;
     }
 
     public String getStageName(int indexPurpose, int indexPurposeStage) {
-        try {
-            return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName();
-        } catch (NullPointerException e) {
-            log.error(e);
-            return null;
-        }
+        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName();
     }
 
     public String getStageStatus(int indexPurpose, int indexPurposeStage) {
+        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getCompleted();
+    }
+
+    //SAVE
+
+    public void save() {
         try {
-            return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getCompleted();
-        } catch (NullPointerException e) {
+//                File dir = new File(Resources.LOCAL_SAVE);
+            File file = new File("C:\\Users\\Aleks\\save.txt");
+            Converter.toJsonAs(file, account);
+
+        } catch (IOException e) {
             log.error(e);
-            return null;
         }
     }
+
+    public void saveAs() {
+        try {
+            val fileChooser = new FileChooser();
+            val file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                Converter.toJsonAs(file, account);
+            }
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
+
+    //LOAD
+    public void load() {
+        try {
+            if (Resources.LOCAL_SAVE != null) {
+                account.setPurposes(Converter.toJavaObject(Resources.LOCAL_SAVE, account.getClass()).getPurposes());
+
+            } else {
+                File file = new File("C:\\Users\\Aleks\\save.txt");
+                account.setPurposes(Converter.toJavaObject(file, account.getClass()).getPurposes());
+            }
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
+    public void loadAs() {
+        try {
+
+            val fileChooser = new FileChooser();
+            val file = fileChooser.showOpenDialog(null);
+            if (file != null) {
+                account.setPurposes(Converter.toJavaObject(file, account.getClass()).getPurposes());
+            }
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
 
 //
 //    public PurposeStage getPurposeStage(int index) {
@@ -326,7 +304,7 @@ public class Controller {
 //    public SessionDataTask getTask(int index) {
 //        try {
 //            Task task = managerTask.getTask(index);
-//            String s = Converter.toJSON(task);
+//            String s = Converter.toJson(task);
 //            SessionDataTask sessionDataTask = Converter.toJavaObject(s, SessionDataTask.class);
 //
 //            System.out.println();
@@ -341,7 +319,7 @@ public class Controller {
 //
 //    public void setTask(int index, SessionDataTask task) {
 //        try {
-//            managerTask.setTask(index, Converter.toJavaObject(Converter.toJSON(task), Task.class));
+//            managerTask.setTask(index, Converter.toJavaObject(Converter.toJson(task), Task.class));
 //        } catch (IOException e) {
 //            //запись в лог
 //        }
@@ -354,7 +332,7 @@ public class Controller {
 //        ObservableList<SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
 //        try {
 //            for (int i = 0; i < managerTask.getTasks().size(); i++) {
-//                String s = Converter.toJSON(managerTask.getTask(i));
+//                String s = Converter.toJson(managerTask.getTask(i));
 //                sessionDataTasks.add(Converter.toJavaObject(s, SessionDataTask.class));
 //            }
 //            return sessionDataTasks;
@@ -369,7 +347,7 @@ public class Controller {
 //        ArrayList arrayList = new ArrayList();
 //        try {
 //            for (int i = 0; i < tasks.size(); i++) {
-//                String s = Converter.toJSON(tasks.get(i));
+//                String s = Converter.toJson(tasks.get(i));
 //                arrayList.add(Converter.toJavaObject(s, Task.class));
 //            }
 //            managerTask.setTasks(arrayList);

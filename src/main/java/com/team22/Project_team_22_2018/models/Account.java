@@ -44,21 +44,16 @@ public class Account implements Serializable, Observable {
     }
 
     public void removePurpose(int index) {
-        try {
+//        try {
             purposes.remove(index);
             notifyAllObservers();
-        } catch (IndexOutOfBoundsException e) {
-            log.error(e);
-        }
+//        } catch (IndexOutOfBoundsException e) {
+//            log.error(e);
+//        }
     }
 
     public Purpose getPurpose(int index) {
-            try{
-                return purposes.get(index);
-            }catch (IndexOutOfBoundsException e){
-                log.error(e);
-                return  null;
-            }
+        return purposes.get(index);
     }
 
     public void setPurpose(int index, Purpose purpose) {

@@ -2,12 +2,9 @@ package com.team22.Project_team_22_2018.controller;
 
 import com.team22.Project_team_22_2018.models.old.Task;
 import com.team22.Project_team_22_2018.models.old.ManagerTask;
-import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 //import org.apache.log4j.Logger;
@@ -54,7 +51,7 @@ public class OldController {
 //    public SessionDataTask getTask(int index) {
 //        try {
 //Task task = managerTask.getTask(index);
-//String s = Converter.toJSON(task);
+//String s = Converter.toJson(task);
 //SessionDataTask sessionDataTask = Converter.toJavaObject(s, SessionDataTask.class);
 //
 //            System.out.println();
@@ -69,7 +66,7 @@ public class OldController {
 //
 //    public void setTask(int index, SessionDataTask task) {
 //        try {
-//            managerTask.setTask(index,Converter.toJavaObject(Converter.toJSON(task), Task.class));
+//            managerTask.setTask(index,Converter.toJavaObject(Converter.toJson(task), Task.class));
 //        } catch (IOException e) {
 //            //запись в лог
 //        }
@@ -82,7 +79,7 @@ public class OldController {
 //        ObservableList<SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
 //        try {
 //            for (int i = 0; i < managerTask.getTasks().size(); i++) {
-//                String s = Converter.toJSON(managerTask.getTask(i));
+//                String s = Converter.toJson(managerTask.getTask(i));
 //                sessionDataTasks.add(Converter.toJavaObject(s, SessionDataTask.class));
 //            }
 //            return sessionDataTasks;
@@ -97,8 +94,8 @@ public class OldController {
         ArrayList arrayList = new ArrayList();
         try {
             for (int i = 0; i < tasks.size(); i++) {
-                String s = Converter.toJSON(tasks.get(i));
-                arrayList.add(Converter.toJavaObject(s, Task.class));
+                String s = Converter.toJson(tasks.get(i));
+//                arrayList.add(Converter.toJavaObject(s, Task.class));
             }
             managerTask.setTasks(arrayList);
         } catch (IOException e) {
