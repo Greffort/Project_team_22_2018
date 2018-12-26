@@ -27,6 +27,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
@@ -99,6 +100,9 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="домой"/>
+                      </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonAddPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
@@ -110,6 +114,9 @@
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="добавить цель"/>
+                      </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonRemotePurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
@@ -118,6 +125,9 @@
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="удалить цель"/>
+                      </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
@@ -126,6 +136,9 @@
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="сохранить"/>
+                      </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
@@ -134,6 +147,9 @@
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="загрузить"/>
+                      </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
@@ -145,6 +161,9 @@
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+                      <tooltip>
+                          <Tooltip text="справка"/>
+                      </tooltip>
                   </Button>
                </children>
                <padding>
@@ -329,6 +348,9 @@
                                  <padding>
                                     <Insets top="2.0" />
                                  </padding>
+                                  <tooltip>
+                                      <Tooltip text="добавить этап"/>
+                                  </tooltip>
                               </Button>
                            </children>
                            <padding>
@@ -345,6 +367,9 @@
                                  <graphic>
                                                <FontAwesomeIconView fill="#b15500" glyphName="SAVE" size="25" text="" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
                                  </graphic>
+                                  <tooltip>
+                                      <Tooltip text="сохранить изменения"/>
+                                  </tooltip>
                               </Button>
                               <Button fx:id="editPurpose" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonEditPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                                  <graphic>
@@ -353,6 +378,9 @@
                                  <padding>
                                     <Insets right="5.0" top="3.0" />
                                  </padding>
+                                  <tooltip>
+                                      <Tooltip text="отредактировать цель"/>
+                                  </tooltip>
                               </Button>
                            </children>
                           </HBox>

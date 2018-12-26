@@ -157,7 +157,9 @@ public class MainController implements Observer {
 //                final CreateTaskFormController controller = loader.getController();
             val scene = new Scene(root);
             val stage = new Stage();
-            stage.setTitle("Windows add");
+            stage.setMinHeight(465);
+            stage.setMinWidth(650);
+            stage.setTitle("добавить цель");
             stage.setScene(scene);
             stage.show();
             stage.setOnCloseRequest(event -> {

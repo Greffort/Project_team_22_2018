@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -19,73 +18,77 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.AddForm">
+<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.AddForm">
    <children>
-      <ScrollPane VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets right="5.0" />
-         </VBox.margin>
-         <content>
-            <VBox>
+      <VBox>
+         <children>
+            <Label text="Цель" textFill="#b15500">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="name" promptText="Сформулируйте цель" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets right="5.0" />
+               </VBox.margin>
+            </TextField>
+            <Label text="Критерий выполненности" textFill="#b15500">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="criterionCompleted" promptText="Опишите, при каком условии цель будет выполнена" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets right="5.0" />
+               </VBox.margin>
+            </TextField>
+            <Label text="Описание" textFill="#b15500">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="description" prefWidth="900.0" promptText="Опишите вашу цель" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets right="5.0" />
+               </VBox.margin></TextArea>
+            <GridPane hgap="5.0" minHeight="75.0" minWidth="500.0" vgap="5.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="708.0" minWidth="10.0" prefWidth="701.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="201.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <Label text="Цель" textFill="#b15500">
+                  <ComboBox fx:id="status" prefHeight="25.0" prefWidth="174.0" style="-fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Статус" textFill="#b15500" GridPane.columnIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="name" promptText="Сформулируйте цель" VBox.vgrow="ALWAYS" />
-                  <Label text="Критерий выполненности" textFill="#b15500">
+                  <Label text="Дата дедлайна" textFill="#b15500">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="criterionCompleted" promptText="Опишите, при каком условии цель будет выполнена" VBox.vgrow="ALWAYS" />
-                  <Label text="Описание" textFill="#b15500">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextArea fx:id="description" promptText="Опишите вашу цель" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
-                  <GridPane hgap="5.0" minHeight="75.0" minWidth="500.0" vgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="708.0" minWidth="10.0" prefWidth="701.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="201.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <ComboBox fx:id="status" prefHeight="25.0" prefWidth="174.0" style="-fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Статус" textFill="#b15500" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label text="Дата дедлайна" textFill="#b15500">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <DatePicker fx:id="deadline" prefHeight="25.0" prefWidth="1097.0" style="-fx-background-radius: 5;" GridPane.rowIndex="1" />
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </GridPane>
+                  <DatePicker fx:id="deadline" prefHeight="25.0" prefWidth="1097.0" style="-fx-background-radius: 5;" GridPane.rowIndex="1" />
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
-            </VBox>
-         </content>
-      </ScrollPane>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </GridPane>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" top="5.0" />
+         </padding>
+      </VBox>
       <TableView fx:id="tableView" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="numberingColumn" maxWidth="27.0" minWidth="27.0" prefWidth="27.0" text="#">
