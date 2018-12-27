@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.controller;
+package com.team22.Project_team_22_2018.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

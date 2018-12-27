@@ -3,6 +3,7 @@ package com.team22.Project_team_22_2018.controller;
 import com.team22.Project_team_22_2018.models.Account;
 import com.team22.Project_team_22_2018.models.Purpose;
 import com.team22.Project_team_22_2018.models.PurposeStage;
+import com.team22.Project_team_22_2018.util.Converter;
 import com.team22.Project_team_22_2018.util.Resources;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
 import com.team22.Project_team_22_2018.view.util_view.TableViewData;
@@ -235,8 +236,7 @@ public class Controller {
     }
 
     public String getStageName(int indexPurpose, int indexPurposeStage) {
-        String s = this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName().toString();
-        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName().toString();
+        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName();
     }
 
     public String getStageStatus(int indexPurpose, int indexPurposeStage) {
