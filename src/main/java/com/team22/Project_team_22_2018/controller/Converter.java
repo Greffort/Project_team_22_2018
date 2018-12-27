@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * @author Greffort
- */
 public final class Converter {
 
     public static String toJson(Object clazz) throws IOException {
@@ -20,11 +17,6 @@ public final class Converter {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(file, clazz);
     }
-
-//    public static <T> T toJavaObject(String s, Class<T> clazz) throws IOException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        return mapper.readValue(s, clazz);
-//    }
 
     public static <T> T toJavaObject(File file, Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

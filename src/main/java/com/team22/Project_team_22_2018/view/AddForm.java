@@ -1,16 +1,11 @@
 package com.team22.Project_team_22_2018.view;
 
 import com.team22.Project_team_22_2018.controller.Controller;
-import com.team22.Project_team_22_2018.models.Account;
-import com.team22.Project_team_22_2018.models.Observable;
-import com.team22.Project_team_22_2018.models.Purpose;
-import com.team22.Project_team_22_2018.models.PurposeStage;
 import com.team22.Project_team_22_2018.util.RuntimeHolder;
 import com.team22.Project_team_22_2018.view.util_view.NumberTableCellFactory;
 import com.team22.Project_team_22_2018.view.util_view.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,14 +17,9 @@ import lombok.extern.log4j.Log4j;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
-/**
- * @author AddForm
- */
 @Log4j
-public class AddForm implements Observer {
+public class AddForm {
 
-    private Account account = RuntimeHolder.getModelHolder();
     Controller controller = RuntimeHolder.getControllerHolder();
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -52,9 +42,8 @@ public class AddForm implements Observer {
             }
         }
     };
-    private ObservableList<String> langs = FXCollections.observableArrayList("IN_PROGRESS", "CLOSE", "OPEN", "WAITING", "TERMINATED");
-    private ObservableList<String> langs2 = FXCollections.observableArrayList("+", "-");
-
+    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("IN_PROGRESS", "CLOSE", "OPEN", "WAITING", "TERMINATED");
+    private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("+", "-");
 
     @FXML
     private TextField name;
@@ -63,13 +52,13 @@ public class AddForm implements Observer {
     @FXML
     private TextArea description;
     @FXML
-    private ComboBox status;
+    private ComboBox<String> status;
     @FXML
     private DatePicker deadline;
     @FXML
-    private TableView tableView;
+    private TableView<TableViewData> tableView;
     @FXML
-    private TableColumn numberingColumn;
+    private TableColumn<Object, Object> numberingColumn;
     @FXML
     private TableColumn<TableViewData, String> taskColumn;
     @FXML
@@ -77,21 +66,13 @@ public class AddForm implements Observer {
     @FXML
     private TextField stage;
     @FXML
-    private ComboBox stageStatus;
-    @FXML
-    private Button addNewStage;
-    @FXML
-    private Button addPurpose;
-
-    public AddForm() {
-        ((Observable) account).registerObserver(this);
-    }
+    private ComboBox<String> stageStatus;
 
     @FXML
     private void initialize() {
         tableView.setEditable(true);
 
-        deadline.setConverter(converter); //dataPicDeadline.setPromptText("dd-MM-yyyy");
+        deadline.setConverter(converter); //"dd-MM-yyyy"
 
         //TableView
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
@@ -102,103 +83,123 @@ public class AddForm implements Observer {
         taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         stageStatus.setValue("-");
-        stageStatus.setItems(langs2);
-        status.setItems(langs);
-//        taskColumn.setOnEditCommit(this::handle);
-//
-//tableView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->  updatePurposeInfo());
-//
-//        listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
-//                updatePurposeInfo(listView.getSelectionModel().getSelectedIndex()));
-//
+        stageStatus.setItems(listStageStatusValue);
+        status.setItems(listPurposeStatusValue);
 
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updatePurposeStageInfo(newValue);
+            }
+        });
     }
 
     @FXML
     public void buttonAddNewStage() {
-        if (stage.getText() == null || stageStatus.getItems() == null) {
-            return;
+
+        if (stage.getText().equals("") || stageStatus.getItems() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Project team 22");
+            alert.setHeaderText("Заполните поля");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    if (stage.getText().equals("")) {
+                        stage.requestFocus();
+                    } else {
+                        stageStatus.requestFocus();
+                    }
+                    return;
+                }
+            });
         } else {
             ObservableList<TableViewData> tableViewData = tableView.getItems();
             tableViewData.add(new TableViewData(stage.getText(), stageStatus.getValue().toString()));
+            stage.setText("");
         }
 
     }
 
     @FXML
     public void buttonAddPurpose() {
-        controller.addPurpose(
-                tableView.getItems(),
-                name.getText(),
-                criterionCompleted.getText(),
-                description.getText(),
-                status.getValue().toString(),
-                deadline.getValue().toString(),
-                LocalDate.now().toString()
-        );
-
-//        controller.addPurpose(new Purpose());
-//        controller.addPurposeStage(0, new PurposeStage());
-//        controller.addTask("Имя задачи","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
-//        controller.addSubTask(0,0,"Подзадача","1997-10-01","1997-10-02","1997-10-03","WAITING","Описание");
-//        Task newTask = new Task(taskNameTextField.getText(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), LocalDate.of(1, 1, 1).toString(), taskDescriptionTextArea.getText(), LocalDate.of(1, 1, 1).toString(), "", "");
-//        controller.addTask(newTask);
-//        tasks.addAll(newTask);
-//try{
-////    System.out.println(Converter.toJson(RuntimeHolder.getModelHolder()));
-//}catch (IOException e ){
-//
-//}
-//        controller.setFlagAddStage(false);
-        closeWindow();
-
-    }
-
-    public void closeWindow() {
-//        Stage stage = (Stage) closeButton.getScene().getWindow();
-//        stage.close();
-    }
-
-
-//    private ObservableList<TableViewData> getTableViewDatas() {
-//        ObservableList<TableViewData> tableViewData = FXCollections.observableArrayList();
-////        ObservableList<String> stageNames = controller.getStageNames(listView.getSelectionModel().getSelectedIndex());
-////        ObservableList<String> stageStatus = controller.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
-//
-//        for (int i = 0; i < stageNames.size(); i++) {
-//            tableViewData.add(new TableViewData(stageNames.get(i), stageStatus.get(i)));
-//        }
-//        return tableViewData;
-//    }
-
-    @Override
-    public void handleEvent() {
-
-        try {
-//            tableView.setItems();
-//            listView.setItems(controller.getPurposes());
-        } catch (NullPointerException e) {
-//            log.error(e);
+        if (checkFilling()) {
+            controller.addPurpose(
+                    tableView.getItems(),
+                    this.name.getText(),
+                    this.criterionCompleted.getText(),
+                    this.description.getText(),
+                    this.status.getValue().toString(),
+                    this.deadline.getValue().toString(),
+                    LocalDate.now().toString()
+            );
+            closeWindow();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Project team 22");
+            alert.setHeaderText("Заполните все поля!");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    log.info("Не заполнены поля");
+                }
+            });
         }
     }
 
-//    private void updatePurposeInfo(int index) {
-//
-//        name.setText(controller.getNamePurpose(index));
-//                tableView.setItems(getTableViewDatas());
-//
-//            stageStatus.setValue("-");
-//        stageStatus.setItems(langs2);
-//
-//        } catch (NullPointerException e) {
-//            log.error(e);
-//        }
-//
-//        comboBoxStageStatus.setItems(langs2);
-//
-//        comboBoxStatus.setItems(langs);
-//        comboBoxStatus.setValue(controller.getStatus(index));
-//
-//
-//    }
+    private boolean checkFilling() {
+        boolean name = this.name.getText().equals("");
+        boolean criterionCompleted = this.criterionCompleted.getText().equals("");
+        boolean description = this.description.getText().equals("");
+        boolean status = this.status.getValue() == null;
+        boolean deadline = this.deadline.getValue() == null;
+
+        if (name) {
+            this.name.requestFocus();
+            return false;
+        }
+        if (criterionCompleted) {
+            this.criterionCompleted.requestFocus();
+            return false;
+        }
+        if (description) {
+            this.description.requestFocus();
+            return false;
+        }
+        if (status) {
+            this.status.requestFocus();
+            return false;
+        }
+        if (deadline) {
+            this.deadline.requestFocus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void closeWindow() {
+        Stage stage = (Stage) this.name.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    public void buttonRemoveStage() {
+        if (tableView.getItems() != null) {
+            tableView.getItems().remove(tableView.getSelectionModel().getSelectedIndex());
+        }
+    }
+
+    @FXML
+    public void buttonSaveEditStage() {
+        tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(stage.getText(), stageStatus.getValue().toString()));
+        stage.setText("");
+    }
+
+    public void buttonCancel() {
+        closeWindow();
+    }
+
+    private void updatePurposeStageInfo(TableViewData object) {
+        if (object != null) {
+            stage.setText(object.getStage());
+            stageStatus.setValue(object.getStatus());
+        }
+    }
 }

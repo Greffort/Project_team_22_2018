@@ -14,14 +14,10 @@ import lombok.val;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Controller
- */
 @Log4j
 public class Controller {
 
@@ -31,7 +27,11 @@ public class Controller {
         this.account = RuntimeHolder.getModelHolder();
     }
 
-    //add
+    //region Add methods
+
+    /**
+     * Добавляет объект Purpose (Цель) в список Account
+     */
     public void addPurpose(
             ObservableList<TableViewData> purposeStages,
             String name,
@@ -40,10 +40,10 @@ public class Controller {
             String status,
             String deadline,
             String dateOpen) {
-        ArrayList<PurposeStage> arrayList = new ArrayList();
+        ArrayList<PurposeStage> arrayList = new ArrayList<>();
 
-        for (int i = 0; i < purposeStages.size(); i++) {
-            arrayList.add(new PurposeStage(purposeStages.get(i).getStage(), purposeStages.get(i).getStatus()));
+        for (TableViewData purposeStage : purposeStages) {
+            arrayList.add(new PurposeStage(purposeStage.getStage(), purposeStage.getStatus()));
         }
         this.account.addPurpose(new Purpose(
                 arrayList,
@@ -56,101 +56,123 @@ public class Controller {
         ));
     }
 
-    public void addPurposeStage(int indexPurpose, PurposeStage purposeStage) {
-        this.account.getPurpose(indexPurpose).addPurposeStage(purposeStage);//addPurpose(purposeStage);
-    }
-
-    //ADD NEW
-    public void addPurpose(Purpose purposeStage) {
-
-        this.account.addPurpose(purposeStage);
-    }
-
+    /**
+     * Добавляет объект PurposeStage (Этап выполнения цели) в список Account
+     */
     public void addPurposeStage(int indexPurpose, String nameStage, String status) {
-
         this.account.getPurpose(indexPurpose).addPurposeStage(new PurposeStage(nameStage, status));
-        //addPurpose(purposeStage);
     }
+    //endregion
 
-    //remove
+    //region Removal methods
+
+    /**
+     * Удаляет объект Purpose (Цель) из списка Account
+     */
     public void removePurpose(int index) {
-        if(index >= 0 && index < account.getPurposes().size()){
+        if (index >= 0 && index < account.getPurposes().size()) {
             this.account.removePurpose(index);
-        }else {
-         return;
         }
     }
 
+    /**
+     * Удаляет объект PurposeStage (Этап выполнения цели) из списка Account
+     */
     public void removePurposeStage(int indexPurpose, int indexPurposeStage) {
         this.account.getPurpose(indexPurpose).removePurposeStage(indexPurposeStage);
     }
 
-    public void clearPurposes(int indexPurpose, int indexPurposeStage) {
-        this.account.clearParposes();
+    public void clearPurposes() {
+        this.account.clearPurposes();
     }
+    //endregion
 
-    //set
+    //region Set methods
+
+    /**
+     * Перезаписывает значение конкретного объекта Purpose
+     */
     public void setPurpose(int index, Purpose purpose) {
         this.account.setPurpose(index, purpose);
     }
 
-    public void setPurposeStage(int indexPurpose, int indexPurposeStage, PurposeStage parpose) {
-
-        this.account.getPurpose(indexPurpose).setPurposeStage(indexPurposeStage, parpose);
-    }
-
+    /**
+     * Перезаписывает весь список Purpose(Целей)
+     */
     public void setPurposes(List<Purpose> list) {
         this.account.setPurposes(list);
     }
 
-    //NEW SET
-    public void setPurpose(int index,
-                           ObservableList<TableViewData> purposeStages,
-                           String name,
-                           String criterionCompleted,
-                           String description,
-                           String status,
-                           String deadline,
-                           String dateOpen) {
-        ObservableList<TableViewData> tableViewData = purposeStages;
+    /**
+     * Перезаписывавет конкретный объект Purpose
+     */
+    public void setPurpose(
+            int index,
+            ObservableList<TableViewData> purposeStages,
+            String name,
+            String criterionCompleted,
+            String description,
+            String status,
+            String deadline
+    ) {
         ArrayList<PurposeStage> list = new ArrayList<>();
 
-        for (int i = 0; i < tableViewData.size(); i++) {
-            list.add(new PurposeStage(tableViewData.get(i).getStage(), tableViewData.get(i).getStatus()));
+        for (TableViewData aTableViewData : purposeStages) {
+            list.add(new PurposeStage(aTableViewData.getStage(), aTableViewData.getStatus()));
         }
-        this.account.setPurpose(index,
-                new Purpose(
-                        list,
-                        name,
-                        criterionCompleted,
-                        description,
-                        status,
-                        LocalDate.parse(deadline),
-                        LocalDate.parse(dateOpen)));
+        this.account.getPurpose(index).setPurposeStages(list);
+        this.account.getPurpose(index).setName(name);
+        this.account.getPurpose(index).setCriterionCompleted(criterionCompleted);
+        this.account.getPurpose(index).setDescription(description);
+        this.account.getPurpose(index).setStatus(status);
+        this.account.getPurpose(index).setDeadline(LocalDate.parse(deadline));
     }
 
+    /**
+     * Перезаписывает значение списка PurposeStages в выбранном Purpose
+     */
+    public void setPurposeStage(int indexPurpose, ObservableList<TableViewData> purposesStage) {
+        ArrayList<PurposeStage> arrayList = new ArrayList<>();
+
+        for (TableViewData aPurposesStage : purposesStage) {
+            arrayList.add(new PurposeStage(aPurposesStage.getStage(), aPurposesStage.getStatus()));
+        }
+        this.account.getPurpose(indexPurpose).setPurposeStages(arrayList);
+    }
+
+    /**
+     * Перезаписывает значение даты закрытия цели
+     */
+    public void setPurposeDateClose(int index, String dateClose) {
+        account.getPurpose(index).setDateClose(LocalDate.parse(dateClose));
+    }
+
+    /**
+     * Перезаписывает значение даты закрытия цели
+     */
+    public void setPurposeDateClose(int index) {
+        account.getPurpose(index).setDateClose(null);
+    }
+
+    /**
+     * Перезаписывает значение имени этапа цели
+     */
     public void setStageName(int indexPurpose, int indexPurposeStage, String name) {
         this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setName(name);
     }
 
+    /**
+     * Перезаписывает значение статуса этапа цели
+     */
     public void setStageStatus(int indexPurpose, int indexPurposeStage, String status) {
         this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setCompleted(status);
     }
+    //endregion
 
-    //get
-    public Purpose getPurpose(int index) {
-        return this.account.getPurpose(index);
-    }
-
-    public PurposeStage getPurposeStage(int indexPurpose, int indexPurposeStage) {
-        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage);
-    }
-
-    //GET NEW
+    //region Get methods
     public ObservableList<String> getPurposes() {
         List<Purpose> list = this.account.getPurposes();
         ObservableList<String> observableList = FXCollections.observableArrayList();
-
         for (Purpose purpose : list) {
             observableList.add(purpose.getName());
         }
@@ -186,7 +208,6 @@ public class Controller {
     }
 
     public String getDeadlineDate(int index) {
-
         return this.account.getPurpose(index).getDeadline().toString();
     }
 
@@ -200,7 +221,6 @@ public class Controller {
         List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
         for (PurposeStage purposeStage : list) {
             observableList.add(purposeStage.getName());
-//                observableList.add(purposeStage.getCompleted());
         }
         return observableList;
     }
@@ -215,15 +235,16 @@ public class Controller {
     }
 
     public String getStageName(int indexPurpose, int indexPurposeStage) {
-        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName();
+        String s = this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName().toString();
+        return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName().toString();
     }
 
     public String getStageStatus(int indexPurpose, int indexPurposeStage) {
         return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getCompleted();
     }
+// endregion
 
-    //SAVE
-
+    //region Save methods
     public void save() {
         try {
 //                File dir = new File(Resources.LOCAL_SAVE);
@@ -246,9 +267,9 @@ public class Controller {
             log.error(e);
         }
     }
+    //endregion
 
-
-    //LOAD
+    //region Loads methods
     public void load() {
         try {
             if (Resources.LOCAL_SAVE != null) {
@@ -265,7 +286,6 @@ public class Controller {
 
     public void loadAs() {
         try {
-
             val fileChooser = new FileChooser();
             val file = fileChooser.showOpenDialog(null);
             if (file != null) {
@@ -276,83 +296,18 @@ public class Controller {
         }
     }
 
+    public boolean loadAsB() {
+        try {
+            val fileChooser = new FileChooser();
+            val file = fileChooser.showOpenDialog(null);
+            if (file != null) {
+                account.setPurposes(Converter.toJavaObject(file, account.getClass()).getPurposes());
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    //endregion
 
-//
-//    public PurposeStage getPurposeStage(int index) {
-//        return this.purposeStages.get(index);
-//    }
-//
-//    public void setPurposeStage(PurposeStage task, int index) {
-//        this.purposeStages.set(index, task);
-//    }
-//
-//
-//    public void addTask(String name, String deadline, String dateClose, String dateOpen, String status, String description) {
-//
-//        managerTask.addTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description));
-//    }
-//
-//    public void addSubTask(int indexTask, String name, String deadline, String dateClose, String dateOpen, String status, String description) {
-//        managerTask.getTask(indexTask).addSubTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description));
-//    }
-//
-//    public void addSubTask(int indexTask, int indexSubTask, String name, String deadline, String dateClose, String dateOpen, String status, String description) {
-//        managerTask.getTask(indexTask).addSubTask(new Task(name, LocalDate.parse(deadline), LocalDate.parse(dateClose), LocalDate.parse(dateOpen), status, description), indexSubTask);
-//    }
-//
-//
-//    public SessionDataTask getTask(int index) {
-//        try {
-//            Task task = managerTask.getTask(index);
-//            String s = Converter.toJson(task);
-//            SessionDataTask sessionDataTask = Converter.toJavaObject(s, SessionDataTask.class);
-//
-//            System.out.println();
-//            return sessionDataTask;
-//
-//        } catch (IOException e) {
-//            //запись в лог
-//        }
-//
-//        return null;
-//    }
-//
-//    public void setTask(int index, SessionDataTask task) {
-//        try {
-//            managerTask.setTask(index, Converter.toJavaObject(Converter.toJson(task), Task.class));
-//        } catch (IOException e) {
-//            //запись в лог
-//        }
-//
-////        managerTask.setTask(index, task);
-//    }
-//
-//    public ObservableList getTasks() {
-////        SessionDataManagerTask sessionDataManagerTask = new SessionDataManagerTask();
-//        ObservableList<SessionDataTask> sessionDataTasks = FXCollections.observableArrayList();
-//        try {
-//            for (int i = 0; i < managerTask.getTasks().size(); i++) {
-//                String s = Converter.toJson(managerTask.getTask(i));
-//                sessionDataTasks.add(Converter.toJavaObject(s, SessionDataTask.class));
-//            }
-//            return sessionDataTasks;
-//        } catch (IOException e) {
-//            //запись в лог
-//        }
-//        return null;
-//    }
-//
-//    public void setTasks(ObservableList tasks) {
-//
-//        ArrayList arrayList = new ArrayList();
-//        try {
-//            for (int i = 0; i < tasks.size(); i++) {
-//                String s = Converter.toJson(tasks.get(i));
-//                arrayList.add(Converter.toJavaObject(s, Task.class));
-//            }
-//            managerTask.setTasks(arrayList);
-//        } catch (IOException e) {
-//            //запись в лог
-//        }
-//    }
 }

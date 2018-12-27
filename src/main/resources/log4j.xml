@@ -28,7 +28,7 @@
         </layout>
     </appender>
 
-    <logger name="com.yourcompany.SomeClass" additivity="false">
+    <logger name="com.Project_team_22.SomeClass" additivity="false">
         <level value="debug" />
         <appender-ref ref="another.file" />
     </logger>

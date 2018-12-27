@@ -3,9 +3,6 @@ package com.team22.Project_team_22_2018.view.util_view;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * @author TableViewData
- */
 @Getter
 @Setter
 public class TableViewData {

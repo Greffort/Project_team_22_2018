@@ -10,13 +10,13 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -27,7 +27,6 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
@@ -101,7 +100,7 @@
                         <Insets />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="домой"/>
+                          <Tooltip text="домой" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonAddPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -115,7 +114,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="добавить цель"/>
+                          <Tooltip text="добавить цель" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonRemotePurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -126,7 +125,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="удалить цель"/>
+                          <Tooltip text="удалить цель" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -137,10 +136,10 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="сохранить"/>
+                          <Tooltip text="сохранить" />
                       </tooltip>
                   </Button>
-                  <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
+                  <Button fx:id="loadAction" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
                         <FontAwesomeIconView fill="#b15500" glyphName="DOWNLOAD" size="25" />
                      </graphic>
@@ -148,7 +147,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="загрузить"/>
+                          <Tooltip text="загрузить" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -162,7 +161,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="справка"/>
+                          <Tooltip text="справка" />
                       </tooltip>
                   </Button>
                </children>
@@ -218,81 +217,81 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <ScrollPane VBox.vgrow="ALWAYS">
+                        <VBox>
+                           <children>
+                              <Label fx:id="labelCloseDate" contentDisplay="CENTER" maxHeight="40.0" text="Дата закрытия цели" textFill="#b15500" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Цель" textFill="#b15500">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="namePurpose" promptText="Сформулируйте цель" VBox.vgrow="ALWAYS" />
+                              <GridPane hgap="5.0" minHeight="75.0" minWidth="500.0" vgap="5.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="708.0" minWidth="10.0" prefWidth="701.0" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="201.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <ComboBox fx:id="comboBoxStatus" prefHeight="25.0" prefWidth="174.0" style="-fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Статус" textFill="#b15500" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Дата дедлайна" textFill="#b15500">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="dataPicDeadline" prefHeight="25.0" prefWidth="1097.0" style="-fx-background-radius: 5;" GridPane.rowIndex="1" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </GridPane>
+                              <Label text="Критерий выполненности" textFill="#b15500">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="textCriterionCompleted" promptText="Опишите, при каком условии цель будет выполнена" VBox.vgrow="ALWAYS" />
+                              <Label text="Описание" textFill="#b15500">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextArea fx:id="textDescription" promptText="Опишите вашу цель" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS">
+                                 <tooltip>
+                                    <Tooltip text="Подробно распишите, в чем заключается ваше цель. " />
+                                 </tooltip>
+                              </TextArea>
+                              <Label fx:id="labelCreateDate" maxHeight="40.0" text="Дата создания цели" textFill="#b15500">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" top="5.0" />
+                           </padding>
                            <VBox.margin>
                               <Insets right="5.0" />
                            </VBox.margin>
-                           <content>
-                              <VBox>
-                                 <children>
-                                    <Label text="Цель" textFill="#b15500">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="namePurpose" promptText="Сформулируйте цель" VBox.vgrow="ALWAYS" />
-                                    <Label text="Критерий выполненности" textFill="#b15500">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="textCriterionCompleted" promptText="Опишите, при каком условии цель будет выполнена" VBox.vgrow="ALWAYS" />
-                                    <Label text="Описание" textFill="#b15500">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextArea fx:id="textDescription" promptText="Опишите вашу цель" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS" />
-                                    <Label fx:id="labelCreateDate" maxHeight="40.0" text="Дата создания цели" textFill="#b15500">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="labelCloseDate" contentDisplay="CENTER" maxHeight="40.0" text="Дата закрытия цели" textFill="#b15500" wrapText="true">
-                                       <font>
-                                          <Font name="System Bold" size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <GridPane hgap="5.0" minHeight="75.0" minWidth="500.0" vgap="5.0">
-                                      <columnConstraints>
-                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="708.0" minWidth="10.0" prefWidth="701.0" />
-                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="201.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                       <children>
-                                          <ComboBox fx:id="comboBoxStatus" prefHeight="25.0" prefWidth="174.0" style="-fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label text="Статус" textFill="#b15500" GridPane.columnIndex="1">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Дата дедлайна" textFill="#b15500">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <DatePicker fx:id="dataPicDeadline" prefHeight="25.0" prefWidth="1097.0" style="-fx-background-radius: 5;" GridPane.rowIndex="1" />
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                       </padding>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <VBox.margin>
-                                          <Insets bottom="10.0" />
-                                       </VBox.margin>
-                                    </GridPane>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" top="5.0" />
-                                 </padding>
-                              </VBox>
-                           </content>
-                        </ScrollPane>
+                        </VBox>
                           <TableView fx:id="tableView" style="-fx-background-radius: 5;" VBox.vgrow="ALWAYS">
                               <columns>
                               <TableColumn fx:id="numberingColumn" maxWidth="27.0" minWidth="27.0" prefWidth="27.0" text="#">
@@ -322,7 +321,9 @@
                           <columnConstraints>
                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="5000.0" minWidth="10.0" />
                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="190.0" />
-                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="30.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="30.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
@@ -341,34 +342,63 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="addNewStage" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonAddNewStage" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 30;" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 <graphic>
-                                    <FontAwesomeIconView fill="#b15500" glyphName="PLUS" size="25" />
-                                 </graphic>
+                              <Button fx:id="removeStage" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonRemoveStage" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 30;" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                  <padding>
                                     <Insets top="2.0" />
                                  </padding>
                                   <tooltip>
-                                      <Tooltip text="добавить этап"/>
+                                      <Tooltip text="Удалить этап" />
                                   </tooltip>
+                                 <graphic>
+                                    <FontAwesomeIconView fill="#b15500" glyphName="TRASH" size="20" text="" />
+                                 </graphic>
+                                 <GridPane.margin>
+                                    <Insets right="2.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Button fx:id="addNewStage" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonAddNewStage" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 30;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <padding>
+                                    <Insets top="2.0" />
+                                 </padding>
+                                 <tooltip>
+                                    <Tooltip text="добавить этап" />
+                                 </tooltip>
+                                 <graphic>
+                                    <FontAwesomeIconView fill="#b15500" glyphName="PLUS" size="25" />
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="saveEditStage" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonSaveEditStage" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 30;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <padding>
+                                    <Insets top="2.0" />
+                                 </padding>
+                                 <tooltip>
+                                    <Tooltip text="Сохранить изменения" />
+                                 </tooltip>
+                                 <graphic>
+                                    <FontAwesomeIconView fill="#b15500" glyphName="SAVE" size="20" />
+                                 </graphic>
+                                 <GridPane.margin>
+                                    <Insets left="9.0" />
+                                 </GridPane.margin>
                               </Button>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </GridPane>
-                          <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="746.0" spacing="10.0">
+                          <HBox alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
                               <padding>
                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                               </padding>
                            <children>
-                              <Button fx:id="closePurpose" mnemonicParsing="false" onAction="#closePurpose" text="Завершить цель!" />
+                              <Button fx:id="buttonOpenPurpose" mnemonicParsing="false" onAction="#buttonOpenPurpose" text="Продолжить выполнение" />
+                              <Button fx:id="buttonClosePurpose" mnemonicParsing="false" onAction="#buttonClosePurpose" text="Завершить цель!" />
                               <Button fx:id="saveEditPurpose" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveEditAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                                  <graphic>
                                                <FontAwesomeIconView fill="#b15500" glyphName="SAVE" size="25" text="" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
                                  </graphic>
                                   <tooltip>
-                                      <Tooltip text="сохранить изменения"/>
+                                      <Tooltip text="сохранить изменения" />
                                   </tooltip>
                               </Button>
                               <Button fx:id="editPurpose" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonEditPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -379,10 +409,13 @@
                                     <Insets right="5.0" top="3.0" />
                                  </padding>
                                   <tooltip>
-                                      <Tooltip text="отредактировать цель"/>
+                                      <Tooltip text="отредактировать цель" />
                                   </tooltip>
                               </Button>
                            </children>
+                           <VBox.margin>
+                              <Insets right="5.0" />
+                           </VBox.margin>
                           </HBox>
                      </children>
                      <padding>
