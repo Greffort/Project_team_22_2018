@@ -77,4 +77,6 @@ public class Account implements Serializable, Observable {
             observer.handleEvent();
         }
     }
+
+    //public
 }

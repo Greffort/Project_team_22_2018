@@ -3,6 +3,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -17,6 +18,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -27,8 +29,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Tooltip?>
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
+<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
         <menus>
@@ -58,6 +59,7 @@
       <GridPane hgap="5.0" minHeight="40.0" minWidth="500.0" vgap="5.0">
          <columnConstraints>
             <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="342.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="33.0" />
          </columnConstraints>
@@ -65,8 +67,15 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <FontAwesomeIconView fill="#9a4800" glyphName="SEARCH" size="20" text="" textAlignment="CENTER" wrappingWidth="15.714285850524902" GridPane.columnIndex="2" />
-            <TextField fx:id="textTask1" minWidth="-Infinity" promptText="Поиск" GridPane.columnIndex="1" />
+            <FontAwesomeIconView fill="#9a4800" glyphName="SEARCH" size="20" text="" textAlignment="CENTER" wrappingWidth="15.714285850524902" GridPane.columnIndex="3" />
+            <TextField fx:id="textFieldSearch" minWidth="-Infinity" onKeyReleased="#changeTextInSearchTextfield" promptText="Поиск" GridPane.columnIndex="2" />
+            <CheckBox id="checkBoxRegularX" mnemonicParsing="false" onMousePressed="#changeValueCheckBoxRegularX" text="поиск по регулярным выражениям" GridPane.columnIndex="1">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></CheckBox>
                <Label text="Project_team_22_2018" textFill="#b15500">
                    <font>
                        <Font name="System Bold" size="20.0" />
@@ -101,7 +110,7 @@
                         <Insets />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="домой"/>
+                          <Tooltip text="домой" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonAddPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -115,7 +124,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="добавить цель"/>
+                          <Tooltip text="добавить цель" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonRemotePurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -126,7 +135,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="удалить цель"/>
+                          <Tooltip text="удалить цель" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -137,7 +146,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="сохранить"/>
+                          <Tooltip text="сохранить" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -148,7 +157,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="загрузить"/>
+                          <Tooltip text="загрузить" />
                       </tooltip>
                   </Button>
                   <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -162,7 +171,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                       <tooltip>
-                          <Tooltip text="справка"/>
+                          <Tooltip text="справка" />
                       </tooltip>
                   </Button>
                </children>
@@ -349,7 +358,7 @@
                                     <Insets top="2.0" />
                                  </padding>
                                   <tooltip>
-                                      <Tooltip text="добавить этап"/>
+                                      <Tooltip text="добавить этап" />
                                   </tooltip>
                               </Button>
                            </children>
@@ -368,7 +377,7 @@
                                                <FontAwesomeIconView fill="#b15500" glyphName="SAVE" size="25" text="" textAlignment="CENTER" wrappingWidth="19.14285659790039" />
                                  </graphic>
                                   <tooltip>
-                                      <Tooltip text="сохранить изменения"/>
+                                      <Tooltip text="сохранить изменения" />
                                   </tooltip>
                               </Button>
                               <Button fx:id="editPurpose" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonEditPurpose" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
@@ -379,7 +388,7 @@
                                     <Insets right="5.0" top="3.0" />
                                  </padding>
                                   <tooltip>
-                                      <Tooltip text="отредактировать цель"/>
+                                      <Tooltip text="отредактировать цель" />
                                   </tooltip>
                               </Button>
                            </children>

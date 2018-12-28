@@ -91,4 +91,14 @@ public class Purpose {
     public void removePurposeStage(int index) {
         this.purposeStages.remove(index);
     }
+
+    /*@Override
+    public String toString(){
+        return new StringBuilder(name).append(" ").
+                append(criterionCompleted).append(" ").
+                append(description).append(" ").
+                append(status).append(" ").
+                append(deadline).
+                toString();
+    }*/
 }
