@@ -5,12 +5,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane onMouseClicked="#close" prefHeight="400.0" prefWidth="373.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.HelpFormController">
+<BorderPane onMouseClicked="#close" prefHeight="400.0" prefWidth="373.0"  xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.HelpFormController">
    <bottom>
-      <Label fx:id="helpLable" prefHeight="400.0" prefWidth="212.0" text="&#9;*SOME INFORMATION*&#10;click anywhere to close the window" textFill="RED" BorderPane.alignment="CENTER" />
+      <Label fx:id="helpLabel" prefHeight="400.0" prefWidth="212.0" textFill="RED" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <TextField alignment="CENTER" editable="false" style="-fx-background-color: BLACK;" text="click anywhere to continue" BorderPane.alignment="CENTER">
+      <TextField alignment="CENTER" editable="false"  text="click anywhere to continue" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets top="200.0" />
          </BorderPane.margin>

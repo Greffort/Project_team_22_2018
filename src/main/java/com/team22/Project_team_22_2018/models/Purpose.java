@@ -13,15 +13,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Purpose
- */
 @Getter
 @Setter
 @Log4j
 public class Purpose {
     private static final String FILL_DEFAULT = "not specified";
-    private static final LocalDate FILL_DATE_DEFAULT = LocalDate.of(1970,01,01);
+    private static final LocalDate FILL_DATE_DEFAULT = LocalDate.of(1970, 01, 01);
 
     private List<PurposeStage> purposeStages;
 
@@ -76,12 +73,7 @@ public class Purpose {
 
 
     public PurposeStage getPurposeStage(int index) {
-//        try{
-            return this.purposeStages.get(index);
-//        }catch (IndexOutOfBoundsException e){
-//            log.error(e);
-//            return null;
-//        }
+        return this.purposeStages.get(index);
     }
 
     public void setPurposeStage(int index, PurposeStage purposeStage) {

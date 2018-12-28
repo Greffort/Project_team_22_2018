@@ -11,9 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Account
- */
 @Getter
 @Setter
 @Log4j
@@ -44,12 +41,8 @@ public class Account implements Serializable, Observable {
     }
 
     public void removePurpose(int index) {
-//        try {
-            purposes.remove(index);
-            notifyAllObservers();
-//        } catch (IndexOutOfBoundsException e) {
-//            log.error(e);
-//        }
+        purposes.remove(index);
+        notifyAllObservers();
     }
 
     public Purpose getPurpose(int index) {
@@ -61,7 +54,7 @@ public class Account implements Serializable, Observable {
         notifyAllObservers();
     }
 
-    public void clearParposes() {
+    public void clearPurposes() {
         purposes = new ArrayList<>();
         notifyAllObservers();
     }
