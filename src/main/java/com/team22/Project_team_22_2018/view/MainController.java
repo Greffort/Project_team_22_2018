@@ -39,6 +39,7 @@ public class MainController implements Observer {
     private Account account = RuntimeHolder.getModelHolder();
     private Controller controller = RuntimeHolder.getControllerHolder();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    private ObservableList<String> sortedPurposes;
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -109,9 +110,14 @@ public class MainController implements Observer {
     private Button buttonClosePurpose;
     @FXML
     private Button buttonOpenPurpose;
-
     @FXML
     private Button loadAction;
+    @FXML
+    private TextField textFieldSearch;
+    @FXML
+    private CheckBox checkBoxRegularX = new CheckBox("checkBoxRegularX");
+
+
     //endregion
 
     public MainController() {
@@ -236,6 +242,59 @@ public class MainController implements Observer {
 //        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
 //
 //        Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+    }
+
+    @FXML
+    private void changeValueCheckBoxRegularX(){
+        checkBoxRegularX.setSelected(!checkBoxRegularX.isSelected());
+        changeTextInSearchTextField(); // <- это нужно для того, чтобы после нажатия на чекбокс таблица так-же обновилась
+    }
+
+    //при смене текста в текстбоксе search происходит поиск в таблице в зависимости от галачки на checkbox-е
+    //если галка стоит - ищем по регулярным выражениям, если нет - обычный поиск
+    @FXML
+    private void changeTextInSearchTextField(){
+
+        if(textFieldSearch.getText().equals("")){
+            listView.setItems(controller.getPurposes());
+        }
+
+        else {
+            sortedPurposes = controller.getPurposes();
+
+            if(!checkBoxRegularX.isSelected()) {
+
+                for (int i = 0; i < sortedPurposes.size(); i++) {
+
+                    if (!sortedPurposes.get(i).contains(textFieldSearch.getText())) {
+                        sortedPurposes.remove(i);
+                        i--;
+                    }
+                }
+
+            }
+            else{
+
+                try{
+                    for (int i = 0; i < sortedPurposes.size(); i++) {
+
+
+                        if (!sortedPurposes.get(i).matches(textFieldSearch.getText())) {
+                            sortedPurposes.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                catch (IllegalArgumentException e){
+                    sortedPurposes.clear();
+                }
+            }
+
+            if(sortedPurposes.size() == 0)
+                sortedPurposes.add("-"); //возвращает - если ничто не подходит под критерии поиска
+
+            listView.setItems(sortedPurposes);
+        }
     }
 
     @FXML

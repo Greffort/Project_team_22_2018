@@ -3,6 +3,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -27,7 +28,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
+<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
         <menus>
@@ -57,6 +58,7 @@
       <GridPane hgap="5.0" minHeight="40.0" minWidth="500.0" vgap="5.0">
          <columnConstraints>
             <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="342.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="446.0" minWidth="10.0" prefWidth="33.0" />
          </columnConstraints>
@@ -64,8 +66,9 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <FontAwesomeIconView fill="#9a4800" glyphName="SEARCH" size="20" text="" textAlignment="CENTER" wrappingWidth="15.714285850524902" GridPane.columnIndex="2" />
-            <TextField fx:id="textTask1" minWidth="-Infinity" promptText="Поиск" GridPane.columnIndex="1" />
+            <FontAwesomeIconView fill="#9a4800" glyphName="SEARCH" size="20" text="" textAlignment="CENTER" wrappingWidth="15.714285850524902" GridPane.columnIndex="3" />
+            <CheckBox alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#changeValueCheckBoxRegularX" text="поиск по регулярным выражениям" GridPane.columnIndex="1" />
+            <TextField id="textFieldSearch" fx:id="textFieldSearch" minWidth="-Infinity" onKeyReleased="#changeTextInSearchTextField" promptText="Поиск" GridPane.columnIndex="2" />
                <Label text="Project_team_22_2018" textFill="#b15500">
                    <font>
                        <Font name="System Bold" size="20.0" />
