@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import static com.team22.project_team_22_2018.util.Resources.LOGIN_FORM;
 
+
 @Log4j
 public class StartApp extends Application {
     @NotNull
