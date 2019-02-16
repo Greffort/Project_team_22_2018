@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.view.util_view;
+package com.team22.project_team_22_2018.view.util;
 
 import javafx.beans.NamedArg;
 import javafx.scene.control.TableCell;
@@ -39,8 +39,8 @@ public class NumberTableCellFactory<S, T> implements Callback<TableColumn<S, T>,
         return new NumberTableCell<>(startNumber);
     }
 
-    public static <T> TableColumn<T, Void> createNumberColumn(final String text,final int startNumber) {
-        TableColumn<T, Void> column = new TableColumn<>(text);
+    public static <T> TableColumn<T, Void> createNumberColumn(final String text, final int startNumber) {
+        final TableColumn<T, Void> column = new TableColumn<>(text);
         column.setSortable(false);
         column.setEditable(false);
         column.setCellFactory(new NumberTableCellFactory<>(startNumber));

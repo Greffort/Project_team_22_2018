@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.view.util_view;
+package com.team22.project_team_22_2018.view.util;
 
 import lombok.Getter;
 import lombok.Setter;
