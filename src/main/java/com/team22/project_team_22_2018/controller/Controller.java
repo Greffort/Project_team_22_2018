@@ -1,12 +1,12 @@
-package com.team22.Project_team_22_2018.controller;
+package com.team22.project_team_22_2018.controller;
 
-import com.team22.Project_team_22_2018.models.Account;
-import com.team22.Project_team_22_2018.models.Purpose;
-import com.team22.Project_team_22_2018.models.PurposeStage;
-import com.team22.Project_team_22_2018.util.Converter;
-import com.team22.Project_team_22_2018.util.Resources;
-import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.view.util_view.TableViewData;
+import com.team22.project_team_22_2018.models.Account;
+import com.team22.project_team_22_2018.models.Purpose;
+import com.team22.project_team_22_2018.models.PurposeStage;
+import com.team22.project_team_22_2018.util.Converter;
+import com.team22.project_team_22_2018.util.Resources;
+import com.team22.project_team_22_2018.util.RuntimeHolder;
+import com.team22.project_team_22_2018.view.util.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -16,15 +16,16 @@ import lombok.val;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
 public class Controller {
 
-    Account account;
+    private Account account;
 
-    public Controller(Account account) {
+    public Controller() {
         this.account = RuntimeHolder.getModelHolder();
     }
 
@@ -34,15 +35,15 @@ public class Controller {
      * Добавляет объект Purpose (Цель) в список Account
      */
     public void addPurpose(
-            ObservableList<TableViewData> purposeStages,
-            String name,
-            String criterionCompleted,
-            String description,
-            String status,
-            String deadline,
-            String dateOpen) {
+            final ObservableList<TableViewData> purposeStages,
+            final String name,
+            final String criterionCompleted,
+            final String description,
+            final String status,
+            final String deadline,
+            final String dateOpen,
+            final String criticalTime) {
         ArrayList<PurposeStage> arrayList = new ArrayList<>();
-
         for (TableViewData purposeStage : purposeStages) {
             arrayList.add(new PurposeStage(purposeStage.getStage(), purposeStage.getStatus()));
         }
@@ -53,14 +54,15 @@ public class Controller {
                 description,
                 status,
                 LocalDate.parse(deadline),
-                LocalDate.parse(dateOpen)
+                LocalDate.parse(dateOpen),
+                LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime))
         ));
     }
 
     /**
      * Добавляет объект PurposeStage (Этап выполнения цели) в список Account
      */
-    public void addPurposeStage(int indexPurpose, String nameStage, String status) {
+    public void addPurposeStage(final int indexPurpose, final String nameStage, final String status) {
         this.account.getPurpose(indexPurpose).addPurposeStage(new PurposeStage(nameStage, status));
     }
     //endregion
@@ -70,7 +72,7 @@ public class Controller {
     /**
      * Удаляет объект Purpose (Цель) из списка Account
      */
-    public void removePurpose(int index) {
+    public void removePurpose(final int index) {
         if (index >= 0 && index < account.getPurposes().size()) {
             this.account.removePurpose(index);
         }
@@ -79,7 +81,7 @@ public class Controller {
     /**
      * Удаляет объект PurposeStage (Этап выполнения цели) из списка Account
      */
-    public void removePurposeStage(int indexPurpose, int indexPurposeStage) {
+    public void removePurposeStage(final int indexPurpose, final int indexPurposeStage) {
         this.account.getPurpose(indexPurpose).removePurposeStage(indexPurposeStage);
     }
 
@@ -93,14 +95,14 @@ public class Controller {
     /**
      * Перезаписывает значение конкретного объекта Purpose
      */
-    public void setPurpose(int index, Purpose purpose) {
+    public void setPurpose(final int index, final Purpose purpose) {
         this.account.setPurpose(index, purpose);
     }
 
     /**
      * Перезаписывает весь список Purpose(Целей)
      */
-    public void setPurposes(List<Purpose> list) {
+    public void setPurposes(final List<Purpose> list) {
         this.account.setPurposes(list);
     }
 
@@ -108,13 +110,13 @@ public class Controller {
      * Перезаписывавет конкретный объект Purpose
      */
     public void setPurpose(
-            int index,
-            ObservableList<TableViewData> purposeStages,
-            String name,
-            String criterionCompleted,
-            String description,
-            String status,
-            String deadline
+            final int index,
+            final ObservableList<TableViewData> purposeStages,
+            final String name,
+            final String criterionCompleted,
+            final String description,
+            final String status,
+            final String deadline
     ) {
         ArrayList<PurposeStage> list = new ArrayList<>();
 
@@ -132,7 +134,7 @@ public class Controller {
     /**
      * Перезаписывает значение списка PurposeStages в выбранном Purpose
      */
-    public void setPurposeStage(int indexPurpose, ObservableList<TableViewData> purposesStage) {
+    public void setPurposeStage(final int indexPurpose, final ObservableList<TableViewData> purposesStage) {
         ArrayList<PurposeStage> arrayList = new ArrayList<>();
 
         for (TableViewData aPurposesStage : purposesStage) {
@@ -144,29 +146,37 @@ public class Controller {
     /**
      * Перезаписывает значение даты закрытия цели
      */
-    public void setPurposeDateClose(int index, String dateClose) {
+    public void setPurposeDateClose(final int index, final String dateClose) {
         account.getPurpose(index).setDateClose(LocalDate.parse(dateClose));
     }
 
     /**
      * Перезаписывает значение даты закрытия цели
      */
-    public void setPurposeDateClose(int index) {
+    public void setPurposeDateClose(final int index) {
         account.getPurpose(index).setDateClose(null);
     }
 
     /**
      * Перезаписывает значение имени этапа цели
      */
-    public void setStageName(int indexPurpose, int indexPurposeStage, String name) {
+    public void setStageName(final int indexPurpose, final int indexPurposeStage, final String name) {
         this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setName(name);
     }
 
     /**
      * Перезаписывает значение статуса этапа цели
      */
-    public void setStageStatus(int indexPurpose, int indexPurposeStage, String status) {
+    public void setStageStatus(final int indexPurpose, final int indexPurposeStage, final String status) {
         this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setCompleted(status);
+    }
+
+    public void setCriticalTime(final int index, final String countDays) {
+        try {
+            this.account.getPurpose(index).setCriticalTime(this.account.getPurpose(index).getDeadline().minusDays(Long.parseLong(countDays)));
+        } catch (NumberFormatException e) {
+            log.error(e);
+        }
     }
     //endregion
 
@@ -180,7 +190,7 @@ public class Controller {
         return observableList;
     }
 
-    public String getNamePurpose(int index) {
+    public String getNamePurpose(final int index) {
         if (this.account.getPurpose(index).getName() == null) {
             return "Имя не указанно";
         } else {
@@ -188,19 +198,19 @@ public class Controller {
         }
     }
 
-    public String getCriterionCompleted(int index) {
+    public String getCriterionCompleted(final int index) {
         return this.account.getPurpose(index).getCriterionCompleted();
     }
 
-    public String getDescription(int index) {
+    public String getDescription(final int index) {
         return this.account.getPurpose(index).getDescription();
     }
 
-    public String getCreateDate(int index) {
+    public String getCreateDate(final int index) {
         return this.account.getPurpose(index).getDateOpen().toString();
     }
 
-    public String getCloseDate(int index) {
+    public String getCloseDate(final int index) {
         if (this.account.getPurpose(index).getDateClose() == null) {
             return null;
         } else {
@@ -208,15 +218,15 @@ public class Controller {
         }
     }
 
-    public String getDeadlineDate(int index) {
+    public String getDeadlineDate(final int index) {
         return this.account.getPurpose(index).getDeadline().toString();
     }
 
-    public String getStatus(int index) {
+    public String getStatus(final int index) {
         return this.account.getPurpose(index).getStatus();
     }
 
-    public ObservableList<String> getStageNames(int index) {
+    public ObservableList<String> getStageNames(final int index) {
 
         ObservableList<String> observableList = FXCollections.observableArrayList();
         List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
@@ -226,7 +236,7 @@ public class Controller {
         return observableList;
     }
 
-    public ObservableList<String> getStageStatuses(int index) {
+    public ObservableList<String> getStageStatuses(final int index) {
         ObservableList<String> observableList = FXCollections.observableArrayList();
         List<PurposeStage> list = this.account.getPurpose(index).getPurposeStages();
         for (PurposeStage purposeStage : list) {
@@ -235,12 +245,24 @@ public class Controller {
         return observableList;
     }
 
-    public String getStageName(int indexPurpose, int indexPurposeStage) {
+    public String getStageName(final int indexPurpose, final int indexPurposeStage) {
         return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getName();
     }
 
-    public String getStageStatus(int indexPurpose, int indexPurposeStage) {
+    public String getStageStatus(final int indexPurpose, final int indexPurposeStage) {
         return this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).getCompleted();
+    }
+
+    public String getCriticalTime(final int index) {
+        return this.account.getPurpose(index).getCriticalTime().toString();
+    }
+
+    public String getCriticalTimeCountDays(final int index) {
+        long number = ChronoUnit.DAYS.between(
+                this.account.getPurpose(index).getCriticalTime(),
+                this.account.getPurpose(index).getDeadline()
+        );
+        return String.valueOf(number);
     }
 // endregion
 

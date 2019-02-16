@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    
+
     testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
@@ -46,7 +46,7 @@ dependencies {
 }
 
 description = "Task Manager"
-mainClassName = 'com.team22.Project_team_22_2018.Main'
+mainClassName = 'com.team22.project_team_22_2018.Main'
 sourceCompatibility = 1.8
 version '1.0-SNAPSHOT'
 
@@ -54,7 +54,7 @@ version '1.0-SNAPSHOT'
 //    baseName = 'team_22_project'
 //    version = '0.1.0'
 //    manifest {
-//        attributes 'Main-Class': 'com.team22.Project_team_22_2018.Main'
+//        attributes 'Main-Class': 'com.team22.project_team_22_2018.Main'
 //    }
 //}
 //
@@ -70,7 +70,7 @@ pmd {
 //            'java-braces',
 //            'java-clone',
 //            'java-codesize',
-//            //'java-comments',//коментировать каждый метод и каждый класс, нужно ли это?
+//            'java-comments',//коментировать каждый метод и каждый класс, нужно ли это?
 //            'java-controversial',
 //            'java-coupling',
 //            'java-design',
@@ -96,7 +96,7 @@ pmd {
 //    manifest {
 //        attributes 'Implementation-Title': 'Gradle Jar File Example',
 //                'Implementation-Version': version,
-//                'Main-Class': 'com.team22.Project_team_22_2018.Main'
+//                'Main-Class': 'com.team22.project_team_22_2018.Main'
 //    }
 //    baseName = project.name + '-all'
 //    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

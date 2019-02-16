@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.util;
+package com.team22.project_team_22_2018.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,22 +8,22 @@ import java.net.URL;
 
 public final class Converter {
 
-    public static String toJson(Object clazz) throws IOException {
+    public static String toJson(final Object clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(clazz);
     }
 
-    public static void toJsonAs(File file, Object clazz) throws IOException {
+    public static void toJsonAs(final File file, final Object clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(file, clazz);
     }
 
-    public static <T> T toJavaObject(File file, Class<T> clazz) throws IOException {
+    public static <T> T toJavaObject(final File file, final Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(file, clazz);
     }
 
-    public static <T> T toJavaObject(URL url, Class<T> clazz) throws IOException {
+    public static <T> T toJavaObject(final URL url, final Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(url, clazz);
     }

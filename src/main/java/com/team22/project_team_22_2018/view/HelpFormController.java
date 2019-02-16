@@ -1,6 +1,6 @@
-package com.team22.Project_team_22_2018.view;
+package com.team22.project_team_22_2018.view;
 
-import com.team22.Project_team_22_2018.util.Resources;
+import com.team22.project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 
 @Log4j
 public class HelpFormController {
@@ -25,7 +26,7 @@ public class HelpFormController {
     }
 
     private static String readHelp() {
-        @NotNull val file = new File(Resources.HELP_TEXT.getFile());
+        @NotNull val file = new File(Objects.requireNonNull(Resources.HELP_TEXT).getFile());
         try (@NotNull val br = new BufferedReader(new FileReader(file))) {
             String line;
             final StringBuilder s = new StringBuilder();

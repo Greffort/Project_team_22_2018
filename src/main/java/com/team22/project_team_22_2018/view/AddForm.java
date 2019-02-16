@@ -1,9 +1,9 @@
-package com.team22.Project_team_22_2018.view;
+package com.team22.project_team_22_2018.view;
 
-import com.team22.Project_team_22_2018.controller.Controller;
-import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.view.util_view.NumberTableCellFactory;
-import com.team22.Project_team_22_2018.view.util_view.TableViewData;
+import com.team22.project_team_22_2018.controller.Controller;
+import com.team22.project_team_22_2018.util.RuntimeHolder;
+import com.team22.project_team_22_2018.view.util.NumberTableCellFactory;
+import com.team22.project_team_22_2018.view.util.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -42,13 +42,15 @@ public class AddForm {
             }
         }
     };
-    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("IN_PROGRESS", "CLOSE", "OPEN", "WAITING", "TERMINATED");
-    private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("+", "-");
+    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
+    private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("Завершен", "Выполняется");
 
     @FXML
     private TextField name;
     @FXML
     private TextField criterionCompleted;
+    @FXML
+    private TextField criticalTime;
     @FXML
     private TextArea description;
     @FXML
@@ -107,12 +109,11 @@ public class AddForm {
                     } else {
                         stageStatus.requestFocus();
                     }
-                    return;
                 }
             });
         } else {
             ObservableList<TableViewData> tableViewData = tableView.getItems();
-            tableViewData.add(new TableViewData(stage.getText(), stageStatus.getValue().toString()));
+            tableViewData.add(new TableViewData(stage.getText(), stageStatus.getValue()));
             stage.setText("");
         }
 
@@ -126,9 +127,10 @@ public class AddForm {
                     this.name.getText(),
                     this.criterionCompleted.getText(),
                     this.description.getText(),
-                    this.status.getValue().toString(),
+                    this.status.getValue(),
                     this.deadline.getValue().toString(),
-                    LocalDate.now().toString()
+                    LocalDate.now().toString(),
+                    this.criticalTime.getText()
             );
             closeWindow();
         } else {
@@ -149,6 +151,7 @@ public class AddForm {
         boolean description = this.description.getText().equals("");
         boolean status = this.status.getValue() == null;
         boolean deadline = this.deadline.getValue() == null;
+        boolean criticalTime = this.criticalTime.getText().equals("");
 
         if (name) {
             this.name.requestFocus();
@@ -169,13 +172,18 @@ public class AddForm {
         if (deadline) {
             this.deadline.requestFocus();
             return false;
-        } else {
+        }
+        if (criticalTime) {
+            this.criticalTime.requestFocus();
+            return false;
+        }else {
             return true;
         }
     }
 
     public void closeWindow() {
         Stage stage = (Stage) this.name.getScene().getWindow();
+        stage.onCloseRequestProperty();
         stage.close();
     }
 
@@ -188,7 +196,7 @@ public class AddForm {
 
     @FXML
     public void buttonSaveEditStage() {
-        tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(stage.getText(), stageStatus.getValue().toString()));
+        tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(stage.getText(), stageStatus.getValue()));
         stage.setText("");
     }
 
@@ -196,7 +204,7 @@ public class AddForm {
         closeWindow();
     }
 
-    private void updatePurposeStageInfo(TableViewData object) {
+    private void updatePurposeStageInfo(final TableViewData object) {
         if (object != null) {
             stage.setText(object.getStage());
             stageStatus.setValue(object.getStatus());

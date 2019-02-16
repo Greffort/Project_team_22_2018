@@ -1,4 +1,4 @@
-package com.team22.Project_team_22_2018.view.util_view;
+package com.team22.project_team_22_2018.view.util;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ public class TableViewData {
     private String stage;
     private String status;
 
-    public TableViewData(String stage, String status) {
+    public TableViewData(final String stage, final String status) {
         this.stage = stage;
         this.status = status;
     }
@@ -19,7 +19,7 @@ public class TableViewData {
         return stage;
     }
 
-    public void setStage(String stage) {
+    public void setStage(final String stage) {
         this.stage = stage;
     }
 
@@ -27,7 +27,7 @@ public class TableViewData {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 }

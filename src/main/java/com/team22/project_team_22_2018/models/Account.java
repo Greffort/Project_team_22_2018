@@ -1,8 +1,8 @@
-package com.team22.Project_team_22_2018.models;
+package com.team22.project_team_22_2018.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.team22.Project_team_22_2018.view.Observer;
+import com.team22.project_team_22_2018.view.Observer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -40,16 +41,16 @@ public class Account implements Serializable, Observable {
         notifyAllObservers();
     }
 
-    public void removePurpose(int index) {
+    public void removePurpose(final int index) {
         purposes.remove(index);
         notifyAllObservers();
     }
 
-    public Purpose getPurpose(int index) {
+    public Purpose getPurpose(final int index) {
         return purposes.get(index);
     }
 
-    public void setPurpose(int index, Purpose purpose) {
+    public void setPurpose(final int index,final  Purpose purpose) {
         purposes.set(index, purpose);
         notifyAllObservers();
     }
@@ -60,7 +61,7 @@ public class Account implements Serializable, Observable {
     }
 
     @Override
-    public void registerObserver(Observer observer) {
+    public void registerObserver(final Observer observer) {
         this.observers.add(observer);
     }
 
@@ -71,5 +72,18 @@ public class Account implements Serializable, Observable {
         }
     }
 
-    //public
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(purposes, account.purposes) &&
+                Objects.equals(observers, account.observers) &&
+                Objects.equals(name, account.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(purposes, observers, name);
+    }
 }

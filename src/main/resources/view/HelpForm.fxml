@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane onMouseClicked="#close" prefHeight="400.0" prefWidth="373.0"  xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.Project_team_22_2018.view.HelpFormController">
+<BorderPane onMouseClicked="#close" prefHeight="400.0" prefWidth="373.0"  xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.view.HelpFormController">
    <bottom>
       <Label fx:id="helpLabel" prefHeight="400.0" prefWidth="212.0" textFill="RED" BorderPane.alignment="CENTER" />
    </bottom>

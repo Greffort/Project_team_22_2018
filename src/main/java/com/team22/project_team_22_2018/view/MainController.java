@@ -1,11 +1,11 @@
-package com.team22.Project_team_22_2018.view;
+package com.team22.project_team_22_2018.view;
 
-import com.team22.Project_team_22_2018.controller.Controller;
-import com.team22.Project_team_22_2018.models.Account;
-import com.team22.Project_team_22_2018.models.Observable;
-import com.team22.Project_team_22_2018.util.RuntimeHolder;
-import com.team22.Project_team_22_2018.view.util_view.NumberTableCellFactory;
-import com.team22.Project_team_22_2018.view.util_view.TableViewData;
+import com.team22.project_team_22_2018.controller.Controller;
+import com.team22.project_team_22_2018.models.Account;
+import com.team22.project_team_22_2018.models.Observable;
+import com.team22.project_team_22_2018.util.RuntimeHolder;
+import com.team22.project_team_22_2018.view.util.NumberTableCellFactory;
+import com.team22.project_team_22_2018.view.util.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,13 +27,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.team22.Project_team_22_2018.util.Resources.ADD_PURPOSE;
-import static com.team22.Project_team_22_2018.util.Resources.HELP_FORM;
+import static com.team22.project_team_22_2018.util.Resources.ADD_PURPOSE;
+import static com.team22.project_team_22_2018.util.Resources.HELP_FORM;
 
-@Log4j
+
 /**
  * Определяет поведние входной формы "LoginForm"
  */
+@Log4j
 public class MainController implements Observer {
     //region Variables
     private Account account = RuntimeHolder.getModelHolder();
@@ -61,8 +62,8 @@ public class MainController implements Observer {
             }
         }
     };
-    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("IN_PROGRESS", "CLOSE", "OPEN", "WAITING", "TERMINATED");
-    private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("+", "-");
+    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
+    private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("Завершен", "Выполняется");
     private boolean flagHelpStage = false;
     @Getter
     @Setter
@@ -79,6 +80,8 @@ public class MainController implements Observer {
 
     @FXML
     private TextField namePurpose;
+    @FXML
+    private TextField criticalTime;
     @FXML
     private TextField textCriterionCompleted;
 
@@ -100,6 +103,7 @@ public class MainController implements Observer {
 
     @FXML
     private TextField textStage;
+
     @FXML
     private Button editPurpose;
     @FXML
@@ -111,7 +115,31 @@ public class MainController implements Observer {
     @FXML
     private Button buttonOpenPurpose;
     @FXML
+    private Button saveEditStage;
+    @FXML
+    private Button removeStage;
+    @FXML
     private Button loadAction;
+
+//    @FXML
+//    private TitledPane titledPaneOverdue;
+//    @FXML
+//    private TitledPane titledPaneBuring;
+//    @FXML
+//    private TitledPane titledPaneCommon;
+//    @FXML
+//    private TitledPane titledPanePending;
+
+//    @FXML
+//    private ListView<String> titledPaneOverdue;
+//    @FXML
+//    private ListView<String> titledPaneBuring;
+//    @FXML
+//    private ListView<String> titledPaneCommon;
+//    @FXML
+//    private ListView<String> listViewPending;
+
+
     @FXML
     private TextField textFieldSearch;
     @FXML
@@ -161,6 +189,7 @@ public class MainController implements Observer {
     @FXML
     private void buttonAddPurpose() {
         try {
+//            controller.setCriticalTime(0,"9");
             if (!flagAddStage) {
                 flagAddStage = true;
                 FXMLLoader loader = new FXMLLoader(ADD_PURPOSE);
@@ -226,7 +255,7 @@ public class MainController implements Observer {
 
 //        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
 //
-//        Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+//        Util.writeTasks(new com.team22.project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
 
 //        }catch (IOException e){
 //            log.error(e);
@@ -241,11 +270,11 @@ public class MainController implements Observer {
 
 //        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
 //
-//        Util.writeTasks(new com.team22.Project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+//        Util.writeTasks(new com.team22.project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
     }
 
     @FXML
-    private void changeValueCheckBoxRegularX(){
+    private void changeValueCheckBoxRegularX() {
         checkBoxRegularX.setSelected(!checkBoxRegularX.isSelected());
         changeTextInSearchTextField(); // <- это нужно для того, чтобы после нажатия на чекбокс таблица так-же обновилась
     }
@@ -253,16 +282,14 @@ public class MainController implements Observer {
     //при смене текста в текстбоксе search происходит поиск в таблице в зависимости от галачки на checkbox-е
     //если галка стоит - ищем по регулярным выражениям, если нет - обычный поиск
     @FXML
-    private void changeTextInSearchTextField(){
+    private void changeTextInSearchTextField() {
 
-        if(textFieldSearch.getText().equals("")){
+        if (textFieldSearch.getText().equals("")) {
             listView.setItems(controller.getPurposes());
-        }
-
-        else {
+        } else {
             sortedPurposes = controller.getPurposes();
 
-            if(!checkBoxRegularX.isSelected()) {
+            if (!checkBoxRegularX.isSelected()) {
 
                 for (int i = 0; i < sortedPurposes.size(); i++) {
 
@@ -272,10 +299,9 @@ public class MainController implements Observer {
                     }
                 }
 
-            }
-            else{
+            } else {
 
-                try{
+                try {
                     for (int i = 0; i < sortedPurposes.size(); i++) {
 
 
@@ -284,13 +310,12 @@ public class MainController implements Observer {
                             i--;
                         }
                     }
-                }
-                catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     sortedPurposes.clear();
                 }
             }
 
-            if(sortedPurposes.size() == 0)
+            if (sortedPurposes.size() == 0)
                 sortedPurposes.add("-"); //возвращает - если ничто не подходит под критерии поиска
 
             listView.setItems(sortedPurposes);
@@ -331,11 +356,10 @@ public class MainController implements Observer {
                     } else {
                         comboBoxStageStatus.requestFocus();
                     }
-                    return;
                 }
             });
         } else {
-            controller.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue().toString());
+            controller.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue());
             updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
             textStage.setText("");
         }
@@ -372,7 +396,6 @@ public class MainController implements Observer {
     @FXML
     public void buttonRemoveStage() {
         if (tableView.getItems() != null) {
-//            tableView.
             tableView.getItems().remove(tableView.getSelectionModel().getSelectedIndex());
             controller.removePurposeStage(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex());
         }
@@ -427,7 +450,7 @@ public class MainController implements Observer {
     /**
      * Заполняет поля значениями объекта Purpose(Цель)
      */
-    private void updatePurposeInfo(int index) {
+    private void updatePurposeInfo(final int index) {
         if (index != -1) {
             boolean name = controller.getNamePurpose(index) == null;
             boolean criterionCompleted = controller.getCriterionCompleted(index) == null;
@@ -436,6 +459,7 @@ public class MainController implements Observer {
             boolean status = controller.getStatus(index) == null;
             boolean deadline = controller.getDeadlineDate(index) == null;
             boolean closeDate = controller.getCloseDate(index) == null;
+            boolean criticalTime = controller.getCriticalTimeCountDays(index) == null;
 
             comboBoxStageStatus.setItems(listStageStatusValue);
             comboBoxStatus.setItems(listPurposeStatusValue);
@@ -446,17 +470,20 @@ public class MainController implements Observer {
             buttonClosePurpose.setVisible(true);
 
             //region Text Fields
-            if (!name) {
-                namePurpose.setText(controller.getNamePurpose(index));
-            } else {
-                namePurpose.setText("Поле не заполнено");
-            }
 
-            if (!criterionCompleted) {
-                textCriterionCompleted.setText(controller.getCriterionCompleted(index));
-            } else {
-                textCriterionCompleted.setText("Поле не заполнено");
-            }
+            namePurpose.setText(!name ? controller.getNamePurpose(index) : "Поле не заполнено" );
+            textCriterionCompleted.setText(!criterionCompleted ? controller.getCriterionCompleted(index) : "Поле не заполнено");
+
+//            if (!name) {
+//                namePurpose.setText(controller.getNamePurpose(index));
+//            } else {
+//                namePurpose.setText("Поле не заполнено");
+//            }
+//            if (!criterionCompleted) {
+//                textCriterionCompleted.setText(controller.getCriterionCompleted(index));
+//            } else {
+//                textCriterionCompleted.setText("Поле не заполнено");
+//            }
 
             if (!description) {
                 textDescription.setText(controller.getDescription(index));
@@ -480,6 +507,11 @@ public class MainController implements Observer {
                 dataPicDeadline.setValue(LocalDate.parse(controller.getDeadlineDate(index)));
             } else {
                 comboBoxStatus.setValue("Поле не заполнено");
+            }
+            if (!criticalTime) {
+                this.criticalTime.setText(controller.getCriticalTimeCountDays(index));
+            } else {
+                this.criticalTime.setText("Поле не заполнено");
             }
 //endregion
 
@@ -522,6 +554,7 @@ public class MainController implements Observer {
         labelCloseDate.setText("");
         textStage.setText("");
         tableView.setItems(null);
+        criticalTime.setText("");
     }
 
 
@@ -555,7 +588,7 @@ public class MainController implements Observer {
     /**
      * Изменяет видимость и активность элементов просмотра/редактирования объектов Purpose(Цель)
      */
-    public void setEditPane(Boolean bool, double opacity) {
+    public void setEditPane(final Boolean bool,final  double opacity) {
         textStage.setDisable(bool);
         editPurpose.setDisable(!bool);
         saveEditPurpose.setDisable(bool);
@@ -567,7 +600,9 @@ public class MainController implements Observer {
         textCriterionCompleted.setDisable(bool);
         comboBoxStageStatus.setDisable(bool);
         addNewStage.setDisable(bool);
-//        buttonClosePurpose.setDisable(bool);
+        criticalTime.setDisable(bool);
+        saveEditStage.setDisable(bool);
+        removeStage.setDisable(bool);
 
         textStage.setOpacity(opacity);
         textCriterionCompleted.setOpacity(opacity);
@@ -579,15 +614,16 @@ public class MainController implements Observer {
         dataPicDeadline.setOpacity(opacity);
         comboBoxStageStatus.setOpacity(opacity);
         addNewStage.setOpacity(opacity);
-//        buttonClosePurpose.setOpacity(opacity);
-
+        criticalTime.setOpacity(opacity);
+        saveEditStage.setOpacity(opacity);
+        removeStage.setOpacity(opacity);
     }
 
-    private void handle(TableColumn.CellEditEvent<TableViewData, String> t) {
+    private void handle(final TableColumn.CellEditEvent<TableViewData, String> editEvent) {
         controller.setStageName(
                 listView.getSelectionModel().getSelectedIndex(),
                 tableView.getSelectionModel().getSelectedIndex(),
-                t.getNewValue()
+                editEvent.getNewValue()
         );
     }
 
@@ -599,8 +635,8 @@ public class MainController implements Observer {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
             alert.setHeaderText("Ошибка чтения файла");
-            alert.showAndWait().ifPresent(rs -> {
-                if (rs == ButtonType.OK) {
+            alert.showAndWait().ifPresent(e -> {
+                if (e == ButtonType.OK) {
                     log.info("Ошибка загрузки файла");
                     loadAction.requestFocus();
                 }
