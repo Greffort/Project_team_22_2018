@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.models;
+package com.team22.project_team_22_2018.server.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -31,10 +31,10 @@ public class Purpose {
 
     private String status;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate criticalTime;
+    //    @JsonDeserialize(using = LocalDateDeserializer.class)
+//    @JsonSerialize(using = LocalDateSerializer.class)
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String criticalTime;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
@@ -59,7 +59,7 @@ public class Purpose {
         this.status = FILL_DEFAULT;
         this.deadline = FILL_DATE_DEFAULT;
         this.dateOpen = FILL_DATE_DEFAULT;
-        this.criticalTime = FILL_DATE_DEFAULT;
+        this.criticalTime = FILL_DEFAULT;
     }
 
     public Purpose(final List<PurposeStage> purposeStages,
@@ -68,7 +68,7 @@ public class Purpose {
                    final String status,
                    final LocalDate deadline,
                    final LocalDate dateOpen,
-                   final LocalDate criticalTime) {
+                   final String criticalTime) {
         this.purposeStages = purposeStages;
         this.name = name;
         this.criterionCompleted = criterionCompleted;
@@ -76,6 +76,7 @@ public class Purpose {
         this.status = status;
         this.deadline = deadline;
         this.dateOpen = dateOpen;
+        this.dateClose = FILL_DATE_DEFAULT;
         this.criticalTime = criticalTime;
     }
 
@@ -114,5 +115,20 @@ public class Purpose {
     @Override
     public int hashCode() {
         return Objects.hash(purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen);
+    }
+
+    @Override
+    public String toString() {
+        return "Purpose{" +
+                ", name='" + name + '\'' +
+                ", purposeStages=" + purposeStages +
+                ", criterionCompleted='" + criterionCompleted + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", criticalTime=" + criticalTime +
+                ", deadline=" + deadline +
+                ", dateClose=" + dateClose +
+                ", dateOpen=" + dateOpen +
+                '}';
     }
 }

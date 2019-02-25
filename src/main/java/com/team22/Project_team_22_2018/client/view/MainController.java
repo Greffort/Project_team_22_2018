@@ -1,11 +1,10 @@
-package com.team22.project_team_22_2018.view;
+package com.team22.project_team_22_2018.client.view;
 
-import com.team22.project_team_22_2018.controller.Controller;
-import com.team22.project_team_22_2018.models.Account;
-import com.team22.project_team_22_2018.models.Observable;
-import com.team22.project_team_22_2018.util.RuntimeHolder;
-import com.team22.project_team_22_2018.view.util.NumberTableCellFactory;
-import com.team22.project_team_22_2018.view.util.TableViewData;
+import com.team22.project_team_22_2018.client.controller.ControllerView;
+import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
+import com.team22.project_team_22_2018.client.view.util.model.Observable;
+import com.team22.project_team_22_2018.client.view.util.tableview.NumberTableCellFactory;
+import com.team22.project_team_22_2018.client.view.util.tableview.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,15 +29,15 @@ import java.util.Locale;
 import static com.team22.project_team_22_2018.util.Resources.ADD_PURPOSE;
 import static com.team22.project_team_22_2018.util.Resources.HELP_FORM;
 
-
 /**
  * Определяет поведние входной формы "LoginForm"
  */
 @Log4j
 public class MainController implements Observer {
+
     //region Variables
-    private Account account = RuntimeHolder.getModelHolder();
-    private Controller controller = RuntimeHolder.getControllerHolder();
+    private ControllerView controllerView = ClientRuntimeHolder.getControllerViewHolder();
+
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     private ObservableList<String> sortedPurposes;
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
@@ -121,35 +120,14 @@ public class MainController implements Observer {
     @FXML
     private Button loadAction;
 
-//    @FXML
-//    private TitledPane titledPaneOverdue;
-//    @FXML
-//    private TitledPane titledPaneBuring;
-//    @FXML
-//    private TitledPane titledPaneCommon;
-//    @FXML
-//    private TitledPane titledPanePending;
-
-//    @FXML
-//    private ListView<String> titledPaneOverdue;
-//    @FXML
-//    private ListView<String> titledPaneBuring;
-//    @FXML
-//    private ListView<String> titledPaneCommon;
-//    @FXML
-//    private ListView<String> listViewPending;
-
-
     @FXML
     private TextField textFieldSearch;
     @FXML
     private CheckBox checkBoxRegularX = new CheckBox("checkBoxRegularX");
-
-
     //endregion
 
     public MainController() {
-        ((Observable) account).registerObserver(this);
+        ((Observable) controllerView).registerObserver(this);
     }
 
     @FXML
@@ -190,17 +168,17 @@ public class MainController implements Observer {
     private void buttonAddPurpose() {
         try {
 //            controller.setCriticalTime(0,"9");
-            if (!flagAddStage) {
-                flagAddStage = true;
-                FXMLLoader loader = new FXMLLoader(ADD_PURPOSE);
-                final Parent root = loader.load();
-                val scene = new Scene(root);
-                val stage = new Stage();
-                stage.setTitle("Windows add");
-                stage.setScene(scene);
-                stage.show();
-                stage.setOnCloseRequest(event -> flagAddStage = false);
-            }
+//            if (!flagAddStage) {
+            flagAddStage = true;
+            FXMLLoader loader = new FXMLLoader(ADD_PURPOSE);
+            final Parent root = loader.load();
+            val scene = new Scene(root);
+            val stage = new Stage();
+            stage.setTitle("Windows add");
+            stage.setScene(scene);
+            stage.show();
+            stage.setOnCloseRequest(event -> flagAddStage = false);
+//            }
         } catch (IOException e) {
             log.error(e);
         }
@@ -209,7 +187,7 @@ public class MainController implements Observer {
     @FXML
     private void buttonRemotePurpose() {
         if (listView.getItems() != null) {
-            controller.removePurpose(listView.getSelectionModel().getSelectedIndex());
+            controllerView.removePurpose(listView.getSelectionModel().getSelectedIndex());
             clearPurposeInfo();
             listView.getSelectionModel().clearSelection();
         }
@@ -233,44 +211,19 @@ public class MainController implements Observer {
 
     @FXML
     public void buttonClosePurpose() {
-        controller.setPurposeDateClose(listView.getSelectionModel().getSelectedIndex(), LocalDate.now().toString());
+        controllerView.setPurposeDateClose(listView.getSelectionModel().getSelectedIndex(), LocalDate.now().toString());
         updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
     }
 
     @FXML
     public void buttonOpenPurpose() {
-        controller.setPurposeDateClose(listView.getSelectionModel().getSelectedIndex());
+        controllerView.setPurposeDateCloseNull(listView.getSelectionModel().getSelectedIndex());
         updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
     }
 
     @FXML
     private void saveAction() {
-        controller.saveAs();
-//        try {
-//            ObservableList<Task> items = tableView.getItems();
-//        List<ITask> list = new ArrayList<>();
-//        for (Task item : items) {
-//            list.add(item.toTask());
-//        }
-
-//        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
-//
-//        Util.writeTasks(new com.team22.project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
-
-//        }catch (IOException e){
-//            log.error(e);
-//        }
-
-
-//        ObservableList<Task> items = tableView.getItems();
-//        List<ITask> list = new ArrayList<>();
-//        for (Task item : items) {
-//            list.add(item.toTask());
-//        }
-
-//        List<Task> collect = tableView.getItems().stream().map(Task::toTask).collect(Collectors.toList());
-//
-//        Util.writeTasks(new com.team22.project_team_22_2018.models.old.ManagerTask(collect), Resources.LOCAL_SAVE.getPath());
+        controllerView.saveAs();
     }
 
     @FXML
@@ -285,9 +238,14 @@ public class MainController implements Observer {
     private void changeTextInSearchTextField() {
 
         if (textFieldSearch.getText().equals("")) {
-            listView.setItems(controller.getPurposes());
+            listView.setItems(
+//                    controller.getModel()
+                    controllerView.getMyObjects()
+
+            );
         } else {
-            sortedPurposes = controller.getPurposes();
+            sortedPurposes = controllerView.getMyObjects();
+//            sortedPurposes = controller.g();
 
             if (!checkBoxRegularX.isSelected()) {
 
@@ -300,7 +258,6 @@ public class MainController implements Observer {
                 }
 
             } else {
-
                 try {
                     for (int i = 0; i < sortedPurposes.size(); i++) {
 
@@ -311,6 +268,7 @@ public class MainController implements Observer {
                         }
                     }
                 } catch (IllegalArgumentException e) {
+                    log.error(e);
                     sortedPurposes.clear();
                 }
             }
@@ -324,7 +282,7 @@ public class MainController implements Observer {
 
     @FXML
     public void saveAsAction() {
-        controller.saveAs();
+        controllerView.saveAs();
     }
 
     @FXML
@@ -359,12 +317,11 @@ public class MainController implements Observer {
                 }
             });
         } else {
-            controller.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue());
+            controllerView.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue());
             updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
             textStage.setText("");
         }
     }
-
 
     /**
      * Обрабатывает событие сохранения "Цели". Отправляет команду на перезапись объекта Purpose в модели
@@ -372,14 +329,16 @@ public class MainController implements Observer {
     @FXML
     public void saveEditAction() {
         setEditPane(true, 0.9);
-        controller.setPurpose(
+        controllerView.setPurpose(
                 listView.getSelectionModel().getSelectedIndex(),
                 tableView.getItems(),
                 namePurpose.getText(),
                 textCriterionCompleted.getText(),
                 textDescription.getText(),
                 comboBoxStatus.getValue(),
-                dataPicDeadline.getValue().format(formatter)
+                dataPicDeadline.getValue().format(formatter),
+                controllerView.getDateOpen(listView.getSelectionModel().getSelectedIndex()),
+                controllerView.getCriticalTime(listView.getSelectionModel().getSelectedIndex())
         );
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Project team 22");
@@ -392,19 +351,18 @@ public class MainController implements Observer {
         textStage.setText("");
     }
 
-
     @FXML
     public void buttonRemoveStage() {
         if (tableView.getItems() != null) {
             tableView.getItems().remove(tableView.getSelectionModel().getSelectedIndex());
-            controller.removePurposeStage(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex());
+            controllerView.removePurposeStage(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex());
         }
     }
 
     @FXML
     public void buttonSaveEditStage() {
         tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(textStage.getText(), comboBoxStageStatus.getValue()));
-        controller.setPurposeStage(
+        controllerView.setPurposeStages(
                 listView.getSelectionModel().getSelectedIndex(),
                 tableView.getItems());
         textStage.setText("");
@@ -452,14 +410,18 @@ public class MainController implements Observer {
      */
     private void updatePurposeInfo(final int index) {
         if (index != -1) {
-            boolean name = controller.getNamePurpose(index) == null;
-            boolean criterionCompleted = controller.getCriterionCompleted(index) == null;
-            boolean description = controller.getDescription(index) == null;
-            boolean createDate = controller.getCreateDate(index) == null;
-            boolean status = controller.getStatus(index) == null;
-            boolean deadline = controller.getDeadlineDate(index) == null;
-            boolean closeDate = controller.getCloseDate(index) == null;
-            boolean criticalTime = controller.getCriticalTimeCountDays(index) == null;
+            boolean name = controllerView.getNamePurpose(index) == null;
+            boolean criterionCompleted = controllerView.getCriterionCompleted(index) == null;
+            boolean description = controllerView.getDescription(index) == null;
+            boolean createDate = controllerView.getCreateDate(index) == null;
+            boolean status = controllerView.getStatus(index) == null;
+            boolean deadline = controllerView.getDeadlineDate(index) == null;
+            boolean closeDate = false;
+            if (controllerView.getCloseDate(index) == null) {
+                closeDate = true;
+            } else if (controllerView.getCloseDate(index).equals("1970-01-01")) {
+                closeDate = true;
+            }
 
             comboBoxStageStatus.setItems(listStageStatusValue);
             comboBoxStatus.setItems(listPurposeStatusValue);
@@ -470,67 +432,49 @@ public class MainController implements Observer {
             buttonClosePurpose.setVisible(true);
 
             //region Text Fields
-
-            namePurpose.setText(!name ? controller.getNamePurpose(index) : "Поле не заполнено" );
-            textCriterionCompleted.setText(!criterionCompleted ? controller.getCriterionCompleted(index) : "Поле не заполнено");
-
-//            if (!name) {
-//                namePurpose.setText(controller.getNamePurpose(index));
-//            } else {
-//                namePurpose.setText("Поле не заполнено");
-//            }
-//            if (!criterionCompleted) {
-//                textCriterionCompleted.setText(controller.getCriterionCompleted(index));
-//            } else {
-//                textCriterionCompleted.setText("Поле не заполнено");
-//            }
+            namePurpose.setText(!name ? controllerView.getNamePurpose(index) : "Поле не заполнено");
+            textCriterionCompleted.setText(!criterionCompleted ? controllerView.getCriterionCompleted(index) : "Поле не заполнено");
 
             if (!description) {
-                textDescription.setText(controller.getDescription(index));
+                textDescription.setText(controllerView.getDescription(index));
             } else {
                 textDescription.setText("Поле не заполнено");
             }
 
             if (!createDate) {
-                labelCreateDate.setText("Дата создания цели: " + controller.getCreateDate(index));
+                labelCreateDate.setText("Дата создания цели: " + controllerView.getCreateDate(index));
             } else {
                 labelCreateDate.setText("Поле не заполнено");
             }
 
             if (!status) {
-                comboBoxStatus.setValue(controller.getStatus(index));
+                comboBoxStatus.setValue(controllerView.getStatus(index));
             } else {
                 comboBoxStatus.setValue("Поле не заполнено");
             }
 
             if (!deadline) {
-                dataPicDeadline.setValue(LocalDate.parse(controller.getDeadlineDate(index)));
+                dataPicDeadline.setValue(LocalDate.parse(controllerView.getDeadlineDate(index)));
             } else {
                 comboBoxStatus.setValue("Поле не заполнено");
-            }
-            if (!criticalTime) {
-                this.criticalTime.setText(controller.getCriticalTimeCountDays(index));
-            } else {
-                this.criticalTime.setText("Поле не заполнено");
             }
 //endregion
 
             //region TableView
-            if (listView.getSelectionModel().getSelectedIndex() != -1 || controller.getPurposes() == null) {
+            if (listView.getSelectionModel().getSelectedIndex() != -1 || controllerView.getMyObjects() == null) {
                 tableView.setItems(getTableViewDates());
             }
             //endregion
 
             //region Close Date
             if (!closeDate) {
-                labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controller.getCloseDate(index));
+                labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controllerView.getCloseDate(index));
                 labelCloseDate.setVisible(true);
             } else {
                 labelCloseDate.setVisible(false);
             }
             //endregion
         }
-
     }
 
     /**
@@ -563,8 +507,8 @@ public class MainController implements Observer {
      */
     private ObservableList<TableViewData> getTableViewDates() {
         ObservableList<TableViewData> tableViewData = FXCollections.observableArrayList();
-        ObservableList<String> stageNames = controller.getStageNames(listView.getSelectionModel().getSelectedIndex());
-        ObservableList<String> stageStatus = controller.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
+        ObservableList<String> stageNames = controllerView.getStageNames(listView.getSelectionModel().getSelectedIndex());
+        ObservableList<String> stageStatus = controllerView.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
 
         for (int i = 0; i < stageNames.size(); i++) {
             tableViewData.add(new TableViewData(stageNames.get(i), stageStatus.get(i)));
@@ -578,8 +522,7 @@ public class MainController implements Observer {
     @Override
     public void handleEvent() {
         try {
-//            listView.getSelectionModel().clearSelection();
-            listView.setItems(controller.getPurposes());
+            listView.setItems(controllerView.getMyObjects());
         } catch (NullPointerException e) {
             log.error(e);
         }
@@ -588,7 +531,7 @@ public class MainController implements Observer {
     /**
      * Изменяет видимость и активность элементов просмотра/редактирования объектов Purpose(Цель)
      */
-    public void setEditPane(final Boolean bool,final  double opacity) {
+    public void setEditPane(final Boolean bool, final double opacity) {
         textStage.setDisable(bool);
         editPurpose.setDisable(!bool);
         saveEditPurpose.setDisable(bool);
@@ -620,7 +563,7 @@ public class MainController implements Observer {
     }
 
     private void handle(final TableColumn.CellEditEvent<TableViewData, String> editEvent) {
-        controller.setStageName(
+        controllerView.setStageName(
                 listView.getSelectionModel().getSelectedIndex(),
                 tableView.getSelectionModel().getSelectedIndex(),
                 editEvent.getNewValue()
@@ -631,7 +574,7 @@ public class MainController implements Observer {
      * Вызывает метод считывания файла
      */
     private void processFile() {
-        if (!controller.loadAsB()) {
+        if (!controllerView.loadAsB()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
             alert.setHeaderText("Ошибка чтения файла");
@@ -646,8 +589,8 @@ public class MainController implements Observer {
         }
     }
 //endregion
-
 }
+
 
 
 

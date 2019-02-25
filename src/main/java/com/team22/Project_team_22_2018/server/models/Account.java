@@ -1,8 +1,6 @@
-package com.team22.project_team_22_2018.models;
+package com.team22.project_team_22_2018.server.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.team22.project_team_22_2018.view.Observer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -15,13 +13,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @Log4j
-public class Account implements Serializable, Observable {
+public class Account implements Serializable {
 
     @JsonSerialize
     private List<Purpose> purposes;
-
-    @JsonIgnore
-    private List<Observer> observers = new ArrayList<>();
 
     private String name;
 
@@ -36,40 +31,27 @@ public class Account implements Serializable, Observable {
     }
 
     public void addPurpose(final Purpose purpose) {
-
         purposes.add(purpose);
-        notifyAllObservers();
     }
 
     public void removePurpose(final int index) {
         purposes.remove(index);
-        notifyAllObservers();
     }
 
     public Purpose getPurpose(final int index) {
         return purposes.get(index);
     }
 
-    public void setPurpose(final int index,final  Purpose purpose) {
+    public void setPurpose(final int index, final Purpose purpose) {
         purposes.set(index, purpose);
-        notifyAllObservers();
+    }
+
+    public void setPurposes(final List<Purpose> purposes) {
+        this.purposes = purposes;
     }
 
     public void clearPurposes() {
         purposes = new ArrayList<>();
-        notifyAllObservers();
-    }
-
-    @Override
-    public void registerObserver(final Observer observer) {
-        this.observers.add(observer);
-    }
-
-    @Override
-    public void notifyAllObservers() {
-        for (Observer observer : observers) {
-            observer.handleEvent();
-        }
     }
 
     @Override
@@ -78,12 +60,19 @@ public class Account implements Serializable, Observable {
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
         return Objects.equals(purposes, account.purposes) &&
-                Objects.equals(observers, account.observers) &&
                 Objects.equals(name, account.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(purposes, observers, name);
+        return Objects.hash(purposes, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "purposes=" + purposes +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

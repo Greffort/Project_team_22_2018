@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.view;
+package com.team22.project_team_22_2018.client.view;
 
 import com.team22.project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;

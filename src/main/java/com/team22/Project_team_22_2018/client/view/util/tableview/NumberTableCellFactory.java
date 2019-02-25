@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.view.util;
+package com.team22.project_team_22_2018.client.view.util.tableview;
 
 import javafx.beans.NamedArg;
 import javafx.scene.control.TableCell;

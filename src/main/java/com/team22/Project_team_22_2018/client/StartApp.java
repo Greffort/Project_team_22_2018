@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018;
+package com.team22.project_team_22_2018.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

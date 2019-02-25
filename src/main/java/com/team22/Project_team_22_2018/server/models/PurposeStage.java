@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.models;
+package com.team22.project_team_22_2018.server.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +25,21 @@ public class PurposeStage {
         this.completed = completed;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(String completed) {
+        this.completed = completed;
+    }
 
     @Override
     public boolean equals(final Object o) {
@@ -38,5 +53,13 @@ public class PurposeStage {
     @Override
     public int hashCode() {
         return Objects.hash(name, completed);
+    }
+
+    @Override
+    public String toString() {
+        return "PurposeStage{" +
+                "name='" + name + '\'' +
+                ", completed='" + completed + '\'' +
+                '}';
     }
 }

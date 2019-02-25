@@ -9,5 +9,4 @@ public interface Resources {
     URL ADD_PURPOSE = Resources.class.getClassLoader().getResource("view/AddForm.fxml");
 
     URL HELP_TEXT = Resources.class.getClassLoader().getResource("file/help.txt");
-    URL LOCAL_SAVE = Resources.class.getClassLoader().getResource("C:\\Users\\Aleks\\save.txt");
 }

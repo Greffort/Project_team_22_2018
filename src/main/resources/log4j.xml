@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="default.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="src\\main\\resources\\log\\log.log" />
+        <param name="file" value="/log/anotherlogfile.log" />
         <param name="append" value="false" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">
@@ -20,7 +20,7 @@
     </appender>
 
     <appender name="another.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="/log/anotherlogfile.log" />
+        <param name="file" value="src\\main\\resources\\log\\log.log"/>
         <param name="append" value="false" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">

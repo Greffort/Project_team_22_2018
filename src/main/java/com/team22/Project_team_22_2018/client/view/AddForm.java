@@ -1,9 +1,9 @@
-package com.team22.project_team_22_2018.view;
+package com.team22.project_team_22_2018.client.view;
 
-import com.team22.project_team_22_2018.controller.Controller;
-import com.team22.project_team_22_2018.util.RuntimeHolder;
-import com.team22.project_team_22_2018.view.util.NumberTableCellFactory;
-import com.team22.project_team_22_2018.view.util.TableViewData;
+import com.team22.project_team_22_2018.client.controller.ControllerView;
+import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
+import com.team22.project_team_22_2018.client.view.util.tableview.NumberTableCellFactory;
+import com.team22.project_team_22_2018.client.view.util.tableview.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,7 +20,8 @@ import java.time.format.DateTimeFormatter;
 @Log4j
 public class AddForm {
 
-    Controller controller = RuntimeHolder.getControllerHolder();
+    //    Controller controller = ServerRuntimeHolder.getControllerHolder();
+    ControllerView controllerView = ClientRuntimeHolder.getControllerViewHolder();
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -122,7 +123,7 @@ public class AddForm {
     @FXML
     public void buttonAddPurpose() {
         if (checkFilling()) {
-            controller.addPurpose(
+            controllerView.addPurpose(
                     tableView.getItems(),
                     this.name.getText(),
                     this.criterionCompleted.getText(),
@@ -132,6 +133,16 @@ public class AddForm {
                     LocalDate.now().toString(),
                     this.criticalTime.getText()
             );
+//            controller.addPurpose(
+//                    tableView.getItems(),
+//                    this.name.getText(),
+//                    this.criterionCompleted.getText(),
+//                    this.description.getText(),
+//                    this.status.getValue(),
+//                    this.deadline.getValue().toString(),
+//                    LocalDate.now().toString(),
+//                    this.criticalTime.getText()
+//            );
             closeWindow();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -176,7 +187,7 @@ public class AddForm {
         if (criticalTime) {
             this.criticalTime.requestFocus();
             return false;
-        }else {
+        } else {
             return true;
         }
     }

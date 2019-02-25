@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.view.util;
+package com.team22.project_team_22_2018.client.view.util.tableview;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +29,13 @@ public class TableViewData {
 
     public void setStatus(final String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "TableViewData{" +
+                "stage='" + stage + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }
