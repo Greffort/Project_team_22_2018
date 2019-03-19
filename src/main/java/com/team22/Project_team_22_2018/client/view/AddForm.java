@@ -16,11 +16,13 @@ import lombok.extern.log4j.Log4j;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 @Log4j
 public class AddForm {
 
-    //    Controller controller = ServerRuntimeHolder.getControllerHolder();
+
+
     ControllerView controllerView = ClientRuntimeHolder.getControllerViewHolder();
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -43,7 +45,9 @@ public class AddForm {
             }
         }
     };
-    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
+    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList(
+            "Просроченная", "Горящая", "Обычная", "В ожидании", "Закрытая");
+//    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
     private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("Завершен", "Выполняется");
 
     @FXML
@@ -94,6 +98,13 @@ public class AddForm {
                 updatePurposeStageInfo(newValue);
             }
         });
+
+        Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
+        criticalTime.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) {
+                criticalTime.setText(oldValue);
+            }
+        });
     }
 
     @FXML
@@ -133,17 +144,10 @@ public class AddForm {
                     LocalDate.now().toString(),
                     this.criticalTime.getText()
             );
-//            controller.addPurpose(
-//                    tableView.getItems(),
-//                    this.name.getText(),
-//                    this.criterionCompleted.getText(),
-//                    this.description.getText(),
-//                    this.status.getValue(),
-//                    this.deadline.getValue().toString(),
-//                    LocalDate.now().toString(),
-//                    this.criticalTime.getText()
-//            );
+
+            MainController.setFlagAddStage(false);
             closeWindow();
+
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
@@ -192,14 +196,14 @@ public class AddForm {
         }
     }
 
-    public void closeWindow() {
+    private void closeWindow() {
         Stage stage = (Stage) this.name.getScene().getWindow();
         stage.onCloseRequestProperty();
         stage.close();
     }
 
     @FXML
-    public void buttonRemoveStage() {
+    private void buttonRemoveStage() {
         if (tableView.getItems() != null) {
             tableView.getItems().remove(tableView.getSelectionModel().getSelectedIndex());
         }

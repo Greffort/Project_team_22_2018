@@ -23,6 +23,8 @@ public class HelpFormController {
     @FXML
     private void initialize() {
         helpLabel.setText(readHelp());
+
+
     }
 
     private static String readHelp() {
@@ -41,6 +43,7 @@ public class HelpFormController {
     }
 
     public void close() {
+        MainController.setFlagHelpStage(false);
         Stage stage = (Stage) helpLabel.getScene().getWindow();
         stage.close();
     }

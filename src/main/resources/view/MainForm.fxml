@@ -28,7 +28,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.client.view.MainController">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.client.view.MainController">
    <children>
       <MenuBar VBox.vgrow="ALWAYS">
         <menus>
@@ -39,6 +39,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#loadAction" text="Загрузить" />
                   <MenuItem mnemonicParsing="false" onAction="#loadFromAction" text="Загрузить из" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#changUser" text="Сменить пользователя" />
               <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Выйти" />
             </items>
           </Menu>
@@ -92,7 +93,7 @@
          <children>
             <VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefWidth="30.0">
                <children>
-                  <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
+                  <Button fx:id="buttonHome" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buttonHome" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <padding>
                         <Insets bottom="2.0" />
                      </padding>
@@ -153,7 +154,7 @@
                           <Tooltip text="загрузить" />
                       </tooltip>
                   </Button>
-                  <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
+                  <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#helpAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;">
                      <graphic>
                         <FontAwesomeIconView fill="#b15500" glyphName="QUESTION" size="25" />
                      </graphic>
@@ -176,6 +177,11 @@
               <items>
                   <VBox alignment="CENTER" maxWidth="-Infinity" prefWidth="300.0">
                      <children>
+                        <Pane prefHeight="24.0" prefWidth="300.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxSortByStatus" layoutY="4.0" mnemonicParsing="false" text="Сортировка по статусам" textFill="#b15500" />
+                           </children>
+                        </Pane>
                         <Label alignment="CENTER" contentDisplay="CENTER" text="Цели" textFill="#b15500">
                            <font>
                               <Font size="14.0" />

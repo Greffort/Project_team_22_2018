@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Log4j
@@ -14,6 +15,8 @@ import java.util.Objects;
 public class MyObject {
     private static final String FILL_DEFAULT = "not specified";
     private static final String FILL_DATE_DEFAULT = "1970-01-01";
+
+    private String uuid;
 
     private List<MySubObject> purposeStages;
 
@@ -33,15 +36,19 @@ public class MyObject {
 
     private String dateOpen;
 
+    //искать ошибку конвертации здесь
     public MyObject() {
-        this.purposeStages = new ArrayList<>();
-        this.name = FILL_DEFAULT;
-        this.criterionCompleted = FILL_DEFAULT;
-        this.description = FILL_DEFAULT;
-        this.status = FILL_DEFAULT;
-        this.deadline = FILL_DATE_DEFAULT;
-        this.dateOpen = FILL_DATE_DEFAULT;
-        this.criticalTime = FILL_DATE_DEFAULT;
+        this(
+                new ArrayList<>(),
+                FILL_DEFAULT,
+                FILL_DEFAULT,
+                FILL_DEFAULT,
+                FILL_DEFAULT,
+                FILL_DATE_DEFAULT,
+                FILL_DATE_DEFAULT,
+                FILL_DATE_DEFAULT,
+                UUID.randomUUID().toString()
+        );
     }
 
     public MyObject(final List<MySubObject> purposeStages,
@@ -51,7 +58,8 @@ public class MyObject {
                     final String status,
                     final String deadline,
                     final String dateOpen,
-                    final String criticalTime) {
+                    final String criticalTime,
+                    final String uuid) {
         this.purposeStages = purposeStages;
         this.name = name;
         this.criterionCompleted = criterionCompleted;
@@ -59,12 +67,25 @@ public class MyObject {
         this.status = status;
         this.deadline = deadline;
         this.dateOpen = dateOpen;
+        this.dateClose = FILL_DATE_DEFAULT;
         this.criticalTime = criticalTime;
-//        this.dataClose = FILL_DATE_DEFAULT;
+        this.uuid = uuid;
     }
 
-    public MySubObject getPurposeStage(final int index) {
+    public MySubObject getPurposeStageI(final int index) {
         return this.purposeStages.get(index);
+    }
+
+    public MySubObject getPurposeStage(final String uuid) {
+        if (purposeStages.size() == 0) {
+            return null;
+        }
+        for (int i = 0; i < purposeStages.size() - 1; i++) {
+            if (purposeStages.get(i).getUuid().equals(uuid)) {
+                return purposeStages.get(i);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -87,7 +108,8 @@ public class MyObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MyObject myObject = (MyObject) o;
-        return Objects.equals(purposeStages, myObject.purposeStages) &&
+        return Objects.equals(uuid, myObject.uuid) &&
+                Objects.equals(purposeStages, myObject.purposeStages) &&
                 Objects.equals(name, myObject.name) &&
                 Objects.equals(criterionCompleted, myObject.criterionCompleted) &&
                 Objects.equals(description, myObject.description) &&
@@ -100,6 +122,6 @@ public class MyObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen);
+        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen);
     }
 }

@@ -2,11 +2,13 @@ package com.team22.project_team_22_2018.client.view;
 
 import com.team22.project_team_22_2018.client.controller.ControllerView;
 import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
+import com.team22.project_team_22_2018.client.view.util.model.MyModel;
 import com.team22.project_team_22_2018.client.view.util.model.Observable;
 import com.team22.project_team_22_2018.client.view.util.tableview.NumberTableCellFactory;
 import com.team22.project_team_22_2018.client.view.util.tableview.TableViewData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +19,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import lombok.val;
 
@@ -25,9 +26,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
-import static com.team22.project_team_22_2018.util.Resources.ADD_PURPOSE;
-import static com.team22.project_team_22_2018.util.Resources.HELP_FORM;
+import static com.team22.project_team_22_2018.util.Resources.*;
 
 /**
  * Определяет поведние входной формы "LoginForm"
@@ -61,12 +62,13 @@ public class MainController implements Observer {
             }
         }
     };
-    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
+    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList(
+            "Просроченная", "Горящая", "Обычная", "В ожидании", "Закрытая");
     private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("Завершен", "Выполняется");
-    private boolean flagHelpStage = false;
+    private static boolean flagHelpStage = false;
+
     @Getter
-    @Setter
-    private boolean flagAddStage = false;
+    private static boolean flagAddStage = false;
 
     @FXML
     private TableView<TableViewData> tableView;
@@ -83,6 +85,8 @@ public class MainController implements Observer {
     private TextField criticalTime;
     @FXML
     private TextField textCriterionCompleted;
+    @FXML
+    private CheckBox checkBoxSortByStatus;
 
     @FXML
     private ListView<String> listView;
@@ -119,6 +123,8 @@ public class MainController implements Observer {
     private Button removeStage;
     @FXML
     private Button loadAction;
+    @FXML
+    private Button buttonHome;
 
     @FXML
     private TextField textFieldSearch;
@@ -128,6 +134,7 @@ public class MainController implements Observer {
 
     public MainController() {
         ((Observable) controllerView).registerObserver(this);
+//        handleEvent();
     }
 
     @FXML
@@ -161,6 +168,24 @@ public class MainController implements Observer {
                 updatePurposeStageInfo(task);
             }
         });
+
+        checkBoxSortByStatus.selectedProperty().addListener((observable, oldValue, newValue) -> handleEvent());
+
+        Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
+        criticalTime.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) {
+                criticalTime.setText(oldValue);
+            }
+        });
+        handleEvent();
+    }
+
+    public static void setFlagAddStage(boolean flag) {
+        flagAddStage = flag;
+    }
+
+    public static void setFlagHelpStage(boolean flag) {
+        flagHelpStage = flag;
     }
 
     //region "Purpose" methods
@@ -168,17 +193,29 @@ public class MainController implements Observer {
     private void buttonAddPurpose() {
         try {
 //            controller.setCriticalTime(0,"9");
-//            if (!flagAddStage) {
-            flagAddStage = true;
-            FXMLLoader loader = new FXMLLoader(ADD_PURPOSE);
-            final Parent root = loader.load();
-            val scene = new Scene(root);
-            val stage = new Stage();
-            stage.setTitle("Windows add");
-            stage.setScene(scene);
-            stage.show();
-            stage.setOnCloseRequest(event -> flagAddStage = false);
-//            }
+            if (!flagAddStage) {
+                flagAddStage = true;
+                FXMLLoader loader = new FXMLLoader(ADD_PURPOSE);
+                final Parent root = loader.load();
+                val scene = new Scene(root);
+                val stage = new Stage();
+                stage.setTitle("Windows add");
+                stage.setScene(scene);
+                stage.show();
+                stage.setOnCloseRequest(event -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Project team 22");
+                    alert.setHeaderText("Вы уверены, что хотите закрыть окно?");
+                    alert.showAndWait().ifPresent(rs -> {
+                        if (rs == ButtonType.OK) {
+                            flagAddStage = false;
+                            stage.close();
+                            log.info("Окно добавления задачи закрыто");
+                        }
+                    });
+                });
+//            stage.setOnCloseRequest(event -> flagAddStage = false);
+            }
         } catch (IOException e) {
             log.error(e);
         }
@@ -186,10 +223,19 @@ public class MainController implements Observer {
 
     @FXML
     private void buttonRemotePurpose() {
-        if (listView.getItems() != null) {
+        if (listView.getItems() != null && listView.getSelectionModel().getSelectedIndex() != -1) {
             controllerView.removePurpose(listView.getSelectionModel().getSelectedIndex());
             clearPurposeInfo();
             listView.getSelectionModel().clearSelection();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Project team 22");
+            alert.setHeaderText("Выберите цель");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    listView.requestFocus();
+                }
+            });
         }
     }
 
@@ -211,19 +257,62 @@ public class MainController implements Observer {
 
     @FXML
     public void buttonClosePurpose() {
+        controllerView.setPurposeStatus(listView.getSelectionModel().getSelectedIndex(), "Закрытая");
         controllerView.setPurposeDateClose(listView.getSelectionModel().getSelectedIndex(), LocalDate.now().toString());
         updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
     }
 
     @FXML
     public void buttonOpenPurpose() {
+        setEditPane(true, 0.9);
+
+//        ObservableList<TableViewData> tableViewData = tableView.getItems();
+
+        /*
+         * Добавить изменение одного статуса задачи. Только статуса. Не трогая все остальное.
+         *
+         */
+        controllerView.setPurposeStatus(listView.getSelectionModel().getSelectedIndex(), "Обычная");
+
         controllerView.setPurposeDateCloseNull(listView.getSelectionModel().getSelectedIndex());
         updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
     }
 
     @FXML
+    public void buttonHome() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(HOME);
+            final Parent root = loader.load();
+            val scene = new Scene(root);
+            val stage = new Stage();
+            stage.setTitle("Home form");
+            stage.setScene(scene);
+            stage.show();
+
+            stage.setOnCloseRequest(event -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Project team 22");
+                alert.setHeaderText("Вы уверены, что хотите закрыть окно?");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        flagAddStage = false;
+                        stage.close();
+                        log.info("Окно закрыто");
+                    }
+                });
+            });
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
+    @FXML
     private void saveAction() {
-        controllerView.saveAs();
+//        controllerView.saveAs();
+        controllerView.save();
+
+
     }
 
     @FXML
@@ -240,11 +329,11 @@ public class MainController implements Observer {
         if (textFieldSearch.getText().equals("")) {
             listView.setItems(
 //                    controller.getModel()
-                    controllerView.getMyObjects()
+                    controllerView.getMyObjectsName()
 
             );
         } else {
-            sortedPurposes = controllerView.getMyObjects();
+            sortedPurposes = controllerView.getMyObjectsName();
 //            sortedPurposes = controller.g();
 
             if (!checkBoxRegularX.isSelected()) {
@@ -287,12 +376,46 @@ public class MainController implements Observer {
 
     @FXML
     private void loadAction() {
-        processFile();
+        controllerView.updateModel();
     }
 
     @FXML
     public void loadFromAction() {
         processFile();
+    }
+
+    public void changUser() {
+        try {
+            closeWindow();
+            FXMLLoader loader = new FXMLLoader(LOGIN);
+            final Parent root = loader.load();
+            val scene = new Scene(root);
+            val stageLoginForm = new Stage();
+
+            stageLoginForm.setHeight(231);
+            stageLoginForm.setWidth(159);
+            stageLoginForm.maxHeightProperty().setValue(231);
+            stageLoginForm.maxWidthProperty().setValue(159);
+            stageLoginForm.minHeightProperty().setValue(231);
+            stageLoginForm.minWidthProperty().setValue(159);
+
+            stageLoginForm.setTitle("Login form");
+            stageLoginForm.setScene(scene);
+            stageLoginForm.show();
+            stageLoginForm.setOnCloseRequest(event -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Project team 22");
+                alert.setHeaderText("Вы уверены, что хотите закрыть окно?");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        stageLoginForm.close();
+                        log.info("Окно регистрации закрыто");
+                    }
+                });
+            });
+        } catch (IOException e) {
+            log.error(e);
+        }
     }
     //endregion
 
@@ -317,7 +440,11 @@ public class MainController implements Observer {
                 }
             });
         } else {
-            controllerView.addPurposeStage(listView.getSelectionModel().getSelectedIndex(), textStage.getText(), comboBoxStageStatus.getValue());
+            controllerView.addPurposeStage(
+                    listView.getSelectionModel().getSelectedIndex(),
+                    textStage.getText(),
+                    comboBoxStageStatus.getValue()
+            );
             updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
             textStage.setText("");
         }
@@ -328,6 +455,11 @@ public class MainController implements Observer {
      */
     @FXML
     public void saveEditAction() {
+//        String sD = dataPicDeadline.getValue().format(formatter);
+//        String critical = String.valueOf(LocalDate.parse(sD).minusDays(
+//                Long.parseLong(this.criticalTime.getText()))
+//        );
+
         setEditPane(true, 0.9);
         controllerView.setPurpose(
                 listView.getSelectionModel().getSelectedIndex(),
@@ -338,7 +470,8 @@ public class MainController implements Observer {
                 comboBoxStatus.getValue(),
                 dataPicDeadline.getValue().format(formatter),
                 controllerView.getDateOpen(listView.getSelectionModel().getSelectedIndex()),
-                controllerView.getCriticalTime(listView.getSelectionModel().getSelectedIndex())
+                this.criticalTime.getText()
+
         );
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Project team 22");
@@ -353,19 +486,31 @@ public class MainController implements Observer {
 
     @FXML
     public void buttonRemoveStage() {
-        if (tableView.getItems() != null) {
-            tableView.getItems().remove(tableView.getSelectionModel().getSelectedIndex());
-            controllerView.removePurposeStage(listView.getSelectionModel().getSelectedIndex(), tableView.getSelectionModel().getSelectedIndex());
+        if (tableView.getItems() != null && tableView.getSelectionModel().getSelectedIndex() != -1) {
+            int index = tableView.getSelectionModel().getSelectedIndex();
+            tableView.getItems().remove(index);
+            controllerView.removePurposeStage(listView.getSelectionModel().getSelectedIndex(), index);
+            textStage.setText("");
+            comboBoxStageStatus.setValue("");
         }
     }
 
     @FXML
     public void buttonSaveEditStage() {
-        tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(textStage.getText(), comboBoxStageStatus.getValue()));
-        controllerView.setPurposeStages(
-                listView.getSelectionModel().getSelectedIndex(),
-                tableView.getItems());
-        textStage.setText("");
+
+
+        if (tableView.getSelectionModel().getSelectedIndex() != -1) {
+            tableView.getItems().set(
+                    tableView.getSelectionModel().getSelectedIndex(),
+                    new TableViewData(textStage.getText(), comboBoxStageStatus.getValue())
+            );
+
+
+            controllerView.setPurposeStages(
+                    listView.getSelectionModel().getSelectedIndex(),
+                    tableView.getItems());
+            textStage.setText("");
+        }
     }
     //endregion
 
@@ -394,6 +539,8 @@ public class MainController implements Observer {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Project team 22");
         alert.setHeaderText("Вы уверены, что хотите выйти?");
+        controllerView.save();
+        controllerView.close();
         alert.showAndWait().ifPresent(rs -> {
             if (rs == ButtonType.OK) {
                 System.exit(0);
@@ -408,6 +555,7 @@ public class MainController implements Observer {
     /**
      * Заполняет поля значениями объекта Purpose(Цель)
      */
+    //добавить здесь вывод criticalTime
     private void updatePurposeInfo(final int index) {
         if (index != -1) {
             boolean name = controllerView.getNamePurpose(index) == null;
@@ -416,6 +564,7 @@ public class MainController implements Observer {
             boolean createDate = controllerView.getCreateDate(index) == null;
             boolean status = controllerView.getStatus(index) == null;
             boolean deadline = controllerView.getDeadlineDate(index) == null;
+            boolean criticalTime = controllerView.getCriticalTime(index) == null;
             boolean closeDate = false;
             if (controllerView.getCloseDate(index) == null) {
                 closeDate = true;
@@ -433,36 +582,44 @@ public class MainController implements Observer {
 
             //region Text Fields
             namePurpose.setText(!name ? controllerView.getNamePurpose(index) : "Поле не заполнено");
+//            namePurpose.setText(!name ? controllerView.getCriticalTime(index) : "Поле не заполнено");
             textCriterionCompleted.setText(!criterionCompleted ? controllerView.getCriterionCompleted(index) : "Поле не заполнено");
 
+            if (!criticalTime) {
+                this.criticalTime.setText(controllerView.getCriticalTime(index));
+            } else {
+                this.criticalTime.setText("Поле не заполнено");
+            }
             if (!description) {
                 textDescription.setText(controllerView.getDescription(index));
             } else {
                 textDescription.setText("Поле не заполнено");
             }
-
             if (!createDate) {
                 labelCreateDate.setText("Дата создания цели: " + controllerView.getCreateDate(index));
             } else {
                 labelCreateDate.setText("Поле не заполнено");
             }
-
             if (!status) {
                 comboBoxStatus.setValue(controllerView.getStatus(index));
             } else {
                 comboBoxStatus.setValue("Поле не заполнено");
             }
-
             if (!deadline) {
                 dataPicDeadline.setValue(LocalDate.parse(controllerView.getDeadlineDate(index)));
             } else {
                 comboBoxStatus.setValue("Поле не заполнено");
             }
-//endregion
+            //endregion
 
             //region TableView
-            if (listView.getSelectionModel().getSelectedIndex() != -1 || controllerView.getMyObjects() == null) {
-                tableView.setItems(getTableViewDates());
+
+            if (listView.getSelectionModel().getSelectedIndex() != -1 || controllerView.getMyObjectsName() == null) {
+                if (controllerView.getStatus(index).equals("Закрытая")) {
+                    tableView.setItems(getTableViewDatesForOpen());
+                } else {
+                    tableView.setItems(getTableViewDates());
+                }
             }
             //endregion
 
@@ -516,17 +673,37 @@ public class MainController implements Observer {
         return tableViewData;
     }
 
+    private ObservableList<TableViewData> getTableViewDatesForOpen() {
+        ObservableList<TableViewData> tableViewData = FXCollections.observableArrayList();
+        ObservableList<String> stageNames = controllerView.getStageNames(listView.getSelectionModel().getSelectedIndex());
+        ObservableList<String> stageStatus = controllerView.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
+
+        for (int i = 0; i < stageNames.size(); i++) {
+            tableViewData.add(new TableViewData(stageNames.get(i), "Завершен"));
+        }
+        return tableViewData;
+    }
+
+
     /**
      * Вызывается при обновлении данных в модели, и вызывает изменения формы
      */
     @Override
     public void handleEvent() {
         try {
-            listView.setItems(controllerView.getMyObjects());
+            MyModel myModel = controllerView.getModel();
+            if (!checkBoxSortByStatus.isSelected()) {
+                controllerView.updateModel();
+                listView.setItems(controllerView.getMyObjectsName());
+            } else {
+                controllerView.sortByStatus();
+                listView.setItems(controllerView.getMyObjectsName());
+            }
         } catch (NullPointerException e) {
-            log.error(e);
+            log.info("Доступных для отображения целей нет");
         }
     }
+
 
     /**
      * Изменяет видимость и активность элементов просмотра/редактирования объектов Purpose(Цель)
@@ -588,6 +765,14 @@ public class MainController implements Observer {
             handleEvent();
         }
     }
+
+    public void closeWindow() {
+        Stage stage = (Stage) this.listView.getScene().getWindow();
+        stage.onCloseRequestProperty();
+        stage.close();
+    }
+
+
 //endregion
 }
 

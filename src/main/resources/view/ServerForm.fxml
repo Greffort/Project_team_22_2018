@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.server.view.ServerFormController">
+   <children>
+      <ListView fx:id="listViewUsers" layoutX="14.0" layoutY="14.0" prefHeight="371.0" prefWidth="200.0" />
+      <Label fx:id="labelMaxCountUsers" layoutX="222.0" layoutY="44.0" text="Максимальное количество клиентов - " />
+      <Label fx:id="labelCountUsers" layoutX="221.0" layoutY="14.0" text="Количество подключенных клиентов - " />
+      <Button fx:id="buttonStartServer" layoutX="221.0" layoutY="360.0" mnemonicParsing="false" onAction="#buttonStartServer" text="Start" />
+      <Button fx:id="buttonStopServer" layoutX="272.0" layoutY="360.0" mnemonicParsing="false" onAction="#buttonStopServer" text="Stop" />
+      <Button fx:id="buttonDeleteUser" layoutX="322.0" layoutY="360.0" mnemonicParsing="false" onAction="#buttonDeleteUser" text="Delete" />
+      <TextField fx:id="textFieldCountUsers" layoutX="438.0" layoutY="10.0" />
+      <TextField fx:id="textFieldMaxCountUsers" layoutX="438.0" layoutY="40.0" />
+      <Button fx:id="buttonEditMaxCountUsers" layoutX="594.0" layoutY="40.0" mnemonicParsing="false" onAction="#buttonEditMaxCountUsers" text="edit" />
+      <Label fx:id="labelIPserver" layoutX="222.0" layoutY="80.0" text="IP сервера - " />
+   </children>
+</AnchorPane>

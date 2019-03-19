@@ -4,30 +4,34 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Getter
 @Log4j
 public class MySubObject {
 
+    private String uuid;
+
     private String name;
 
     private String completed;
 
     public MySubObject() {
-        this.completed = "not specified completed";
-        this.name = "not specified name";
+        this("not specified completed", "not specified name", UUID.randomUUID().toString());
     }
 
-    public MySubObject(final String name, final String completed) {
+    public MySubObject(final String name, final String completed, final String uuid) {
         this.name = name;
         this.completed = completed;
+        this.uuid = uuid;
     }
 
     @Override
     public String toString() {
         return "MySubObject{" +
-                "name='" + name + '\'' +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
                 ", completed='" + completed + '\'' +
                 '}';
     }
@@ -37,12 +41,13 @@ public class MySubObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MySubObject that = (MySubObject) o;
-        return Objects.equals(name, that.name) &&
+        return Objects.equals(uuid, that.uuid) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(completed, that.completed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, completed);
+        return Objects.hash(uuid, name, completed);
     }
 }

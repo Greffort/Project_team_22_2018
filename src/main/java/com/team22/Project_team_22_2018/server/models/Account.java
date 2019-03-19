@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,30 +21,51 @@ public class Account implements Serializable {
 
     private String name;
 
+    private UUID uuid;
+
     public Account() {
-        this.purposes = new ArrayList<>();
-        this.name = "not specified";
+        this(new ArrayList<>(), "not specified");
     }
 
     public Account(List<Purpose> purposes, String name) {
+        this(purposes, name, UUID.randomUUID());
+    }
+
+    public Account(List<Purpose> purposes, String name, UUID uuid) {
         this.purposes = purposes;
         this.name = name;
+        this.uuid = uuid;
     }
 
     public void addPurpose(final Purpose purpose) {
         purposes.add(purpose);
     }
 
-    public void removePurpose(final int index) {
-        purposes.remove(index);
+    public void removePurpose(final UUID uuid) {
+        for (int i = 0; i < purposes.size(); i++) {
+            if (purposes.get(i).getUuid().equals(uuid)) {
+                purposes.remove(i);
+            }
+        }
     }
 
-    public Purpose getPurpose(final int index) {
-        return purposes.get(index);
+    public Purpose getPurpose(final UUID uuid) {
+        log.info("Поиск объекта: " + uuid);
+        for (int i = 0; i < purposes.size(); i++) {
+            if (purposes.get(i).getUuid().equals(uuid)) {
+                return purposes.get(i);
+            }
+        }
+        log.info("Объект: " + uuid + " не найден");
+        return null;
     }
 
-    public void setPurpose(final int index, final Purpose purpose) {
-        purposes.set(index, purpose);
+    public void setPurpose(final UUID uuid, final Purpose purpose) {
+        for (int i = 0; i < purposes.size(); i++) {
+            if (purposes.get(i).getUuid().equals(uuid)) {
+                purposes.set(i, purpose);
+            }
+        }
     }
 
     public void setPurposes(final List<Purpose> purposes) {
@@ -54,18 +76,12 @@ public class Account implements Serializable {
         purposes = new ArrayList<>();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return Objects.equals(purposes, account.purposes) &&
-                Objects.equals(name, account.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(purposes, name);
+    public void setStatus(final UUID uuid, final String status) {
+        for (int i = 0; i < purposes.size(); i++) {
+            if (purposes.get(i).getUuid().equals(uuid)) {
+                purposes.get(i).setStatus(status);
+            }
+        }
     }
 
     @Override
@@ -73,6 +89,22 @@ public class Account implements Serializable {
         return "Account{" +
                 "purposes=" + purposes +
                 ", name='" + name + '\'' +
+                ", uuid=" + uuid +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(purposes, account.purposes) &&
+                Objects.equals(name, account.name) &&
+                Objects.equals(uuid, account.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(purposes, name, uuid);
     }
 }
