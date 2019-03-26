@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.client.view;
+package com.team22.project_team_22_2018.client.view.fxcontroller;
 
 import com.team22.project_team_22_2018.client.controller.ControllerView;
 import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -25,28 +24,20 @@ public class LoginFormController {
     private TextField textFieldLogin;
     @FXML
     private TextField textFieldPassword;
-    @FXML
-    private Button buttonLogin;
-    @FXML
-    private Button buttonRegistr;
 
     @FXML
     void buttonLogin() {
-        //берем данные из текстФиелд, отправляем на сервер, и ждем ответа,
-        //если все верно, то просим идем дальше загружать mainForm.
+
         if (checkTextFields()) {
-            //добавление пользователя
             if (controllerView.login(textFieldLogin.getText(), textFieldPassword.getText())) {
-                //вызываем MainForm
                 ClientRuntimeHolder.setLOGIN(textFieldLogin.getText());
                 openMainForm();
-//                controllerView.updateModel();
-            } /*else {
+            } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Project team 22");
                 alert.setHeaderText("Неверный логин или пароль");
                 alert.show();
-            }*/
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
@@ -60,12 +51,7 @@ public class LoginFormController {
     }
 
     @FXML
-    void buttonRegistr() {
-        //добавляем в файл пользователя. На серввере.
-        //В контроллере добавить команды регистрации и логирования.
-        //отправляем на контролеер данные, объектом, и ждем ответа от сервера.
-        //если регистрация успешна, то входим в систему, если нет, то уведомляем и остаемся на том же окне.
-
+    void buttonRegistration() {
         if (!checkTextFields()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
@@ -75,24 +61,23 @@ public class LoginFormController {
                     log.info("Не заполнены поля");
                 }
             });
-        } else if (controllerView.registration(textFieldLogin.getText(),textFieldPassword.getText())) {
+        } else if (controllerView.registration(textFieldLogin.getText(), textFieldPassword.getText())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Project team 22");
             alert.setHeaderText("Новый пользователь добавлен. Войти?");
             alert.showAndWait().ifPresent(rs -> {
                 if (rs == ButtonType.OK) {
-//                    controllerView.login(textFieldLogin.getText(), textFieldPassword.getText());
                     ClientRuntimeHolder.setLOGIN(textFieldLogin.getText());
                     openMainForm();
                     log.info("Новый пользователь добавлен");
                 }
             });
-        } /*else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Project team 22");
             alert.setHeaderText("При регистрации возникли проблемы. Попробуйте еще раз");
             alert.show();
-        }*/
+        }
     }
 
     private void closeWindow() {
@@ -129,7 +114,6 @@ public class LoginFormController {
                 });
             });
             closeWindow();
-
         } catch (Exception e) {
             log.error(e);
         }
@@ -138,7 +122,6 @@ public class LoginFormController {
     private boolean checkTextFields() {
         boolean name = this.textFieldLogin.getText().equals("");
         boolean description = this.textFieldPassword.getText().equals("");
-
         if (name) {
             this.textFieldLogin.requestFocus();
             return false;
@@ -149,6 +132,5 @@ public class LoginFormController {
         } else {
             return true;
         }
-
     }
 }

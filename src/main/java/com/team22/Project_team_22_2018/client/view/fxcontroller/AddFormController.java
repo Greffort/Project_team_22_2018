@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.client.view;
+package com.team22.project_team_22_2018.client.view.fxcontroller;
 
 import com.team22.project_team_22_2018.client.controller.ControllerView;
 import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
@@ -19,9 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 @Log4j
-public class AddForm {
-
-
+public class AddFormController {
 
     ControllerView controllerView = ClientRuntimeHolder.getControllerViewHolder();
     private StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
@@ -47,7 +45,6 @@ public class AddForm {
     };
     private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList(
             "Просроченная", "Горящая", "Обычная", "В ожидании", "Закрытая");
-//    private ObservableList<String> listPurposeStatusValue = FXCollections.observableArrayList("Overdue", "Burning", "Common", "Pending");
     private ObservableList<String> listStageStatusValue = FXCollections.observableArrayList("Завершен", "Выполняется");
 
     @FXML
@@ -79,14 +76,12 @@ public class AddForm {
     private void initialize() {
         tableView.setEditable(true);
 
-        deadline.setConverter(converter); //"dd-MM-yyyy"
+        deadline.setConverter(converter);
 
-        //TableView
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         numberingColumn.setCellFactory(new NumberTableCellFactory<>());
 
-        //редактирование столбца заданий
         taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         stageStatus.setValue("-");
@@ -128,7 +123,6 @@ public class AddForm {
             tableViewData.add(new TableViewData(stage.getText(), stageStatus.getValue()));
             stage.setText("");
         }
-
     }
 
     @FXML
@@ -149,14 +143,10 @@ public class AddForm {
             closeWindow();
 
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Project team 22");
-            alert.setHeaderText("Заполните все поля!");
-            alert.showAndWait().ifPresent(rs -> {
-                if (rs == ButtonType.OK) {
-                    log.info("Не заполнены поля");
-                }
-            });
+            UtilForm.showAlertInformation(
+                    "Project team 22",
+                    "Заполните все поля!",
+                    "Не заполнены поля");
         }
     }
 

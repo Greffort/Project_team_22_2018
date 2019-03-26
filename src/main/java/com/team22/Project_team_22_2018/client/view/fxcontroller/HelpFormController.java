@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.client.view;
+package com.team22.project_team_22_2018.client.view.fxcontroller;
 
 import com.team22.project_team_22_2018.util.Resources;
 import javafx.fxml.FXML;
@@ -23,8 +23,6 @@ public class HelpFormController {
     @FXML
     private void initialize() {
         helpLabel.setText(readHelp());
-
-
     }
 
     private static String readHelp() {

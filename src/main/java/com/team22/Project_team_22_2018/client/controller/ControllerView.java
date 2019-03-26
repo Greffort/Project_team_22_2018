@@ -71,7 +71,11 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     }
 
     //region GET methods
-    public MyModel getModel() {
+    public MyModel getMyModel() {
+        return this.myModel;
+    }
+
+    public synchronized MyModel getModel() {
         try {
             outD.writeUTF("getModel");
             outD.flush();
@@ -168,9 +172,8 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     //endregion
 
     //region SET methods
-    public void setPurpose(
+    public synchronized void setPurpose(
             final int index,
-//            final String uuid,/
             final ObservableList<TableViewData> purposeStages,
             final String name,
             final String criterionCompleted,
@@ -178,32 +181,73 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
             final String status,
             final String deadline,
             final String dateOpen,
-            final String criticalTime
+            final String criticalTime,
+            final boolean flag
+    ) {
+        synchronized (this) {
+            String critical = String.valueOf(LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)));
+
+            log.info("Изменение цели. Имя цели: " + name);
+            try {
+                outD.writeUTF("setPurpose");
+                outD.flush();
+                if (inD.readUTF().equals("ok")) {
+                    outD.writeUTF(getUUIDMyObject(index));
+                    outD.flush();
+                } else return;
+                if (inD.readUTF().equals("ok")) {
+                    ArrayList<MySubObject> list = new ArrayList<>();
+                    for (TableViewData aTableViewData : purposeStages) {
+                        list.add(new MySubObject(aTableViewData.getStage(), aTableViewData.getStatus(), UUID.randomUUID().toString()));
+                    }
+
+                    MyObject myObject = new MyObject(
+                            list, name,
+                            criterionCompleted, description,
+                            status, deadline,
+                            dateOpen, critical, getUUIDMyObject(index),
+                            flag
+                    );
+                    outD.writeUTF(Converter.toJson(myObject));
+                    outD.flush();
+                } else return;
+                notifyAllObservers();
+            } catch (IOException e) {
+                log.error(e);
+                getAlertReconnect();
+            }
+        }
+    }
+
+    public synchronized void setPurpose(
+            final String uuid,
+            final List<MySubObject> purposeStages,
+            final String name,
+            final String criterionCompleted,
+            final String description,
+            final String status,
+            final String deadline,
+            final String dateOpen,
+            final String criticalTime,
+            final boolean flag
     ) {
 
-        String critical = String.valueOf(LocalDate.parse(deadline).minusDays(
-                Long.parseLong(criticalTime))
-        );
-
+        String critical = String.valueOf(LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)));
         log.info("Изменение цели. Имя цели: " + name);
         try {
             outD.writeUTF("setPurpose");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(getUUIDMyObject(index));
+                outD.writeUTF(uuid);
                 outD.flush();
             } else return;
             if (inD.readUTF().equals("ok")) {
-                ArrayList<MySubObject> list = new ArrayList<>();
-                for (TableViewData aTableViewData : purposeStages) {
-                    list.add(new MySubObject(aTableViewData.getStage(), aTableViewData.getStatus(), UUID.randomUUID().toString()));
-                }
-
                 MyObject myObject = new MyObject(
-                        list, name,
+                        purposeStages, name,
                         criterionCompleted, description,
                         status, deadline,
-                        dateOpen, critical, UUID.randomUUID().toString()
+                        dateOpen, critical, uuid/*UUID.randomUUID().toString()*/,
+                        flag
                 );
                 outD.writeUTF(Converter.toJson(myObject));
                 outD.flush();
@@ -215,7 +259,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void setPurposeStages(final int index, final ObservableList<TableViewData> purposesStage) {
+    public synchronized void setPurposeStages(final int index, final ObservableList<TableViewData> purposesStage) {
         setPurpose(
                 index,
                 purposesStage,
@@ -225,11 +269,12 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 getStatus(index),
                 getDeadlineDate(index),
                 getDateOpen(index),
-                getCriticalTime(index)
+                getCriticalTime(index),
+                getMyObjects().get(index).isCheck()
         );
     }
 
-    public void setPurposeDateClose(final int index, final String dateClose) {
+    public synchronized void setPurposeDateClose(final int index, final String dateClose) {
         try {
             outD.writeUTF("setPurposeDateClose");
             outD.flush();
@@ -248,7 +293,26 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void setPurposeDateCloseNull(final int index) {
+    public synchronized void setPurposeDateClose(final String uuid, final String dateClose) {
+        try {
+            outD.writeUTF("setPurposeDateClose");
+            outD.flush();
+            if (inD.readUTF().equals("ok")) {
+                outD.writeUTF(uuid);
+                outD.flush();
+            } else return;
+            if (inD.readUTF().equals("ok")) {
+                outD.writeUTF(dateClose);
+                outD.flush();
+            } else return;
+            notifyAllObservers();
+        } catch (IOException e) {
+            log.error(e);
+            getAlertReconnect();
+        }
+    }
+
+    public synchronized void setPurposeDateCloseNull(final int index) {
         try {
             outD.writeUTF("setPurposeDateCloseNull");
             outD.flush();
@@ -263,7 +327,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void setStageName(final int indexPurpose, final int indexPurposeStage, final String name) {
+    public synchronized void setStageName(final int indexPurpose, final int indexPurposeStage, final String name) {
         try {
             outD.writeUTF("setStageName");
             outD.flush();
@@ -286,7 +350,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void setPurposeStatus(final int index, final String status) {
+    public synchronized void setPurposeStatus(final int index, final String status) {
         try {
             outD.writeUTF("setPurposeStatus");
             outD.flush();
@@ -298,11 +362,47 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 outD.writeUTF(status);
                 outD.flush();
             } else return;
+        } catch (IOException e) {
+            log.error(e);
+            getAlertReconnect();
+        }
+    }
+
+    public synchronized void setPurposeStatus(final String uuid, final String status) {
+        try {
+            outD.writeUTF("setPurposeStatus");
+            outD.flush();
+            if (inD.readUTF().equals("ok")) {
+                outD.writeUTF(uuid);
+                outD.flush();
+            } else return;
+            if (inD.readUTF().equals("ok")) {
+                outD.writeUTF(status);
+                outD.flush();
+            } else return;
             notifyAllObservers();
         } catch (IOException e) {
             log.error(e);
             getAlertReconnect();
         }
+    }
+
+    public synchronized void setCheck(final boolean bool, MyObject myObject) {
+        setPurpose(
+                myObject.getUuid(),
+                myModel.getPurpose(myObject.getUuid()).getPurposeStages(),
+                myModel.getPurpose(myObject.getUuid()).getName(),
+                myModel.getPurpose(myObject.getUuid()).getCriterionCompleted(),
+                myModel.getPurpose(myObject.getUuid()).getDescription(),
+                myModel.getPurpose(myObject.getUuid()).getStatus(),
+                myModel.getPurpose(myObject.getUuid()).getDeadline(),
+                myModel.getPurpose(myObject.getUuid()).getDateOpen(),
+                String.valueOf(DAYS.between(
+                        LocalDate.parse(myModel.getPurpose(myObject.getUuid()).getCriticalTime()),
+                        LocalDate.parse(myModel.getPurpose(myObject.getUuid()).getDeadline())
+                )),
+                bool
+        );
     }
     //endregion
 
@@ -319,18 +419,15 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
             if (inD.readUTF().equals("ok")) {
                 ObservableList<MySubObject> mySubObjects = FXCollections.observableArrayList();
-
                 for (TableViewData tableViewData : purposeStages) {
                     mySubObjects.add(new MySubObject(tableViewData.getStage(), tableViewData.getStatus(), UUID.randomUUID().toString()));
                 }
-
                 String critical = String.valueOf(LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)));
-
                 MyObject myModel = new MyObject(
                         mySubObjects, name, criterionCompleted, description,
-                        status, deadline, dateOpen, critical, UUID.randomUUID().toString()
+                        status, deadline, dateOpen, critical, UUID.randomUUID().toString(),
+                        false
                 );
-
                 outD.writeUTF(Converter.toJson(myModel));
                 outD.flush();
             }
@@ -481,6 +578,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     }
     //endregion
 
+    //region UTIL
     public int getLargerNumber(MyObject myObject) {
         if (myObject.getStatus().equals("Просроченная")) {
             return 5;
@@ -500,8 +598,6 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
     public void sortByStatus() {
         ObservableList<MyObject> observableList = getMyObjects();
-
-//        System.out.println(observableList.toString());
         for (int i = observableList.size() - 1; i > 0; i--) {
             for (int j = 0; j < i; j++) {
                 if (getLargerNumber(observableList.get(j + 1)) > getLargerNumber(observableList.get(j))) {
@@ -513,36 +609,93 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
         myModel.setPurposes(observableList);
     }
+    //endregion
 
-    public void close() {
-        if (socket != null ) {
-            try {
-                outD.writeUTF("stop");
-                outD.flush();
-            } catch (IOException e) {
-                log.error(e);
+    //region CONNECT
+    public boolean login(String login, String password) {
+        //отправляем на сервер логин и пароль, поочереди
+        synchronized (this) {
+            if (socket != null) {
+                try {
+                    outD.writeUTF("login");
+                    outD.flush();
+                    if (inD.readUTF().equals("ok")) {
+                        outD.writeUTF(login);
+                        outD.flush();
+                    }
+                    if (inD.readUTF().equals("ok")) {
+                        outD.writeUTF(password);
+                        outD.flush();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Project team 22");
+                        alert.setHeaderText("Неверный логин или пароль");
+                        alert.show();
+                    }
+                    if (inD.readUTF().equals("true")) {
+                        return true;
+                    }
+                } catch (IOException e) {
+                    log.error(e);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Project team 22");
+                    alert.setHeaderText("Отсутствует подключение к серверу.");
+                    alert.show();
+                    return false;
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Project team 22");
+                alert.setHeaderText("Отсутствует подключение к серверу.");
+                alert.show();
             }
-            try {
-                socket.close();
-            } catch (IOException e) {
-                log.error(e);
-            }
+            return false;
         }
-        if (outD != null) {
-            try {
-                outD.close();
-            } catch (IOException e) {
-                log.error(e);
+        //возвращаем true если подключение удалось
+    }
+
+    public boolean registration(String login, String password) {
+        synchronized (this) {
+            if (socket != null) {
+                try {
+                    outD.writeUTF("registr");
+                    outD.flush();
+                    if (inD.readUTF().equals("ok")) {
+                        outD.writeUTF(login);
+                        outD.flush();
+                    }
+                    if (inD.readUTF().equals("ok")) {
+                        outD.writeUTF(password);
+                        outD.flush();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Project team 22");
+                        alert.setHeaderText("Важно сообщение.");
+                        alert.show();
+                    }
+                    if (inD.readUTF().equals("true")) {
+                        return true;
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Project team 22");
+                        alert.setHeaderText("Данный логин занят. Попробуйте другой.");
+                        alert.show();
+                    }
+                } catch (IOException e) {
+                    log.error(e);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Project team 22");
+                    alert.setHeaderText("Отсутствует подключение к серверу.");
+                    alert.show();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Project team 22");
+                alert.setHeaderText("Отсутствует подключение к серверу.");
+                alert.show();
             }
+            return false;
         }
-        if (inD != null) {
-            try {
-                inD.close();
-            } catch (IOException e) {
-                log.error(e);
-            }
-        }
-        log.info("Соединение с сервером прервано");
     }
 
     public boolean connect() {
@@ -552,7 +705,6 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
             outD = new DataOutputStream(socket.getOutputStream());
             inD = new DataInputStream(socket.getInputStream());
             log.info("Подключение к серверу - успешно");
-//            myModel = getModel();
             return true;
         } catch (IOException e) {
             log.error("Подключение к серверу - ошибка. " + e);
@@ -561,52 +713,10 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    @Override
-    public void registerObserver(final Observer observer) {
-        this.observers.add(observer);
-    }
-
-    @Override
-    public void notifyAllObservers() {
-        updateModel();
-        for (Observer observer : observers) {
-            observer.handleEvent();
-        }
-    }
-
-    @Override
-    public synchronized void run() {
-        log.info("PING_PONG_START");
-        if (socket != null) {
-            while (!socket.isClosed()) {
-                //описание работы приема сообщений от сервера.
-                try {
-                    Thread.sleep(1000);
-                    outD.writeUTF("ping");
-                    outD.flush();
-                    log.info("PING");
-                    if (inD.readUTF().equals("pong")) {
-                        Thread.sleep(1000);
-                        log.info("_PONG");
-                    } else {
-                        new IOException();
-                    }
-                } catch (InterruptedException ignored) {
-                } catch (IOException e) {
-                    log.error("PING_PONG" + e);
-                    Platform.runLater(this::getAlertReconnect);
-                    break;
-                }
-            }
-        }
-    }
-
     private void reconnect() {
         final Thread thread = new Thread(() -> {
             int counter = 0;
             while (true) {
-                //считаем попытку подклчюения
-                //пробуем подключиться, если ловим ошибку, снова пытаемся, если нет, то все ок
                 counter++;
                 log.info("Сервер недоступен. Попытка подключения - " + counter);
                 try {
@@ -616,7 +726,6 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                     inD = new DataInputStream(socket.getInputStream());
                     log.info("Подключение к серверу - успешно");
 
-//                    Platform.runLater(this::updateModel);
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Project team 22");
@@ -638,101 +747,99 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     }
 
     private void getAlertReconnect() {
-        close();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Project team 22");
-        alert.setHeaderText("Соединение с сервером отсутствует. Востановить соедиенние?");
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                log.info("Попытка переподключения");
-                reconnect();
-            } else if (rs == ButtonType.CANCEL) {
-                System.exit(1);
-            }
-        });
-    }
-
-    public boolean login(String login, String password) {
-        //отправляем на сервер логин и пароль, поочереди
-        if (socket != null) {
-            try {
-                outD.writeUTF("login");
-                outD.flush();
-                if (inD.readUTF().equals("ok")) {
-                    outD.writeUTF(login);
-                    outD.flush();
-                }
-                if (inD.readUTF().equals("ok")) {
-                    outD.writeUTF(password);
-                    outD.flush();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Project team 22");
-                    alert.setHeaderText("Неверный логин или пароль");
-                    alert.show();
-                }
-                if (inD.readUTF().equals("true")) {
-                    return true;
-                }
-            } catch (IOException e) {
-                log.error(e);
-                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        try {
+            close();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Project team 22");
-            alert.setHeaderText("Отсутствует подключение к серверу.");
-            alert.show();
-                return false;
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Project team 22");
-            alert.setHeaderText("Отсутствует подключение к серверу.");
-            alert.show();
+            alert.setHeaderText("Соединение с сервером отсутствует. Востановить соедиенние?");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    log.info("Попытка переподключения");
+                    reconnect();
+                } else if (rs == ButtonType.CANCEL) {
+                    System.exit(1);
+                }
+            });
+        } catch (IllegalStateException ignored) {
         }
-        return false;
-        //возвращаем true если подключение удалось
+
     }
 
-    public boolean registration(String login, String password) {
-        //отправляем на сервер логин и пароль, поочереди
+    public void close() {
         if (socket != null) {
-            try {
-                outD.writeUTF("registr");
-                outD.flush();
-                if (inD.readUTF().equals("ok")) {
-                    outD.writeUTF(login);
+            if (!socket.isConnected()) {
+                try {
+                    outD.writeUTF("stop");
                     outD.flush();
+                } catch (IOException e) {
+                    log.error(e);
                 }
-                if (inD.readUTF().equals("ok")) {
-                    outD.writeUTF(password);
-                    outD.flush();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Project team 22");
-                    alert.setHeaderText("Важно сообщение.");
-                    alert.show();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    log.error(e);
                 }
-                if (inD.readUTF().equals("true")) {
-                    return true;
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Project team 22");
-                    alert.setHeaderText("Данный логин занят. Попробуйте другой.");
-                    alert.show();
-                }
-            } catch (IOException e) {
-                log.error(e);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Project team 22");
-                alert.setHeaderText("Отсутствует подключение к серверу.");
-                alert.show();
             }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Project team 22");
-            alert.setHeaderText("Отсутствует подключение к серверу.");
-            alert.show();
         }
-        return false;
+        if (outD != null) {
+            if (!socket.isConnected()) {
+                try {
+                    outD.close();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+            }
+        }
+        if (inD != null) {
+            if (!socket.isConnected()) {
+                try {
+                    inD.close();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+            }
+        }
+        log.info("Соединение с сервером прервано");
+    }
+    //endregion
+
+    @Override
+    public void run() {
+        log.info("PING_PONG_START");
+        if (socket != null) {
+            while (!socket.isClosed()) {
+                try {
+                    Thread.sleep(5000);
+                    synchronized (this) {
+                        outD.writeUTF("ping");
+                        outD.flush();
+                        log.info("PING");
+                        if (inD.readUTF().equals("pong")) {
+                            log.info("_PONG");
+                        } else {
+                            new IOException();
+                        }
+                    }
+                } catch (InterruptedException ignored) {
+                } catch (IOException e) {
+                    log.error("PING_PONG" + e);
+                    Platform.runLater(this::getAlertReconnect);
+                    break;
+                }
+            }
+        }
     }
 
+    @Override
+    public void registerObserver(final Observer observer) {
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void notifyAllObservers() {
+        updateModel();
+        for (Observer observer : observers) {
+            observer.handleEvent();
+        }
+    }
 }

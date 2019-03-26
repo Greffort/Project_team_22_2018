@@ -1,19 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.client.view.LoginFormController">
+<VBox alignment="CENTER" prefHeight="225.0" prefWidth="431.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team22.project_team_22_2018.client.view.fxcontroller.LoginFormController">
    <children>
-      <Label text="Login" />
-      <TextField fx:id="textFieldLogin" VBox.vgrow="ALWAYS" />
-      <Label text="Password" />
-      <TextField fx:id="textFieldPassword" VBox.vgrow="ALWAYS" />
-      <Button fx:id="buttonLogin" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buttonLogin" text="Login" />
-      <Button fx:id="buttonRegistr" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buttonRegistr" text="Registration" />
+      <Label alignment="CENTER" contentDisplay="CENTER" text="Project_team_22_2018" textFill="#b15500">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label text="Login" textFill="#b15500">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <TextField fx:id="textFieldLogin" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <Label text="Password" textFill="#b15500">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <TextField fx:id="textFieldPassword" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <HBox alignment="CENTER" prefHeight="57.0" prefWidth="421.0">
+         <children>
+            <Button fx:id="buttonRegistration" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#buttonRegistration" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textFill="#b15500">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="#b15500" glyphName="REGISTERED" size="25" />
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Зарегистрироваться" />
+               </tooltip>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="1.0" left="2.0" right="3.0" top="2.0" />
+               </padding>
+            </Button>
+            <Button fx:id="buttonLogin" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#buttonLogin" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 40;" textFill="#b15500" HBox.hgrow="NEVER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fx:id="font" fill="#b15500" glyphName="HOME" size="25" />
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Войти" />
+               </tooltip>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

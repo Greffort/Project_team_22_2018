@@ -1,4 +1,4 @@
-package com.team22.project_team_22_2018.client.view;
+package com.team22.project_team_22_2018.client.view.fxcontroller;
 
 import com.team22.project_team_22_2018.client.controller.ControllerView;
 import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
@@ -64,7 +64,7 @@ public class HomeFormController {
         });
     }
 
-    private void openLoginForm(){
+    private void openLoginForm() {
         try {
             FXMLLoader loader = new FXMLLoader(LOGIN);
             final Parent root = loader.load();

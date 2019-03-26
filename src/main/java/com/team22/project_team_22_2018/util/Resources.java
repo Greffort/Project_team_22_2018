@@ -12,6 +12,7 @@ public interface Resources {
     URL HOME = Resources.class.getClassLoader().getResource("view/HomeForm.fxml");
     URL SAVE = Resources.class.getClassLoader().getResource("1");
     URL SSERVER_FORM = Resources.class.getClassLoader().getResource("view/ServerForm.fxml");
+    URL NOTIFICATION = Resources.class.getClassLoader().getResource("view/NotificationForm.fxml");
 
     URL HELP_TEXT = Resources.class.getClassLoader().getResource("file/help.txt");
 }
