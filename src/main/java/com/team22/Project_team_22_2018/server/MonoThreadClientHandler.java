@@ -33,7 +33,6 @@ public class MonoThreadClientHandler implements Runnable {
         try (DataInputStream in = new DataInputStream(clientDialog.getInputStream());
              DataOutputStream out = new DataOutputStream(clientDialog.getOutputStream())) {
             log.info("Клиент подключился");
-
             while (true) {
                 if (clientDialog.isClosed()) {
                     server.getClientsO().remove(this);
@@ -41,7 +40,6 @@ public class MonoThreadClientHandler implements Runnable {
                     break;
                 }
                 String type = in.readUTF();
-
                 if (type.equals("stop")) {
                     server.getClientsO().remove(this);
                     log.info("Клиент отключился");
@@ -58,7 +56,6 @@ public class MonoThreadClientHandler implements Runnable {
                     out.writeUTF(s);
                     out.flush();
                 } else if (type.equals("setPurpose")) {
-
                     out.writeUTF("ok");
                     out.flush();
                     String uuid = in.readUTF();
@@ -68,17 +65,14 @@ public class MonoThreadClientHandler implements Runnable {
                     controllerModel.setPurpose(uuid, purpose);
                     continue;
                 } else if (type.equals("setPurposeDateClose")) {
-
                     out.writeUTF("ok");
                     out.flush();
                     String uuid = in.readUTF();
                     out.writeUTF("ok");
                     out.flush();
                     String dateClose = in.readUTF();
-
                     controllerModel.setPurposeDateClose(uuid, dateClose);
                 } else if (type.equals("setPurposeStatus")) {
-
                     out.writeUTF("ok");
                     out.flush();
                     String uuid = in.readUTF();
@@ -87,16 +81,13 @@ public class MonoThreadClientHandler implements Runnable {
                     String status = in.readUTF();
                     controllerModel.setStatus(uuid, status);
                     controllerModel.setCheck(false, uuid);
-
                 } else if (type.equals("setPurposeDateCloseNull")) {
-
                     out.writeUTF("ok");
                     out.flush();
                     String uuid = in.readUTF();
                     controllerModel.setCheck(false, uuid);
                     controllerModel.setPurposeDateClose(uuid);
                 } else if (type.equals("setStageName")) {
-
                     out.writeUTF("ok");
                     out.flush();
                     String uuidPurpose = in.readUTF();
@@ -139,7 +130,6 @@ public class MonoThreadClientHandler implements Runnable {
                     out.writeUTF("ok");
                     out.flush();
                     String password = in.readUTF();
-
                     if (controllerModel.checkLogin(login, password)) {
                         out.writeUTF("true");
                         out.flush();
@@ -154,7 +144,6 @@ public class MonoThreadClientHandler implements Runnable {
                     out.writeUTF("ok");
                     out.flush();
                     String password = in.readUTF();
-
                     if (controllerModel.registration(login, password)) {
                         out.writeUTF("true");
                         out.flush();
@@ -168,146 +157,6 @@ public class MonoThreadClientHandler implements Runnable {
                     controllerModel.save(in.readUTF());
                 }
                 //endregion
-//                switch (type) {
-//                    case "stop": {
-//                        server.getClientsO().remove(this);
-//                        log.info("Клиент отключился");
-//                        break;
-//                    }
-//                    case "getModel": {
-//                out.writeUTF("ok");
-//                out.flush();
-//                String s = Converter.toJson(controllerModel.getModel());
-//                log.info("Отправка модели " + s);
-//                out.writeUTF(s);
-//                out.flush();
-//
-//                    }
-//                    case "setPurpose": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String uuid = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        Purpose purpose = Converter.toJavaObject(in.readUTF(), Purpose.class);
-//                        controllerModel.setPurpose(uuid, purpose);
-//                        continue;
-//                    }
-//                    case "setPurposeDateClose": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String uuid = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String dateClose = in.readUTF();
-//                        controllerModel.setPurposeDateClose(uuid, dateClose);
-//                    }
-//                    case "setPurposeStatus": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String uuid = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String status = in.readUTF();
-//                        controllerModel.setStatus(uuid, status);
-//                    }
-//                    case "setPurposeDateCloseNull": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//
-//                        String uuid = in.readUTF();
-//                        controllerModel.setPurposeDateClose(uuid);
-//                    }
-//                    case "setStageName": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//
-//                        String uuidPurpose = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//
-//                        String uuidPurposeStage = in.readUTF();
-//                        String name = in.readUTF();
-//                        controllerModel.setStageName(uuidPurpose, uuidPurposeStage, name);
-//                    }
-//                    case "setPurposes": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        controllerModel.setPurposes(Converter.toJavaObject(in.readUTF(), Account.class).getPurposes());
-//                    }
-//                    case "addPurpose": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        addPurpose(in, out);
-//                    }
-//                    case "addPurposeStage": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        addPurposeStage(in, out);
-//                    }
-//                    case "removePurpose": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        controllerModel.removePurpose(in.readUTF());
-//                    }
-//                    case "removePurposeStage": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//
-//                        String uuidPurpose = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//
-//                        String uuidPurposeStage = in.readUTF();
-//
-//                        controllerModel.removePurposeStage(uuidPurpose, uuidPurposeStage);
-//                    }
-//                    case "ping": {
-//                        out.writeUTF("pong");
-//                        out.flush();
-//
-//                        lastPingTimestamp = System.currentTimeMillis();
-//                    }
-//                    case "login": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String login = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String password = in.readUTF();
-//
-//                        if (controllerModel.checkLogin(login, password)) {
-//                            out.writeUTF("true");
-//                            out.flush();
-//                        } else {
-//                            out.writeUTF("false");
-//                            out.flush();
-//                        }
-//                    }
-//                    case "registr": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String login = in.readUTF();
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        String password = in.readUTF();
-//
-//                        if (controllerModel.registration(login, password)) {
-//                            out.writeUTF("true");
-//                            out.flush();
-//                        } else {
-//                            out.writeUTF("false");
-//                            out.flush();
-//                        }
-//                    }
-//                    case "save": {
-//                        out.writeUTF("ok");
-//                        out.flush();
-//                        controllerModel.save(in.readUTF());
-//                    }
-//                }
             }
         } catch (IOException x) {
             server.getClientsO().remove(this);
@@ -356,10 +205,8 @@ public class MonoThreadClientHandler implements Runnable {
 
     }
 
-
     @Override
     public String toString() {
         return String.valueOf(clientDialog.getInetAddress());
     }
-
 }
