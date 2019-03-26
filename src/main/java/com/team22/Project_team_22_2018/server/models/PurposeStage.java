@@ -19,7 +19,7 @@ public class PurposeStage {
     private String completed;
 
     public PurposeStage() {
-        this("not specified completed","not specified name",UUID.randomUUID());
+        this("not specified completed", "not specified name", UUID.randomUUID());
     }
 
     public PurposeStage(final String name, final String completed, UUID uuid) {
@@ -67,5 +67,4 @@ public class PurposeStage {
     public int hashCode() {
         return Objects.hash(uuid, name, completed);
     }
-
 }

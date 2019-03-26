@@ -20,8 +20,6 @@ import java.util.UUID;
 @Log4j
 public class MyModel implements Serializable {
 
-
-
     @JsonSerialize
     private List<MyObject> purposes;
 
@@ -39,21 +37,20 @@ public class MyModel implements Serializable {
         this.uuid = uuid;
     }
 
-
-
     public MyObject getPurposeI(final int index) {
         if (purposes.isEmpty()) {
             return null;
         }
         return purposes.get(index);
     }
-//
+
     public MyObject getPurpose(final String uuid) {
         if (purposes.isEmpty()) {
             return null;
         }
         for (@NotNull val purpose : purposes) {
-            if (purpose.getUuid().equals(uuid)) {
+            String s = purpose.getUuid();
+            if (s.equals(uuid)) {
                 return purpose;
             }
         }
@@ -61,7 +58,6 @@ public class MyModel implements Serializable {
     }
 
     public ObservableList<String> getPurposes() {
-//        List<MyObject> list = char;
         ObservableList<String> observableList = FXCollections.observableArrayList();
         for (@NotNull val purpose : this.purposes) {
             observableList.add(purpose.getName());

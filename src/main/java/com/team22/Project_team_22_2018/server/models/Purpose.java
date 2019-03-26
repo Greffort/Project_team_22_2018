@@ -54,6 +54,31 @@ public class Purpose {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOpen;
 
+    private boolean check = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Purpose purpose = (Purpose) o;
+        return check == purpose.check &&
+                Objects.equals(uuid, purpose.uuid) &&
+                Objects.equals(purposeStages, purpose.purposeStages) &&
+                Objects.equals(name, purpose.name) &&
+                Objects.equals(criterionCompleted, purpose.criterionCompleted) &&
+                Objects.equals(description, purpose.description) &&
+                Objects.equals(status, purpose.status) &&
+                Objects.equals(criticalTime, purpose.criticalTime) &&
+                Objects.equals(deadline, purpose.deadline) &&
+                Objects.equals(dateClose, purpose.dateClose) &&
+                Objects.equals(dateOpen, purpose.dateOpen);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen, check);
+    }
+
     public Purpose() {
         this(new ArrayList<>(),
                 FILL_DEFAULT,
@@ -63,7 +88,8 @@ public class Purpose {
                 FILL_DATE_DEFAULT,
                 FILL_DATE_DEFAULT,
                 FILL_DATE_DEFAULT,
-                UUID.randomUUID());
+                UUID.randomUUID(),
+                false);
     }
 
     public Purpose(final List<PurposeStage> purposeStages,
@@ -74,7 +100,8 @@ public class Purpose {
                    final LocalDate deadline,
                    final LocalDate dateOpen,
                    final LocalDate criticalTime,
-                   final UUID uuid) {
+                   final UUID uuid,
+                   final boolean bool) {
         this.purposeStages = purposeStages;
         this.name = name;
         this.criterionCompleted = criterionCompleted;
@@ -85,23 +112,12 @@ public class Purpose {
         this.dateClose = FILL_DATE_DEFAULT;
         this.criticalTime = criticalTime;
         this.uuid = uuid;
+        this.check = bool;
     }
 
     public void addPurposeStage(final PurposeStage purposeStage) {
         this.purposeStages.add(purposeStage);
     }
-
-//    public PurposeStage getPurposeStage(final int index) {
-//        return this.purposeStages.get(index);
-//    }
-//
-//    public void setPurposeStage(final int index, final PurposeStage purposeStage) {
-//        this.purposeStages.set(index, purposeStage);
-//    }
-//
-//    public void removePurposeStage(final int index) {
-//        this.purposeStages.remove(index);
-//    }
 
     public PurposeStage getPurposeStage(final UUID uuid) {
         log.info("Поиск объекта: " + uuid);
@@ -115,7 +131,7 @@ public class Purpose {
     }
 
     public void setPurposeStage(final UUID uuid, final PurposeStage purposeStage) {
-        for (int i = 0; i < purposeStages.size() ; i++) {
+        for (int i = 0; i < purposeStages.size(); i++) {
             if (purposeStages.get(i).getUuid().equals(uuid)) {
                 purposeStages.set(i, purposeStage);
             }
@@ -146,25 +162,4 @@ public class Purpose {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Purpose purpose = (Purpose) o;
-        return Objects.equals(uuid, purpose.uuid) &&
-                Objects.equals(purposeStages, purpose.purposeStages) &&
-                Objects.equals(name, purpose.name) &&
-                Objects.equals(criterionCompleted, purpose.criterionCompleted) &&
-                Objects.equals(description, purpose.description) &&
-                Objects.equals(status, purpose.status) &&
-                Objects.equals(criticalTime, purpose.criticalTime) &&
-                Objects.equals(deadline, purpose.deadline) &&
-                Objects.equals(dateClose, purpose.dateClose) &&
-                Objects.equals(dateOpen, purpose.dateOpen);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen);
-    }
 }

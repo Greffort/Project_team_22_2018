@@ -20,7 +20,6 @@ public class ControllerModel {
     private Account account;
 
     public ControllerModel() {
-//        this.account = ServerRuntimeHolder.getModelHolder();
         this.account = new Account();
     }
 
@@ -55,27 +54,6 @@ public class ControllerModel {
         this.account.setPurposes(list);
     }
 
-//    /**
-//     * Перезаписывает значение даты закрытия цели
-//     */
-//    public void setPurposeDateClose(final int index, final String dateClose) {
-//        account.getPurpose(index).setDateClose(LocalDate.parse(dateClose));
-//    }
-//
-//    /**
-//     * Перезаписывает значение даты закрытия цели
-//     */
-//    public void setPurposeDateClose(final int index) {
-//        account.getPurpose(index).setDateClose(LocalDate.of(1970, 1, 1));
-//    }
-//
-//    /**
-//     * Перезаписывает значение имени этапа цели
-//     */
-//    public void setStageName(final int indexPurpose, final int indexPurposeStage, final String name) {
-//        this.account.getPurpose(indexPurpose).getPurposeStage(indexPurposeStage).setName(name);
-//    }
-
     /**
      * Перезаписывает значение даты закрытия цели
      */
@@ -101,6 +79,10 @@ public class ControllerModel {
     public void setStatus(final String uuidPurpose, final String status) {
         this.account.setStatus(UUID.fromString(uuidPurpose), status);
     }
+
+    public void setCheck(boolean bool, String uuid) {
+        account.getPurpose(UUID.fromString(uuid)).setCheck(bool);
+    }
     //endregion
 
     //region ADD methods
@@ -112,7 +94,7 @@ public class ControllerModel {
             final ArrayList arrayList, final String name,
             final String criterionCompleted, final String description,
             final String status, final String deadline,
-            final String dateOpen, final String criticalTime, String uuid) {
+            final String dateOpen, final String criticalTime, String uuid, boolean check) {
         this.account.addPurpose(new Purpose(
                 arrayList,
                 name,
@@ -123,7 +105,8 @@ public class ControllerModel {
                 LocalDate.parse(dateOpen),
 //             criticalTime
                 LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)),
-                UUID.fromString(uuid)
+                UUID.fromString(uuid),
+                check
         ));
     }
 
@@ -140,13 +123,9 @@ public class ControllerModel {
     /**
      * Добавляет объект PurposeStage (Этап выполнения цели) в список Account
      */
-//    public void addPurposeStage(final int indexPurpose, final String nameStage, final String status, String uuid) {
-//        this.account.getPurpose(indexPurpose).addPurposeStage(new PurposeStage(nameStage, status,UUID.fromString(uuid)));
-//    }
     public void addPurposeStage(String uuidPurpose, final String nameStage, final String status, String uuid) {
         UUID uuid1 = UUID.fromString(uuid);
         UUID uuid2 = (UUID.fromString(uuidPurpose));
-
         this.account.getPurpose(uuid2).addPurposeStage(new PurposeStage(nameStage, status, uuid1));
     }
     //endregion
@@ -157,9 +136,6 @@ public class ControllerModel {
      * Удаляет объект Purpose (Цель) из списка Account
      */
     public void removePurpose(final String uuid) {
-//        if (index >= 0 && index < account.getPurposes().size()) {
-//            this.account.removePurpose(index);
-//        }
         try {
             this.account.removePurpose(UUID.fromString(uuid));
         } catch (Exception e) {
@@ -178,21 +154,17 @@ public class ControllerModel {
         //получили логин  пароль, берем файл, считываем из него данные и сверяем.
         //Если совпадение найдено, то берем строку ниже, и смотрим совпадает ли пароль, если да то возвращаем true,
         try {
-            @NotNull Scanner scanner = new Scanner(new FileReader("login&password"));
-            while (scanner.hasNextLine()) {
-                if (scanner.nextLine().equals(login)) {
-                    if (scanner.nextLine().equals(password)) {
+            @NotNull Scanner scannerLogin = new Scanner(new FileReader("login"));
+            @NotNull Scanner scannerPassword = new Scanner(new FileReader("password"));
+            //login
+            while (scannerLogin.hasNextLine()) {
+                if (scannerLogin.nextLine().equals(login)) {
+                    if (scannerPassword.nextLine().equals(password)) {
                         try {
-                            Scanner scanner1 = new Scanner(new FileReader(login));
-                            String s = scanner1.nextLine();
-//                            System.out.println(s);
-//                            System.out.println(account.toString());
-                            this.account = Converter.toJavaObject(s, Account.class);
-//                            System.out.println(account.toString());
+                            this.account = Converter.toJavaObject(new Scanner(new FileReader(login)).nextLine(), Account.class);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                         return true;
                     }
                 }
@@ -210,13 +182,15 @@ public class ControllerModel {
             return false;
         } else {
             try {
+                @NotNull FileWriter fileWriterLogin = new FileWriter("login", true);
+                @NotNull FileWriter fileWriterPassword = new FileWriter("password", true);
+                BufferedWriter bufferWriterLogin = new BufferedWriter(fileWriterLogin);
+                BufferedWriter bufferWriterPassword = new BufferedWriter(fileWriterPassword);
 
-//            @NotNull PrintStream printStream = new PrintStream(new FileOutputStream("login&password"));
-                @NotNull FileWriter fileWriter = new FileWriter("login&password", true);
-                BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
-                bufferWriter.write(login + "\n");
-                bufferWriter.write(password + "\n");
-                bufferWriter.flush();
+                bufferWriterLogin.write(login + "\n");
+                bufferWriterPassword.write(password + "\n");
+                bufferWriterLogin.flush();
+                bufferWriterPassword.flush();
                 return true;
             } catch (FileNotFoundException e) {
                 log.error(e);
@@ -235,6 +209,5 @@ public class ControllerModel {
             e.printStackTrace();
         }
     }
-
     //endregion
 }

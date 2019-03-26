@@ -52,6 +52,7 @@ public class Account implements Serializable {
     public Purpose getPurpose(final UUID uuid) {
         log.info("Поиск объекта: " + uuid);
         for (int i = 0; i < purposes.size(); i++) {
+            System.out.println(purposes.get(i).getUuid());
             if (purposes.get(i).getUuid().equals(uuid)) {
                 return purposes.get(i);
             }

@@ -36,7 +36,8 @@ public class MyObject {
 
     private String dateOpen;
 
-    //искать ошибку конвертации здесь
+    private boolean check = false;
+
     public MyObject() {
         this(
                 new ArrayList<>(),
@@ -47,7 +48,8 @@ public class MyObject {
                 FILL_DATE_DEFAULT,
                 FILL_DATE_DEFAULT,
                 FILL_DATE_DEFAULT,
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(),
+                false
         );
     }
 
@@ -59,7 +61,8 @@ public class MyObject {
                     final String deadline,
                     final String dateOpen,
                     final String criticalTime,
-                    final String uuid) {
+                    final String uuid,
+                    final boolean bool) {
         this.purposeStages = purposeStages;
         this.name = name;
         this.criterionCompleted = criterionCompleted;
@@ -70,6 +73,7 @@ public class MyObject {
         this.dateClose = FILL_DATE_DEFAULT;
         this.criticalTime = criticalTime;
         this.uuid = uuid;
+        this.check = bool;
     }
 
     public MySubObject getPurposeStageI(final int index) {
@@ -88,27 +92,21 @@ public class MyObject {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return "MyObject{" +
-                "purposeStages=" + purposeStages +
-                ", name='" + name + '\'' +
-                ", criterionCompleted='" + criterionCompleted + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", criticalTime='" + criticalTime + '\'' +
-                ", deadline='" + deadline + '\'' +
-                ", dateClose='" + dateClose + '\'' +
-                ", dateOpen='" + dateOpen + '\'' +
-                '}';
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(final boolean check) {
+        this.check = check;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MyObject myObject = (MyObject) o;
-        return Objects.equals(uuid, myObject.uuid) &&
+        return check == myObject.check &&
+                Objects.equals(uuid, myObject.uuid) &&
                 Objects.equals(purposeStages, myObject.purposeStages) &&
                 Objects.equals(name, myObject.name) &&
                 Objects.equals(criterionCompleted, myObject.criterionCompleted) &&
@@ -122,6 +120,23 @@ public class MyObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen);
+        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen, check);
+    }
+
+    @Override
+    public String toString() {
+        return "MyObject{" +
+                "uuid='" + uuid + '\'' +
+                ", purposeStages=" + purposeStages +
+                ", name='" + name + '\'' +
+                ", criterionCompleted='" + criterionCompleted + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", criticalTime='" + criticalTime + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", dateClose='" + dateClose + '\'' +
+                ", dateOpen='" + dateOpen + '\'' +
+                ", check=" + check +
+                '}';
     }
 }
