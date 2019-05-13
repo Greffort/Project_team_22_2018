@@ -1,15 +1,17 @@
 package com.team22.project_team_22_2018.client.view.util.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@Setter
 @Getter
 @Log4j
-public class MySubObject {
+public class MySubObject implements Serializable {
 
     private String uuid;
 
@@ -21,11 +23,17 @@ public class MySubObject {
         this("not specified completed", "not specified name", UUID.randomUUID().toString());
     }
 
+    public MySubObject(final String name, final String completed) {
+        this.name = name;
+        this.completed = completed;
+    }
+
     public MySubObject(final String name, final String completed, final String uuid) {
         this.name = name;
         this.completed = completed;
         this.uuid = uuid;
     }
+
 
     @Override
     public String toString() {

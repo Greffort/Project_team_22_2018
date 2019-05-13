@@ -30,7 +30,6 @@ public class LoginFormController {
 
         if (checkTextFields()) {
             if (controllerView.login(textFieldLogin.getText(), textFieldPassword.getText())) {
-                ClientRuntimeHolder.setLOGIN(textFieldLogin.getText());
                 openMainForm();
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -67,8 +66,7 @@ public class LoginFormController {
             alert.setHeaderText("Новый пользователь добавлен. Войти?");
             alert.showAndWait().ifPresent(rs -> {
                 if (rs == ButtonType.OK) {
-                    ClientRuntimeHolder.setLOGIN(textFieldLogin.getText());
-                    openMainForm();
+                    buttonLogin();
                     log.info("Новый пользователь добавлен");
                 }
             });
@@ -106,7 +104,6 @@ public class LoginFormController {
                 alert.setHeaderText("Вы уверены, что хотите выйти из приложения?");
                 alert.showAndWait().ifPresent(rs -> {
                     if (rs == ButtonType.OK) {
-                        controllerView.save();
                         controllerView.close();
                         log.info("Приложение закрыто");
                         System.exit(0);

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static com.team22.project_team_22_2018.util.Resources.*;
@@ -74,11 +75,14 @@ public class MainController implements Observer {
     @FXML
     private TableView<TableViewData> tableView;
     @FXML
+    private TableColumn<Object, Object> numberingColumn;
+    @FXML
     private TableColumn<TableViewData, String> taskColumn;
     @FXML
     private TableColumn<TableViewData, String> statusColumn;
     @FXML
-    private TableColumn<Object, Object> numberingColumn;
+    private TableColumn<TableViewData, String> idColumn;
+
 
     @FXML
     private TextField namePurpose;
@@ -122,20 +126,11 @@ public class MainController implements Observer {
     private Button saveEditStage;
     @FXML
     private Button removeStage;
-    @FXML
-    private Button loadAction;
-    @FXML
-    private Button buttonHome;
 
     @FXML
     private TextField textFieldSearch;
     @FXML
     private CheckBox checkBoxRegularX = new CheckBox("checkBoxRegularX");
-
-    @FXML
-    private Label labelAllGoal;
-    @FXML
-    private Label labelCloseGoal;
 
     private boolean flag = true;
     //endregion
@@ -146,18 +141,22 @@ public class MainController implements Observer {
 
     @FXML
     public void initialize() {
+        controllerView.updateModel();
+
         tableView.setEditable(true);
         labelCloseDate.setVisible(false);
         buttonOpenPurpose.setVisible(false);
-        buttonClosePurpose.setVisible(false);
+        buttonClosePurpose.setVisible(true);
+        buttonClosePurpose.setDisable(true);
 
         setEditPane(true, 0.9);
         dataPicDeadline.setConverter(converter);
 
-        //TableView
+        //TableView idColumn
+        numberingColumn.setCellFactory(new NumberTableCellFactory<>());
         taskColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        numberingColumn.setCellFactory(new NumberTableCellFactory<>());
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("uuid"));
 
         //редактирование столбца заданий
         taskColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -281,35 +280,10 @@ public class MainController implements Observer {
 
     @FXML
     public void buttonHome() {
-        try {
-            FXMLLoader loader = new FXMLLoader(HOME);
-            final Parent root = loader.load();
-            val scene = new Scene(root);
-            val stage = new Stage();
-            stage.setTitle("Home form");
-            stage.setScene(scene);
-            stage.show();
-
-            stage.setOnCloseRequest(event -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Project team 22");
-                alert.setHeaderText("Вы уверены, что хотите закрыть окно?");
-                alert.showAndWait().ifPresent(rs -> {
-                    if (rs == ButtonType.OK) {
-                        flagAddStage = false;
-                        stage.close();
-                        log.info("Окно закрыто");
-                    }
-                });
-            });
-        } catch (IOException e) {
-            log.error(e);
-        }
     }
 
     @FXML
     private void saveAction() {
-        controllerView.save();
     }
 
     @FXML
@@ -330,7 +304,6 @@ public class MainController implements Observer {
         } else {
             sortedPurposes = controllerView.getMyObjectsName();
             if (!checkBoxRegularX.isSelected()) {
-
                 for (int i = 0; i < sortedPurposes.size(); i++) {
 
                     if (!sortedPurposes.get(i).contains(textFieldSearch.getText())) {
@@ -338,12 +311,9 @@ public class MainController implements Observer {
                         i--;
                     }
                 }
-
             } else {
                 try {
                     for (int i = 0; i < sortedPurposes.size(); i++) {
-
-
                         if (!sortedPurposes.get(i).matches(textFieldSearch.getText())) {
                             sortedPurposes.remove(i);
                             i--;
@@ -354,27 +324,22 @@ public class MainController implements Observer {
                     sortedPurposes.clear();
                 }
             }
-
             if (sortedPurposes.size() == 0)
                 sortedPurposes.add("-"); //возвращает - если ничто не подходит под критерии поиска
-
             listView.setItems(sortedPurposes);
         }
     }
 
     @FXML
     public void saveAsAction() {
-        controllerView.saveAs();
     }
 
     @FXML
     private void loadAction() {
-        controllerView.updateModel();
     }
 
     @FXML
     public void loadFromAction() {
-        processFile();
     }
 
     public void changUser() {
@@ -435,12 +400,8 @@ public class MainController implements Observer {
                 }
             });
         } else {
-            controllerView.addPurposeStage(
-                    listView.getSelectionModel().getSelectedIndex(),
-                    textStage.getText(),
-                    comboBoxStageStatus.getValue()
-            );
-            updatePurposeInfo(listView.getSelectionModel().getSelectedIndex());
+            ObservableList<TableViewData> tableViewData = tableView.getItems();
+            tableViewData.add(new TableViewData(textStage.getText(), comboBoxStageStatus.getValue(), UUID.randomUUID().toString()));
             textStage.setText("");
         }
     }
@@ -451,7 +412,7 @@ public class MainController implements Observer {
     @FXML
     public void saveEditAction() {
         setEditPane(true, 0.9);
-        controllerView.setPurpose(
+        controllerView.setGoal(
                 listView.getSelectionModel().getSelectedIndex(),
                 tableView.getItems(),
                 namePurpose.getText(),
@@ -463,10 +424,6 @@ public class MainController implements Observer {
                 this.criticalTime.getText(),
                 flag
         );
-        if (!labelCloseDate.getText().equals("Дата закрытия цели")) {
-            buttonClosePurpose();
-        }
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Project team 22");
         alert.setHeaderText("Изменения сохранены");
@@ -492,15 +449,18 @@ public class MainController implements Observer {
     @FXML
     public void buttonSaveEditStage() {
         if (tableView.getSelectionModel().getSelectedIndex() != -1) {
-            tableView.getItems().set(
-                    tableView.getSelectionModel().getSelectedIndex(),
-                    new TableViewData(textStage.getText(), comboBoxStageStatus.getValue())
-            );
-
-            controllerView.setPurposeStages(
-                    listView.getSelectionModel().getSelectedIndex(),
-                    tableView.getItems());
-            textStage.setText("");
+            if (tableView.getSelectionModel().getSelectedIndex() != -1) {
+                tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(),
+                        new TableViewData(
+                                textStage.getText(),
+                                comboBoxStageStatus.getValue(),
+                                controllerView.getModel().getGoalI(
+                                        listView.getSelectionModel().getSelectedIndex()).getGoalStages().get(
+                                        tableView.getSelectionModel().getSelectedIndex()).getUuid()
+                        )
+                );
+                textStage.setText("");
+            }
         }
     }
     //endregion
@@ -530,7 +490,6 @@ public class MainController implements Observer {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Project team 22");
         alert.setHeaderText("Вы уверены, что хотите выйти?");
-        controllerView.save();
         controllerView.close();
         alert.showAndWait().ifPresent(rs -> {
             if (rs == ButtonType.OK) {
@@ -561,6 +520,9 @@ public class MainController implements Observer {
                 closeDate = true;
             } else if (controllerView.getCloseDate(index).equals("1970-01-01")) {
                 closeDate = true;
+                buttonOpenPurpose.setVisible(false);
+                buttonClosePurpose.setVisible(true);
+                buttonClosePurpose.setDisable(false);
             }
             flag = controllerView.getMyObjects().get(index).isCheck();
 
@@ -569,7 +531,7 @@ public class MainController implements Observer {
             comboBoxStageStatus.setValue("-");
             comboBoxStatus.setValue(listPurposeStatusValue.get(0));
 
-            buttonOpenPurpose.setVisible(true);
+
             buttonClosePurpose.setVisible(true);
 
             //region Text Fields
@@ -596,6 +558,8 @@ public class MainController implements Observer {
             if (!closeDate) {
                 labelCloseDate.setText("Цель выполнена! Дата закрытия цели: " + controllerView.getCloseDate(index));
                 labelCloseDate.setVisible(true);
+                buttonOpenPurpose.setVisible(true);
+                buttonClosePurpose.setVisible(false);
             } else {
                 labelCloseDate.setVisible(false);
             }
@@ -635,8 +599,10 @@ public class MainController implements Observer {
         ObservableList<String> stageNames = controllerView.getStageNames(listView.getSelectionModel().getSelectedIndex());
         ObservableList<String> stageStatus = controllerView.getStageStatuses(listView.getSelectionModel().getSelectedIndex());
 
+
         for (int i = 0; i < stageNames.size(); i++) {
-            tableViewData.add(new TableViewData(stageNames.get(i), stageStatus.get(i)));
+            String stageUUID = controllerView.getUUIDMySubObject(listView.getSelectionModel().getSelectedIndex(), i);
+            tableViewData.add(new TableViewData(stageNames.get(i), stageStatus.get(i), stageUUID));
         }
         return tableViewData;
     }
@@ -644,8 +610,9 @@ public class MainController implements Observer {
     private ObservableList<TableViewData> getTableViewDatesForOpen() {
         ObservableList<TableViewData> tableViewData = FXCollections.observableArrayList();
         ObservableList<String> stageNames = controllerView.getStageNames(listView.getSelectionModel().getSelectedIndex());
-        for (String stageName : stageNames) {
-            tableViewData.add(new TableViewData(stageName, "Завершен"));
+        for (int i = 0; i < stageNames.size(); i++) {
+            String stageUUID = controllerView.getUUIDMySubObject(listView.getSelectionModel().getSelectedIndex(), i);
+            tableViewData.add(new TableViewData(stageNames.get(i), "Завершен", stageUUID));
         }
         return tableViewData;
     }
@@ -676,6 +643,7 @@ public class MainController implements Observer {
     public void setEditPane(final Boolean bool, final double opacity) {
         textStage.setDisable(bool);
         editPurpose.setDisable(!bool);
+        saveEditPurpose.setDisable(bool);
         saveEditPurpose.setDisable(bool);
         namePurpose.setDisable(bool);
         textDescription.setDisable(bool);
@@ -712,25 +680,6 @@ public class MainController implements Observer {
         );
     }
 
-    /**
-     * Вызывает метод считывания файла
-     */
-    private void processFile() {
-        if (!controllerView.loadAsB()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Project team 22");
-            alert.setHeaderText("Ошибка чтения файла");
-            alert.showAndWait().ifPresent(e -> {
-                if (e == ButtonType.OK) {
-                    log.info("Ошибка загрузки файла");
-                    loadAction.requestFocus();
-                }
-            });
-        } else {
-            handleEvent();
-        }
-    }
-
     public void closeWindow() {
         Stage stage = (Stage) this.listView.getScene().getWindow();
         stage.onCloseRequestProperty();
@@ -741,7 +690,7 @@ public class MainController implements Observer {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    ObservableList<MyObject> purposes = controllerView.getModel().getPurposes("");
+                    ObservableList<MyObject> purposes = controllerView.getModel().getGoals("");
                     for (int i = 0; i < purposes.size(); i++) {
                         if (purposes.get(i).getDateClose().equals("1970-01-01")) {
                             if (!purposes.get(i).isCheck() && LocalDate.parse(purposes.get(i).getCriticalTime()).equals(LocalDate.now())) {
@@ -757,7 +706,7 @@ public class MainController implements Observer {
                     break;
                 }
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500_000_000);
                 } catch (InterruptedException e) {
                     log.error(e);
                 }

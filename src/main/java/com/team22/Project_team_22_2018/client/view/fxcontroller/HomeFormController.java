@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,19 +23,7 @@ public class HomeFormController {
     private ControllerView controllerView = ClientRuntimeHolder.getControllerViewHolder();
 
     @FXML
-    private TextField textFieldName;
-
-    @FXML
     private TextField textFieldLogin;
-
-    @FXML
-    private TextField textFieldPassword;
-
-    @FXML
-    private Button buttonExit;
-
-    @FXML
-    private Button buttonChangeUser;
 
     @FXML
     void buttonChangeUser() {
@@ -44,9 +31,6 @@ public class HomeFormController {
         stage.onCloseRequestProperty();
         stage.close();
         openLoginForm();
-
-        //добавить щакрытие главного окна
-        //сменить пользователя
     }
 
     @FXML
@@ -54,7 +38,6 @@ public class HomeFormController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Project team 22");
         alert.setHeaderText("Вы уверены, что хотите выйти из приложения?");
-        controllerView.save();
         controllerView.close();
         alert.showAndWait().ifPresent(rs -> {
             if (rs == ButtonType.OK) {

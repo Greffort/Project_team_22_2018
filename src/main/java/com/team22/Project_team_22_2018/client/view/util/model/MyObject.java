@@ -1,24 +1,29 @@
 package com.team22.project_team_22_2018.client.view.util.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Setter
 @Getter
 @Log4j
 @AllArgsConstructor
-public class MyObject {
+public class MyObject implements Serializable {
     private static final String FILL_DEFAULT = "not specified";
     private static final String FILL_DATE_DEFAULT = "1970-01-01";
 
     private String uuid;
 
-    private List<MySubObject> purposeStages;
+    @JsonSerialize
+    private List<MySubObject> goalStages;
 
     private String name;
 
@@ -32,11 +37,11 @@ public class MyObject {
 
     private String deadline;
 
-    private String dateClose;
-
     private String dateOpen;
 
-    private boolean check = false;
+    private String dateClose;
+
+    private int check = 0;
 
     public MyObject() {
         this(
@@ -49,11 +54,11 @@ public class MyObject {
                 FILL_DATE_DEFAULT,
                 FILL_DATE_DEFAULT,
                 UUID.randomUUID().toString(),
-                false
+                0
         );
     }
 
-    public MyObject(final List<MySubObject> purposeStages,
+    public MyObject(final List<MySubObject> goalStages,
                     final String name,
                     final String criterionCompleted,
                     final String description,
@@ -62,8 +67,8 @@ public class MyObject {
                     final String dateOpen,
                     final String criticalTime,
                     final String uuid,
-                    final boolean bool) {
-        this.purposeStages = purposeStages;
+                    final int bool) {
+        this.goalStages = goalStages;
         this.name = name;
         this.criterionCompleted = criterionCompleted;
         this.description = description;
@@ -76,28 +81,37 @@ public class MyObject {
         this.check = bool;
     }
 
-    public MySubObject getPurposeStageI(final int index) {
-        return this.purposeStages.get(index);
+    public MySubObject getGoalStageI(final int index) {
+        return this.goalStages.get(index);
     }
 
-    public MySubObject getPurposeStage(final String uuid) {
-        if (purposeStages.size() == 0) {
+    public MySubObject getGoalStage(final String uuid) {
+        if (goalStages.size() == 0) {
             return null;
         }
-        for (int i = 0; i < purposeStages.size() - 1; i++) {
-            if (purposeStages.get(i).getUuid().equals(uuid)) {
-                return purposeStages.get(i);
+        for (int i = 0; i < goalStages.size() - 1; i++) {
+            if (goalStages.get(i).getUuid().equals(uuid)) {
+                return goalStages.get(i);
             }
         }
         return null;
     }
 
     public boolean isCheck() {
-        return check;
+        if (this.check == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void setCheck(final boolean check) {
-        this.check = check;
+        if (check == true) {
+            this.check = 1;
+        } else {
+            this.check = 0;
+        }
     }
 
     @Override
@@ -107,7 +121,7 @@ public class MyObject {
         MyObject myObject = (MyObject) o;
         return check == myObject.check &&
                 Objects.equals(uuid, myObject.uuid) &&
-                Objects.equals(purposeStages, myObject.purposeStages) &&
+                Objects.equals(goalStages, myObject.goalStages) &&
                 Objects.equals(name, myObject.name) &&
                 Objects.equals(criterionCompleted, myObject.criterionCompleted) &&
                 Objects.equals(description, myObject.description) &&
@@ -120,22 +134,22 @@ public class MyObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, purposeStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen, check);
+        return Objects.hash(uuid, goalStages, name, criterionCompleted, description, status, criticalTime, deadline, dateClose, dateOpen, check);
     }
 
     @Override
     public String toString() {
         return "MyObject{" +
                 "uuid='" + uuid + '\'' +
-                ", purposeStages=" + purposeStages +
+                ", goalStages=" + goalStages +
                 ", name='" + name + '\'' +
                 ", criterionCompleted='" + criterionCompleted + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", criticalTime='" + criticalTime + '\'' +
                 ", deadline='" + deadline + '\'' +
-                ", dateClose='" + dateClose + '\'' +
                 ", dateOpen='" + dateOpen + '\'' +
+                ", dateClose='" + dateClose + '\'' +
                 ", check=" + check +
                 '}';
     }

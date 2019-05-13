@@ -46,7 +46,7 @@ public class StartClient extends Application {
                     if (rs == ButtonType.OK) {
                         log.info("Приложение закрыто");
                         System.exit(0);
-                    }else{
+                    } else {
                         event.consume();
                     }
                 });

@@ -12,11 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.team22.project_team_22_2018.util.Resources.SSERVER_FORM;
 
+
+//import static com.team22.project_team_22_2018.util.Resources.SSERVER_FORM;
+
 @Log4j
 public class StartServer extends Application {
 
     private final String APPLICATION_NAME = "team_22_project_server";
-
 
     private static Thread threadGUI = new Thread(Application::launch);
 

@@ -1,7 +1,6 @@
 package com.team22.project_team_22_2018.client.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.team22.project_team_22_2018.client.util.ClientRuntimeHolder;
 import com.team22.project_team_22_2018.client.view.Observer;
 import com.team22.project_team_22_2018.client.view.util.model.MyModel;
 import com.team22.project_team_22_2018.client.view.util.model.MyObject;
@@ -18,13 +17,15 @@ import javafx.stage.FileChooser;
 import lombok.extern.log4j.Log4j;
 import lombok.val;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.UUID;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -43,7 +44,6 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
     public ControllerView() {
         log.info("Инициализация ControllerView");
-
         if (!connect()) {
             while (socket == null) {
                 try {
@@ -55,23 +55,22 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void updateModel() {
+    public synchronized void updateModel() {
         try {
             outD.writeUTF("getModel");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 String s = inD.readUTF();
-                log.info("Обновление данных на клиенте " + s);
+                log.info("Обновление данных на клиенте "/* + s*/);
                 myModel = Converter.toJavaObject(s, MyModel.class);
             }
         } catch (IOException e) {
             log.error(e);
-            getAlertReconnect();
         }
     }
 
     //region GET methods
-    public MyModel getMyModel() {
+    public synchronized MyModel getMyModel() {
         return this.myModel;
     }
 
@@ -90,11 +89,11 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     }
 
     public ObservableList<String> getMyObjectsName() {
-        return this.myModel.getPurposes();
+        return this.myModel.getGoals();
     }
 
     public ObservableList<MyObject> getMyObjects() {
-        return this.myModel.getPurposes("костыль");
+        return this.myModel.getGoals("костыль");
     }
 
     public String getNamePurpose(final int index) {
@@ -140,21 +139,17 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         ));
     }
 
-    public String getUUIDMyModel(final int index) {
-        return this.myModel.getUuid();
-    }
-
     public String getUUIDMyObject(final int index) {
-        return this.myModel.getPurposeI(index).getUuid();
+        return this.myModel.getGoalI(index).getUuid();
     }
 
-    public String getUUIDMySubObject(final int index, final int indexSubObject) {
-        return this.myModel.getPurposeI(index).getPurposeStageI(indexSubObject).getUuid();
+    public String getUUIDMySubObject(final int indexGoal, final int indexSubObject) {
+        return this.myModel.getGoalI(indexGoal).getGoalStageI(indexSubObject).getUuid();
     }
 
     public ObservableList<String> getStageNames(final int index) {
         ObservableList<String> observableList = FXCollections.observableArrayList();
-        List<MySubObject> list = this.myModel.getPurpose(getUUIDMyObject(index)).getPurposeStages();
+        List<MySubObject> list = this.myModel.getPurpose(getUUIDMyObject(index)).getGoalStages();
         for (MySubObject purposeStage : list) {
             observableList.add(purposeStage.getName());
         }
@@ -163,7 +158,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
     public ObservableList<String> getStageStatuses(final int index) {
         ObservableList<String> observableList = FXCollections.observableArrayList();
-        List<MySubObject> list = this.myModel.getPurpose(getUUIDMyObject(index)).getPurposeStages();
+        List<MySubObject> list = this.myModel.getPurpose(getUUIDMyObject(index)).getGoalStages();
         for (MySubObject purposeStage : list) {
             observableList.add(purposeStage.getCompleted());
         }
@@ -172,7 +167,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     //endregion
 
     //region SET methods
-    public synchronized void setPurpose(
+    public synchronized void setGoal(
             final int index,
             final ObservableList<TableViewData> purposeStages,
             final String name,
@@ -189,7 +184,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
             log.info("Изменение цели. Имя цели: " + name);
             try {
-                outD.writeUTF("setPurpose");
+                outD.writeUTF("setGoal");
                 outD.flush();
                 if (inD.readUTF().equals("ok")) {
                     outD.writeUTF(getUUIDMyObject(index));
@@ -198,15 +193,20 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 if (inD.readUTF().equals("ok")) {
                     ArrayList<MySubObject> list = new ArrayList<>();
                     for (TableViewData aTableViewData : purposeStages) {
-                        list.add(new MySubObject(aTableViewData.getStage(), aTableViewData.getStatus(), UUID.randomUUID().toString()));
+                        list.add(new MySubObject(aTableViewData.getStage(), aTableViewData.getStatus(), aTableViewData.getUuid()));
                     }
-
+                    int a;
+                    if (flag) {
+                        a = 1;
+                    } else {
+                        a = 0;
+                    }
                     MyObject myObject = new MyObject(
                             list, name,
                             criterionCompleted, description,
                             status, deadline,
                             dateOpen, critical, getUUIDMyObject(index),
-                            flag
+                            a
                     );
                     outD.writeUTF(Converter.toJson(myObject));
                     outD.flush();
@@ -219,7 +219,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public synchronized void setPurpose(
+    public synchronized void setGoal(
             final String uuid,
             final List<MySubObject> purposeStages,
             final String name,
@@ -231,23 +231,29 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
             final String criticalTime,
             final boolean flag
     ) {
-
         String critical = String.valueOf(LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)));
         log.info("Изменение цели. Имя цели: " + name);
         try {
-            outD.writeUTF("setPurpose");
+            outD.writeUTF("setGoal");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 outD.writeUTF(uuid);
                 outD.flush();
             } else return;
+
             if (inD.readUTF().equals("ok")) {
+                int a;
+                if (flag) {
+                    a = 1;
+                } else {
+                    a = 0;
+                }
                 MyObject myObject = new MyObject(
                         purposeStages, name,
                         criterionCompleted, description,
                         status, deadline,
-                        dateOpen, critical, uuid/*UUID.randomUUID().toString()*/,
-                        flag
+                        dateOpen, critical, uuid,
+                        a
                 );
                 outD.writeUTF(Converter.toJson(myObject));
                 outD.flush();
@@ -259,24 +265,9 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public synchronized void setPurposeStages(final int index, final ObservableList<TableViewData> purposesStage) {
-        setPurpose(
-                index,
-                purposesStage,
-                getNamePurpose(index),
-                getCriterionCompleted(index),
-                getDescription(index),
-                getStatus(index),
-                getDeadlineDate(index),
-                getDateOpen(index),
-                getCriticalTime(index),
-                getMyObjects().get(index).isCheck()
-        );
-    }
-
     public synchronized void setPurposeDateClose(final int index, final String dateClose) {
         try {
-            outD.writeUTF("setPurposeDateClose");
+            outD.writeUTF("setGoalDateClose");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 outD.writeUTF(String.valueOf(getUUIDMyObject(index)));
@@ -295,7 +286,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
     public synchronized void setPurposeDateClose(final String uuid, final String dateClose) {
         try {
-            outD.writeUTF("setPurposeDateClose");
+            outD.writeUTF("setGoalDateClose");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 outD.writeUTF(uuid);
@@ -388,9 +379,9 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     }
 
     public synchronized void setCheck(final boolean bool, MyObject myObject) {
-        setPurpose(
+        setGoal(
                 myObject.getUuid(),
-                myModel.getPurpose(myObject.getUuid()).getPurposeStages(),
+                myModel.getPurpose(myObject.getUuid()).getGoalStages(),
                 myModel.getPurpose(myObject.getUuid()).getName(),
                 myModel.getPurpose(myObject.getUuid()).getCriterionCompleted(),
                 myModel.getPurpose(myObject.getUuid()).getDescription(),
@@ -404,17 +395,15 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 bool
         );
     }
-    //endregion
 
-    //region ADD methods
-    public void addPurpose(
+    public synchronized void addGoal(
             final ObservableList<TableViewData> purposeStages, final String name,
             final String criterionCompleted, final String description,
             final String status, final String deadline,
             final String dateOpen, final String criticalTime) {
         try {
             log.info("Добавление новой цели");
-            outD.writeUTF("addPurpose");
+            outD.writeUTF("addGoalDB");
             outD.flush();
 
             if (inD.readUTF().equals("ok")) {
@@ -423,42 +412,18 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                     mySubObjects.add(new MySubObject(tableViewData.getStage(), tableViewData.getStatus(), UUID.randomUUID().toString()));
                 }
                 String critical = String.valueOf(LocalDate.parse(deadline).minusDays(Long.parseLong(criticalTime)));
-                MyObject myModel = new MyObject(
+                MyObject myObject = new MyObject(
                         mySubObjects, name, criterionCompleted, description,
                         status, deadline, dateOpen, critical, UUID.randomUUID().toString(),
-                        false
+                        0
                 );
-                outD.writeUTF(Converter.toJson(myModel));
+                outD.writeUTF(myModel.getUuid());
+                outD.flush();
+                inD.readUTF().equals("ok");
+
+                outD.writeUTF(Converter.toJson(myObject));
                 outD.flush();
             }
-            notifyAllObservers();
-        } catch (IOException e) {
-            log.error(e);
-            getAlertReconnect();
-        }
-    }
-
-    public void addPurposeStage(final int indexPurpose, final String nameStage, final String status) {
-        try {
-            log.info("Добавление подзадачи");
-            outD.writeUTF("addPurposeStage");
-            outD.flush();
-            if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(getUUIDMyObject(indexPurpose));
-                outD.flush();
-            } else return;
-            if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(nameStage);
-                outD.flush();
-            } else return;
-            if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(status);
-                outD.flush();
-            } else return;
-            if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(String.valueOf(UUID.randomUUID()));
-                outD.flush();
-            } else return;
             notifyAllObservers();
         } catch (IOException e) {
             log.error(e);
@@ -468,10 +433,10 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
     //endregion methods
 
     //region REMOVE methods
-    public void removePurpose(final int index) {
+    public synchronized void removePurpose(final int index) {
         try {
             log.info("Удаление задачи");
-            outD.writeUTF("removePurpose");
+            outD.writeUTF("removeGoal");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 outD.writeUTF(getUUIDMyObject(index));
@@ -484,10 +449,10 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public void removePurposeStage(final int indexPurpose, final int indexPurposeStage) {
+    public synchronized void removePurposeStage(final int indexPurpose, final int indexPurposeStage) {
         try {
             log.info("Удаление подзадачи");
-            outD.writeUTF("removePurposeStage");
+            outD.writeUTF("removeGoalStage");
             outD.flush();
             if (inD.readUTF().equals("ok")) {
                 outD.writeUTF(getUUIDMyObject(indexPurpose));
@@ -526,56 +491,6 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
 
         }
     }
-
-    public void save() {
-        try {
-            outD.writeUTF("save");
-            outD.flush();
-            if (inD.readUTF().equals("ok")) {
-                outD.writeUTF(ClientRuntimeHolder.getLOGIN());
-                outD.flush();
-            }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Project team 22");
-            alert.setHeaderText("Сохранение выполнено");
-            alert.showAndWait().ifPresent(rs -> {
-                if (rs == ButtonType.OK) {
-                    log.info("Сохранение выполнено");
-                }
-            });
-//            alert.show();
-        } catch (IOException e) {
-            log.error(e);
-            getAlertReconnect();
-
-        }
-    }
-
-    //endregion
-
-    //region LOAD methods
-    public boolean loadAsB() {
-        try {
-            log.info("Загрузка из файла на клиенте");
-            val fileChooser = new FileChooser();
-            val file = fileChooser.showOpenDialog(null);
-            if (file != null) {
-                Scanner scanner = new Scanner(new FileReader(file));
-                outD.writeUTF("setPurposes");
-                outD.flush();
-                if (inD.readUTF().equals("ok")) {
-                    outD.writeUTF(scanner.nextLine());
-                    outD.flush();
-                }
-            }
-            notifyAllObservers();
-            return true;
-        } catch (IOException e) {
-            log.error(e);
-            getAlertReconnect();
-            return false;
-        }
-    }
     //endregion
 
     //region UTIL
@@ -607,12 +522,12 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 }
             }
         }
-        myModel.setPurposes(observableList);
+        myModel.setGoals(observableList);
     }
     //endregion
 
     //region CONNECT
-    public boolean login(String login, String password) {
+    public synchronized boolean login(String login, String password) {
         //отправляем на сервер логин и пароль, поочереди
         synchronized (this) {
             if (socket != null) {
@@ -654,7 +569,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         //возвращаем true если подключение удалось
     }
 
-    public boolean registration(String login, String password) {
+    public synchronized boolean registration(String login, String password) {
         synchronized (this) {
             if (socket != null) {
                 try {
@@ -698,7 +613,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    public boolean connect() {
+    public synchronized boolean connect() {
         try {
             log.info("Подключение к серверу - выполняется");
             socket = new Socket(InetAddress.getLocalHost(), 22222);
@@ -713,7 +628,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         }
     }
 
-    private void reconnect() {
+    private synchronized void reconnect() {
         final Thread thread = new Thread(() -> {
             int counter = 0;
             while (true) {
@@ -799,7 +714,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
                 }
             }
         }
-        log.info("Соединение с сервером прервано");
+        log.info("Соединение с сервером отсутствует");
     }
     //endregion
 
@@ -809,7 +724,7 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         if (socket != null) {
             while (!socket.isClosed()) {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500000000);
                     synchronized (this) {
                         outD.writeUTF("ping");
                         outD.flush();

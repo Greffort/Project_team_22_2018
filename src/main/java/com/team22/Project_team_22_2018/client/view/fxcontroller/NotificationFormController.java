@@ -103,9 +103,9 @@ public class NotificationFormController {
                 close();
             }
             if (!datePickerDeadlineEdit.isDisable() && datePickerDeadlineEdit.getValue() != null) {
-                controllerView.setPurpose(
+                controllerView.setGoal(
                         this.uuid,
-                        this.myObject.getPurposeStages(),
+                        this.myObject.getGoalStages(),
                         this.myObject.getName(),
                         this.myObject.getCriterionCompleted(),
                         this.myObject.getDescription(),
@@ -122,7 +122,7 @@ public class NotificationFormController {
             if (!textFieldNot.getText().equals("")) {
                 long number;
                 if (comboBoxNot.getValue().equals("Минут")) {
-                    number = 60000;//000
+                    number = 60000000;//000
                 } else {
                     number = 3600000;
                 }

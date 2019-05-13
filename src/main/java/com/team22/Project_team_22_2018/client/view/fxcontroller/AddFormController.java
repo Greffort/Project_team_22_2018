@@ -128,7 +128,7 @@ public class AddFormController {
     @FXML
     public void buttonAddPurpose() {
         if (checkFilling()) {
-            controllerView.addPurpose(
+            controllerView.addGoal(
                     tableView.getItems(),
                     this.name.getText(),
                     this.criterionCompleted.getText(),
@@ -201,8 +201,10 @@ public class AddFormController {
 
     @FXML
     public void buttonSaveEditStage() {
-        tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(stage.getText(), stageStatus.getValue()));
-        stage.setText("");
+        if (tableView.getSelectionModel().getSelectedIndex() != -1) {
+            tableView.getItems().set(tableView.getSelectionModel().getSelectedIndex(), new TableViewData(stage.getText(), stageStatus.getValue()));
+            stage.setText("");
+        }
     }
 
     public void buttonCancel() {

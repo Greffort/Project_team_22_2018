@@ -9,10 +9,17 @@ public class TableViewData {
 
     private String stage;
     private String status;
+    private String uuid;
 
     public TableViewData(final String stage, final String status) {
         this.stage = stage;
         this.status = status;
+    }
+
+    public TableViewData(final String stage, final String status, final String uuid) {
+        this.stage = stage;
+        this.status = status;
+        this.uuid = uuid;
     }
 
     public String getStage() {
@@ -31,11 +38,20 @@ public class TableViewData {
         this.status = status;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return "TableViewData{" +
                 "stage='" + stage + '\'' +
                 ", status='" + status + '\'' +
+                ", uuid='" + uuid + '\'' +
                 '}';
     }
 }
