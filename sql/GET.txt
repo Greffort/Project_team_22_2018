@@ -1,0 +1,173 @@
+/*
++getAllGoal
+
++//написать один метод принимающий значение статуса для 4х методов ниже
+getCloseGoal
+getOtherGoal
+getFireGoal
+getOverdueGoal
+
+
++getDeadlineTodayGoal
+
++getCriticalTimeGoal
+
+getAllGoalStage
+getCloseGoalStage
+getOpenGoalStage
+*/
+
+/*
+getAllGoal
+*/
+
+select 
+goals.IDGOAL,
+goals.GNAME,
+goals.GCRITERCOMPL,
+goals.GDESCRIP,
+goals.GSTATUS, 
+goals.GCRITICTIME,
+goals.GDEADLINE,
+goals.GDATEOPEN,
+goals.GDATECLOSE,
+goals.GCHEKCER
+from goals;
+
+/*
+getAllGoal specific user
+*/
+select usersgoals.idgoal, 
+        goals.gname,   
+        goals.gdescrip,   
+        goals.gstatus,   
+        goals.gdeadline,   
+        goals.gdateopen,    
+        goals.gdateclose,    
+        goals.gcritictime,    
+        goals.gcritercompl,    
+        goals.gchekcer   
+        from usersgoals 
+        inner join goals on usersgoals.idgoal = goals.idgoal
+        where usersgoals.iduser = 1;
+        
+/*
+    getCloseGoal
+*/
+select 
+goals.IDGOAL,
+goals.GNAME,
+goals.GCRITERCOMPL,
+goals.GDESCRIP,
+goals.GSTATUS, 
+goals.GCRITICTIME,
+goals.GDEADLINE,
+goals.GDATEOPEN,
+goals.GDATECLOSE,
+goals.GCHEKCER
+from goals
+where gstatus = /*'Close'*/'goal_2';
+
+/*
+getCloseGoal specific user
+*/
+
+select usersgoals.idgoal, 
+        goals.gname,   
+        goals.gdescrip,   
+        goals.gstatus,   
+        goals.gdeadline,   
+        goals.gdateopen,    
+        goals.gdateclose,    
+        goals.gcritictime,    
+        goals.gcritercompl,    
+        goals.gchekcer   
+        from usersgoals 
+        inner join goals on usersgoals.idgoal = goals.idgoal
+        where usersgoals.iduser = 1 and goals.gstatus = /*'Close'*/'goal_2';
+        
+/*
+getDeadlineTodayGoal
+*/
+select 
+goals.IDGOAL,
+goals.GNAME,
+goals.GCRITERCOMPL,
+goals.GDESCRIP,
+goals.GSTATUS, 
+goals.GCRITICTIME,
+goals.GDEADLINE,
+goals.GDATEOPEN,
+goals.GDATECLOSE,
+goals.GCHEKCER
+from goals
+where gdeadline =TO_CHAR(SYSDATE, 'DD.MM.YYYY');--/*'Close'*/'goal_2';
+
+select usersgoals.idgoal, 
+        goals.gname,   
+        goals.gdescrip,   
+        goals.gstatus,   
+        goals.gdeadline,   
+        goals.gdateopen,    
+        goals.gdateclose,    
+        goals.gcritictime,    
+        goals.gcritercompl,    
+        goals.gchekcer   
+        from usersgoals 
+        inner join goals on usersgoals.idgoal = goals.idgoal
+        where usersgoals.iduser = 1 and gdeadline = TO_CHAR(SYSDATE, 'DD.MM.YYYY');--/*'Close'*/'goal_2';
+        
+        
+/*
+getCriticalTimeGoal
+*/
+select 
+goals.IDGOAL,
+goals.GNAME,
+goals.GCRITERCOMPL,
+goals.GDESCRIP,
+goals.GSTATUS, 
+goals.GCRITICTIME,
+goals.GDEADLINE,
+goals.GDATEOPEN,
+goals.GDATECLOSE,
+goals.GCHEKCER
+from goals
+where GCRITICTIME <=TO_CHAR(SYSDATE, 'DD.MM.YYYY');--/*'Close'*/'goal_2';
+
+select usersgoals.idgoal, 
+        goals.gname,   
+        goals.gdescrip,   
+        goals.gstatus,   
+        goals.gdeadline,   
+        goals.gdateopen,    
+        goals.gdateclose,    
+        goals.gcritictime,    
+        goals.gcritercompl,    
+        goals.gchekcer   
+        from usersgoals 
+        inner join goals on usersgoals.idgoal = goals.idgoal
+        where usersgoals.iduser = 1 and  TO_CHAR(SYSDATE, 'DD.MM.YYYY')>=GCRITICTIME; --/*'Close'*/'goal_2';
+
+/*
+getAllGoalStage
+
+//в один метод
+getCloseGoalStage
+getOpenGoalStage
+*/
+select GOALSGOALSTAGES.IDGOALSTAGE, 
+GOALSTAGES.gsname,
+GOALSTAGES.gscompleted 
+        from GOALSGOALSTAGES 
+        inner join GOALSTAGES  on GOALSGOALSTAGES.IDGOALSTAGE = GOALSTAGES.IDGSTAG
+        where goalsgoalstages.idgoal = 1; --/*'Close'*/'goal_2';
+
+select GOALSGOALSTAGES.IDGOALSTAGE, 
+GOALSTAGES.gsname,
+GOALSTAGES.gscompleted 
+        from GOALSGOALSTAGES 
+        inner join GOALSTAGES  on GOALSGOALSTAGES.IDGOALSTAGE = GOALSTAGES.IDGSTAG
+        where goalsgoalstages.idgoal = 1 and goalstages.gscompleted = 'close';
+
+
