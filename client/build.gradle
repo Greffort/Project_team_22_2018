@@ -1,0 +1,84 @@
+plugins {
+    id 'java'
+    id "com.github.spotbugs" version "1.6.5"
+    id 'pmd'
+    id 'application'
+    id "name.remal.spotbugs-settings" version "1.0.95"
+}
+
+apply plugin: 'application'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: "com.github.spotbugs"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+
+}
+
+dependencies {
+    //spotBugs
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+
+    //lombok/annotations
+    compile 'org.projectlombok:lombok:1.16.18'
+    compile 'org.jetbrains:annotations:15.0'
+
+    //javaFX
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+
+    //fontAwesomeFX
+    compile 'de.jensd:fontawesomefx:8.9'
+
+    //JSON
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
+
+    //logger
+    compile 'log4j:log4j:1.2.17'
+//    compile 'commons-logging:commons-logging:1.2'
+//    compile group: 'log4j', name: 'log4j', version: '1.2.16'
+//    compile group: 'com.lambdaworks', name: 'scrypt', version: '1.4.0'
+
+}
+
+description = "Task Manager"
+mainClassName = 'com.team22.project_team_22_2018.Main'
+sourceCompatibility = 1.8
+version '1.0-SNAPSHOT'
+
+//
+spotbugs {
+    ignoreFailures = true
+    spotbugsTest.enabled = true
+}
+
+pmd {
+    ignoreFailures = true
+    pmdTest.enabled = true
+    ruleSets = ['java-basic',
+                'java-braces',
+                'java-clone',
+                'java-codesize',
+//            'java-comments',//коментировать каждый метод и каждый класс, нужно ли это?
+                'java-controversial',
+                'java-coupling',
+                'java-design',
+                'java-empty',
+                'java-finalizers',
+                'java-imports',
+//            'java-optimizations',
+                'java-strictexception',
+                'java-strings',
+                'java-typeresolution',
+                'java-unnecessary',
+                'java-unusedcode',
+                'java-naming'
+    ]
+}
