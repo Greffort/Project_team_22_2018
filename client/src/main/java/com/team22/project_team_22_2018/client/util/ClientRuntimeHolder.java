@@ -4,9 +4,9 @@ import com.team22.project_team_22_2018.client.controller.ControllerView;
 
 public class ClientRuntimeHolder {
 
-    private static final ControllerView controllerViewHolder = new ControllerView();
+    private static final ControllerView CONTROLLER_VIEW_HOLDER = new ControllerView();
 
     public static ControllerView getControllerViewHolder() {
-        return controllerViewHolder;
+        return CONTROLLER_VIEW_HOLDER;
     }
 }
