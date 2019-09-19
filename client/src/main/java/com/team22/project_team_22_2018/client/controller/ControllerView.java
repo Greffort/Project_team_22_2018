@@ -724,13 +724,14 @@ public class ControllerView implements Observable, Runnable, AutoCloseable {
         if (socket != null) {
             while (!socket.isClosed()) {
                 try {
-                    Thread.sleep(500000000);
+                    Thread.sleep(5000);
                     synchronized (this) {
                         outD.writeUTF("ping");
                         outD.flush();
                         log.info("PING");
                         if (inD.readUTF().equals("pong")) {
                             log.info("_PONG");
+                            updateModel();
                         } else {
                             new IOException();
                         }

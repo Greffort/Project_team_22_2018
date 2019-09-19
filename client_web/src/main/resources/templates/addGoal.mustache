@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>PT22. Add goal</title>
+
+    <link rel="stylesheet" href="assets/web/assets/mobirise-icons-bold/mobirise-icons-bold.css">
+    <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
+    <link rel="stylesheet" href="assets/tether/tether.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="assets/datatables/data-tables.bootstrap4.min.css">
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+
+    <script>
+        function deleteGoalStage(uuid) {
+            $.ajax(`/delete_goalStage?uuid=${uuid}`, {
+                method: "GET",
+                success: function (data) {
+                    $(`#${uuid}`).remove();
+                }
+            });
+        }
+
+        function addGoalStage() {
+            const name = $("#nameGS").val();
+            const completed = $("#completedGS").val();
+            $.get(`/addGoalStage?name=${name}&completed=${completed}`, function (uuid) {
+                $("#goalsStages").append(`
+                 <tr id="${uuid}">
+                                        <td class="body-item mbr-fonts-style display-7" name="name">${name}</td>
+                                        <td class="body-item mbr-fonts-style display-7" name="deadline">${completed}</td>
+                                        <td name="uuid">
+                        <button class="btn btn-primary btn-sm"
+                        onclick="deleteGoalStage('${uuid}')">delete
+                        </button>
+                        </td>
+                        </tr>
+                `)
+            });
+        }
+    </script>
+
+</head>
+<body>
+
+<section class="menu cid-rqQ4Qrvrme" once="menu" id="menu1-d">
+    <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
+        <div class="menu-logo">
+            <div class="navbar-brand">
+                <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-4" href="/"><span
+                        class="mbri-rocket mbr-iconfont mbr-iconfont-btn"></span>Project team 22</a></span>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
+                <li class="nav-item"><a class="nav-link link text-white display-4" href="/userPage"><span
+                        class="mbri-left mbr-iconfont mbr-iconfont-btn"></span>Cancel</a></li>
+            </ul>
+        </div>
+    </nav>
+</section>
+
+<h3>Header</h3>
+
+<section class="header5 cid-rr67H9caKs mbr-fullscreen" id="header5-l">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class=" col-md-10">
+                <h1 class="mbr-section-title align-center pb-3 display-1">
+                    Add goal
+                </h1>
+                <p class="mbr-text align-center display-5 pb-3 mbr-fonts-style">
+                </p>
+
+                <form method="post" action="addGoal">
+                    <p>
+                    <h5><span class="label label-default">Goal name</span></h5>
+                    <input type="text" id="goalname" name="goalname" class="form-control" placeholder="Goal name"
+                           autofocus="">
+                    </p>
+                    <p>
+                    <h5><span class="label label-default">Criterion Completed</span></h5>
+                    <input type="text" id="criterComp" name="criterComp" class="form-control"
+                           placeholder="Criterion Completed"
+                           autofocus="">
+                    </p>
+                    <h5><span class="label label-default">Description</span></h5>
+                    <input type="text" id="description" name="description" class="form-control"
+                           placeholder="Description"
+                           autofocus="">
+                    </p>
+                    <p>
+                    <h5><span class="label label-default">Deadline date</span></h5>
+                    <input class="btn btn-sm" type="date" id="deadline" name="deadline" required=""/>
+                    </p>
+                    <p>
+                    <h5><span class="label label-default">Status</span></h5>
+
+                    <select class="form-control" id="status" name="status">
+                        <option>Просроченная</option>
+                        <option>Горящая</option>
+                        <option>Обычная</option>
+                        <option>В ожидании</option>
+                        <option>Закрытая</option>
+                    </select>
+
+                    </p>
+                    <p>
+                    <h5><span class="label label-default">За какое количество дней показывать уведомление?</span></h5>
+                    <input type="text" id="criticalTime" name="criticalTime" class="form-control"
+                           placeholder="количество дней. Цифра" required=""
+                           autofocus="">
+                    </p>
+                    <div class="mbr-section-btn align-center">
+                        <button class="btn btn-md btn-secondary display-4" type="submit">Add goal</button>
+                    </div>
+                </form>
+
+                <!--Добавить добавление подцелей-->
+                <h4><span class="label label-default align-content-center">Goal stages</span></h4>
+
+
+                <section class="section-table cid-rr6LSIybyC" id="table1-o">
+                    <div class="container container-table">
+
+                        <div class="container scroll">
+                            <table id="goalsStages" class="table isSearch" cellspacing="0">
+                                <thead>
+                                <tr class="table-heads ">
+                                    <th class="head-item mbr-fonts-style display-7">
+                                        Name
+                                    </th>
+                                    <th class="head-item mbr-fonts-style display-7">
+                                        Completes
+                                    </th>
+                                    <th>
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {{#goalsStages}}
+                                    <tr id="{{uuid}}">
+                                        <td class="body-item mbr-fonts-style display-7" name="name">{{name}}</td>
+                                        <td class="body-item mbr-fonts-style display-7"
+                                            name="deadline">{{completed}}</td>
+                                        <td name="uuid">
+                                            <!--<form method="post" action="/delete_goalStage?uuid={{uuid}}">-->
+                                            <button class="btn btn-primary btn-sm"
+                                                    onclick="deleteGoalStage('{{uuid}}')">delete
+                                            </button>
+                                            <!--</form>-->
+                                        </td>
+                                    </tr>
+                                {{/goalsStages}}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </section>
+                <!--<form class="form-inline" method="post" action="addGoalStage" id="goal_stage"-->
+                <!--enctype="multipart/form-data">-->
+                <p>
+                    <label for="nameGS" class="sr-only">name GS</label>
+                    <input type="text" id="nameGS" name="nameGS" class="form-control"
+                           placeholder="nameGS"
+                           autofocus="" required="">
+                </p>
+                <p>
+                    <label for="completedGS" class="sr-only">status GS</label>
+                    <input type="text" id="completedGS" name="completedGS" class="form-control"
+                           placeholder="completedGS"
+                           autofocus="" required="">
+                </p>
+                <p>
+                    <button class="btn btn-md btn-secondary display-4" onclick="addGoalStage()">Add goal stage
+                    </button>
+                </p>
+                <!--</form>-->
+
+                <form method="post" action="cancel">
+
+                    <button class="btn btn-md display-4" type="submit">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script src="assets/web/assets/jquery/jquery.min.js"></script>
+<script src="assets/tether/tether.min.js"></script>
+<script src="assets/popper/popper.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/dropdown/js/script.min.js"></script>
+<script src="assets/touchswipe/jquery.touch-swipe.min.js"></script>
+<script src="assets/datatables/jquery.data-tables.min.js"></script>
+<script src="assets/datatables/data-tables.bootstrap4.min.js"></script>
+<script src="assets/smoothscroll/smooth-scroll.js"></script>
+<script src="assets/theme/js/script.js"></script>
+
+</body>
+</html>

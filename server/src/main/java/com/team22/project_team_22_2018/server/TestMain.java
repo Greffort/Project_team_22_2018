@@ -9,7 +9,6 @@ import com.team22.project_team_22_2018.server.repository.GoalStagesRepository;
 import com.team22.project_team_22_2018.server.repository.GoalsRepository;
 import com.team22.project_team_22_2018.server.repository.PassRepository;
 import com.team22.project_team_22_2018.server.repository.UsersRepository;
-import com.team22.project_team_22_2018.server.util.HibernateUtil;
 import org.hibernate.Session;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
@@ -182,19 +181,6 @@ public class TestMain {
         pass.setNumber(UUID.randomUUID().toString());
         pass.setUsers(user);
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        session.saveOrUpdate(goal);
-        session.saveOrUpdate(goal2);
-        session.saveOrUpdate(goal3);
-        session.saveOrUpdate(user);
-        session.saveOrUpdate(goalStage);
-
-        session.saveOrUpdate(pass);
-
-        session.flush();
-        session.getTransaction().commit();
     }
 
 //    private boolean login(String login, String password){

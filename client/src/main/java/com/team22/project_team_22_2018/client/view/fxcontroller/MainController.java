@@ -706,7 +706,7 @@ public class MainController implements Observer {
                     break;
                 }
                 try {
-                    Thread.sleep(500_000_000);
+                    Thread.sleep(500_000);
                 } catch (InterruptedException e) {
                     log.error(e);
                 }
