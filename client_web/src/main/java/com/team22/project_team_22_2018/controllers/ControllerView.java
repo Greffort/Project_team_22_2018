@@ -34,7 +34,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 //import com.team22.project_team_22_2018.client.view.util.tableview.TableViewData;
 
 @Log4j
-public class ControllerView implements Observable, Runnable, AutoCloseable {
+public  class ControllerView implements Observable, Runnable, AutoCloseable {
 
     private static class Clazz{
         public Clazz(){

@@ -57,17 +57,9 @@ public class ControllerWeb {
         }
     }
 
-    @GetMapping("/userPage")
-    public  void userPage(Model model, String h) {
-
-    }
-
 
     @PostMapping(path = "/getAddGoalPage")
     public String getAddGoalPage(Map<String, Object> model) {
-        model.put("dcdc","dd");
-        model.put("dcdc","dd");
-        model.hashCode();
         return "redirect:/addGoal";
     }
     //endregion

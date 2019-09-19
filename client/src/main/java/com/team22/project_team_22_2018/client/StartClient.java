@@ -28,12 +28,12 @@ public class StartClient extends Application {
             assert LOGIN != null;
             @NotNull final Parent root = FXMLLoader.load(LOGIN);
             @NotNull final Scene scene = new Scene(root);
-            primaryStage.minHeightProperty().setValue(250);
-            primaryStage.minWidthProperty().setValue(475);
-            primaryStage.setHeight(250);
-            primaryStage.setWidth(475);
-            primaryStage.maxHeightProperty().setValue(250);
-            primaryStage.maxWidthProperty().setValue(475);
+            primaryStage.minHeightProperty().setValue(320);
+            primaryStage.minWidthProperty().setValue(510);
+            primaryStage.setHeight(320);
+            primaryStage.setWidth(510);
+            primaryStage.maxHeightProperty().setValue(320);
+            primaryStage.maxWidthProperty().setValue(510);
 
             primaryStage.setTitle(APPLICATION_NAME);
             primaryStage.setScene(scene);
