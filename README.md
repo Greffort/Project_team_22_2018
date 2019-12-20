@@ -7,7 +7,8 @@ Operating procedure:
 * Modify configuration file(s).
 * Start AutoInstaller tool by executing install.sh script.
 
-##Role Variables
+## Role Variables
+
 | Variable                          | Required | Type   | Default | Description                                                                                                                                                                                                                                      |
 | :---                              | :---     | :---   | :---    | :---                                                                                                                                                                                                                                             |
 | `install_ai_patch_path`           | Yes      | path   | -       | Absolute path to AutoInstaller zip package.                                                                                                                                                                                                      |
@@ -25,12 +26,11 @@ Operating procedure:
 
 
 
-###RBM_patch
-<details>
+### RBM_patch
 
+<details>
 <summary>RBM patch variables</summary>
 
-  #### RBM patch
 | Variable                     | Required | Type   | Default       | Description                                      |
 | :---                         | :---     | :---   | :---          | :---                                             |
 | `rbm_inf_user_name`          | Yes      | string | -             | The database username to connect to the database |
@@ -43,7 +43,8 @@ Operating procedure:
 
 </details>
 
-##Examples
+## Examples
+
 ```yaml
 - name: Install Patch
   include_role:
