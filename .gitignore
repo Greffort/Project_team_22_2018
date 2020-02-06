@@ -29,9 +29,9 @@ hs_err_pid*
 .idea/workspace.xml
 build/
 out/
-src/main/java/com/team22/com.team22.project_team_22_2018/models/PurposeStage.java
-src/main/java/com/team22/com.team22.project_team_22_2018/models/Observable.java
-src/main/java/com/team22/com.team22.project_team_22_2018/models/PurposeStage.java
-src/main/java/com/team22/com.team22.project_team_22_2018/StartApp.java
-src/main/java/com/team22/com.team22.project_team_22_2018/view/util/NumberTableCellFactory.java
-src/main/java/com/team22/com.team22.project_team_22_2018/view/util/TableViewData.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/models/PurposeStage.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/models/Observable.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/models/PurposeStage.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/StartApp.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/view/util/NumberTableCellFactory.java
+# src/main/java/com/team22/com.team22.project_team_22_2018/view/util/TableViewData.java

@@ -16,6 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import lombok.extern.log4j.Log4j;
 import lombok.val;
+import org.apache.log4j.Category;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
